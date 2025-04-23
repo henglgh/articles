@@ -1,0 +1,39 @@
+baseURL = 'https://henglgh.github.io/articles'
+languageCode = 'en-us'
+timeZone = "Asia/Shanghai"
+title = '阿根'
+
+theme="hugo-theme-article"
+copyright = "© 阿根"
+
+[params]
+  mode="toggle"
+  useCDN=false
+  [[params.social]]
+    name = "GitHub"
+    icon = "github"
+    url = "https://github.com/henglgh/articles"
+
+[outputs]
+  home = ["HTML", "JSON"]
+
+[menus]
+  [[menu.main]]
+    name = "Archive"
+    url = "/tags"
+    weight = 1
+
+[markup]
+  [markup.goldmark]
+    [markup.goldmark.extensions]
+      [markup.goldmark.extensions.passthrough]
+        enable = true
+  [markup.highlight]
+    noClasses = false
+    tabWidth = 2
+  [markup.tableOfContents]
+    startLevel = 1
+    endLevel = 6
+
+[pagination]
+  disablePagination = true
