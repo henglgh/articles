@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+	{{ partial "header.html" . }}
+	<body>
+		{{ partial "head.html" . }}
+		<main class="homeMain">
+			<article class="homeArticle">
+				{{ $pages := .Site.RegularPages }}
+				{{ $filteredPages := where $pages "Params.hidden" "ne" true }}
+				{{ range $filteredPages }}
+				<section class="content">
+					<h1 class="title"><a href="{{ .RelPermalink }}">{{ .Title }}</a></h1>
+					<time>{{ dateFormat "2006-01-02 15:04:01" .Date }}</time>
+					<br>{{ template "partials/pagedescription.html" . }}
+				</section>
+				{{ end }}
+				{{ partial "footer.html" . }}
+			</article>
+			<aside class="homeRightSide"></aside>
+		</main>
+	</body>
+</html>

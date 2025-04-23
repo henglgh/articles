@@ -1,0 +1,11 @@
+<footer class="footerMenu">
+  {{- range $index, $key := .Site.Params.Social -}}
+  <span><a href="{{ $key.url }}"><i data-feather="{{ $key.icon }}"></i></a></span>
+  {{- end -}}
+  <span>{{ dateFormat "2006" now }} {{ with .Site.Copyright }} {{ . }} {{ end }}</span>
+</footer>
+{{- if (isset .Site.Params "social") -}}
+<script>
+  feather.replace()
+</script>
+{{- end -}}

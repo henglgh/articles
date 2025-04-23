@@ -1,0 +1,94 @@
+/* --------------------通用配置------------------- */
+body {
+  color: #afafaf;
+  background-color: #202124;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: #abb2bf;
+}
+
+a:hover {
+  border-bottom-color: var(--darkMaincolor);
+}
+
+/* --------------------图片配置------------------- */
+img {
+  border-color: #282c34;
+}
+
+/* --------------------分割线配置-------------------*/
+hr {
+  border-top-color: #c678dd;
+}
+
+/* --------------------代码块配置------------------- */
+code {
+  color: var(--darkMaincolor);
+  background-color: #3c3e42;
+}
+
+pre {
+  scrollbar-color: #abb2bf #202124;
+  background-color: #3c3e42 !important;
+}
+
+/* --------------------header配置------------------- */
+.headerMain {
+  background-color: #202124;
+}
+
+.headerMenu a {
+  color: #abb2bf;
+  border-bottom: 2px solid var(--darkMaincolor);
+}
+
+/*---------------------搜索框配置------------------- */
+.headerMenuSearch .searchInput {
+  color: #abb2bf;
+  background-color: #202124;
+  border-bottom-color: var(--darkMaincolor);
+}
+
+.headerMenuSearch .searchOutput {
+  background: #494c51ef;
+  box-shadow: 0 4px 8px rgba(224, 108, 117, 0.1);
+}
+
+.headerMenuSearch .searchOutput a:hover {
+  border-bottom-color: var(--darkMaincolor);
+}
+
+/* --------------------footer配置------------------- */
+.footerMenu {
+  border-top-color: var(--darkMaincolor);
+}
+
+/* --------------------主页配置------------------- */
+.homeMain {
+  scrollbar-color: #abb2bf #202124;
+}
+
+/* --------------------列表页配置------------------- */
+.listMain {
+  scrollbar-color: #abb2bf #202124;
+}
+
+/* --------------------专栏页配置------------------- */
+.termsMain {
+  scrollbar-color: #abb2bf #202124;
+}
+
+/* --------------------单页配置------------------- */
+.singleMain {
+  scrollbar-color: #abb2bf #202124;
+}
+
+.singleArticle a {
+  color: #61afef;
+}
+
+.singleRightSide {
+  color: #abb2bf;
+  scrollbar-color: #abb2bf #202124;
+}

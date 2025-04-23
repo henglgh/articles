@@ -1,0 +1,17 @@
+{{ define "main" }}
+<main class="singleMain">
+  <article class="singleArticle">
+    <section class="titleSection">
+      <h1 class="title">{{ .Title }}</h1>
+      <time>{{ dateFormat "2006-01-02 15:04:01" .Date }}</time>
+    </section>
+    <section class="content">
+      {{ .Content }}
+    </section>
+    {{- partial "footer.html" . -}}
+  </article>
+  <aside class="singleRightSide">
+    {{ .TableOfContents }}
+  </aside>
+</main>
+{{ end }}

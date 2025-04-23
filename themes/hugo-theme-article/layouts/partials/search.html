@@ -1,0 +1,10 @@
+<div class="searchContainer">
+  <input class="searchInput" type="search" id="search" placeholder="Search...">
+  <div class="searchOutput" id="searchResults"></div>
+</div>
+
+<script>
+   window.SEARCH_INDEX_URL = '{{ "index.json" | absURL }}';
+</script>
+<script src="{{ absURL "js/lunr.min.js" }}"></script>
+<script src="{{ absURL "js/search.js" }}"></script>

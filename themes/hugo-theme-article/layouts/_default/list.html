@@ -1,0 +1,24 @@
+{{ define "main" }}
+<main class="listMain">
+  <article class="listArticle">
+    {{ if isset .Data "Term" }}
+    <h1>🏷️ {{ .Data.Term}}</h1>
+    {{ else }}
+    <h1 class="page-title">Articles</h1>
+    {{ end }}
+    <section class="content">
+      <ul class="posts">
+        {{- range .Data.Pages -}}
+          {{- if (not (in (.Site.Params.excludedTypes | default (slice "page")) .Type)) -}}
+          <li class="post">
+            <a href="{{ .RelPermalink }}"><time>{{ dateFormat "2006-01-02" .Date }}</time> {{.Title}}</a>
+          </li>
+          {{- end -}}
+        {{- end -}}
+      </ul>
+    </section>
+    {{- partial "footer.html" . -}}
+  </article>
+  <aside class="listRightSide"></aside>
+</main>
+{{ end }}
