@@ -1,5 +1,5 @@
 ---
-title: DAOS 组件
+title: DAOS 系统架构-组件
 date: 2025-04-03T16:03:00+0800
 description: "本文详细介绍DAOS组件。"
 tags: [daos]

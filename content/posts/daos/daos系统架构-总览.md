@@ -1,5 +1,5 @@
 ---
-title: DAOS 架构设计
+title: DAOS 系统架构-总览
 date: 2025-04-01T16:03:00+0800
 description: "本文详细介绍DAOS架构设计。"
 tags: [daos]
