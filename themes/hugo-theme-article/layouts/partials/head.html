@@ -2,14 +2,17 @@
 	<div class="headerMenu">
 		<nav class="headerMenuHome">
 			<a href="{{ absURL "" }}">Home</a>
+			{{ range .Site.Menus.main }}
+			<a href="{{ .URL }}">{{ .Name }}</a>
+			{{ end }}
 		</nav>
 		<nav class="headerMenuSearch">
 			{{ partial "search.html" . }}
 		</nav>
 		<nav class="headerMenuOthers">
-			{{ range .Site.Menus.main }}
-			<a href="{{ .URL }}">{{ .Name }}</a>
-			{{ end }}
+			{{- range $index, $key := .Site.Params.Social -}}
+ 			<a href="{{ $key.url }}"><i data-feather="{{ $key.icon }}"></i></a>
+ 			{{- end -}}
 			{{ if eq .Site.Params.mode "toggle" -}}
 			<a id="dark-mode-toggle" onclick="toggleTheme()" href="javascript:void(0);"><i id="theme-icon" data-feather="sun"></i></a>
 			<script src="{{ absURL "js/themetoggle.js" }}"></script>
@@ -22,3 +25,8 @@
 	</div>
 	<div class="headerRightSide"></div>
 </header>
+{{- if (isset .Site.Params "social") -}}
+<script>
+	feather.replace()
+</script>
+{{- end -}}

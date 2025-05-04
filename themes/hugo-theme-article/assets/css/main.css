@@ -134,7 +134,7 @@ img {
 
   /* 特有的 */
   background-color: white;
-  line-height: 2em;
+  /* line-height: 2em; */
   font-size: 1.2rem;
   font-weight: bold;
   display: flex;
@@ -155,6 +155,11 @@ img {
 
 .headerMenu a {
   border-bottom: 2px solid var(--maincolor);
+}
+
+.headerMenuHome, .headerMenuOthers {
+  display: flex;
+  gap: 10px;
 }
 
 .headerRightSide {
@@ -224,7 +229,8 @@ img {
 .footerMenu {
   display: flex;
   margin-top: 10px;
-  padding-top: 10px;
+  padding-top: 5px;
+  padding-bottom: 5px;
   flex-direction: column;
   align-items: center;
   justify-content: center;
@@ -399,7 +405,7 @@ img {
   }
 
   .headerMenuSearch {
-    width: 48%;
+    width: 38%;
   }
 }
 
