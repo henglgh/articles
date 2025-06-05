@@ -15,7 +15,7 @@ tags: [daos]
 
 在一个复制服务的所有副本当中，只有当前领导者可以处理服务RPCs。一个服务的领导者就是当前Raft的领导者（即此刻任期数最高的）非领导者拒绝所有的服务RPCs，并尽其所知的将客户端请求重定向当前领导。客户端会缓存副本服务的地址以及当前的领导者。有时，客户端可能不会获得任何有意义的重定向提示，并且可以通过与随机的一个副本通信来找到当前领导者。
 
-![service_replication_modules](../../../static/images/service_replication_modules.png)
+![service_replication_modules](https://raw.githubusercontent.com/henglgh/articles/main/static/images/service_replication_modules.png)
 
 上图展示了构成一个服务副本的相关模块。`service模块`通过将RPCs转换成状态查询和确定性状态更新操作来处理RPCs。`Raft模块`通过与其他副本上的Raft模块通信，按照Raft协议来实现复制的日志。Raft模块为service模块执行状态查询和状态更新提供了方法。`Storage模块`（本例中是持久化内存和文件系统）用于存储service以及Raft状态。它使用VOS以原子方式更新存储在持久化内存中的状态。
 

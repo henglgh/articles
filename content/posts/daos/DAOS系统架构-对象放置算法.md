@@ -13,7 +13,7 @@ DAOS使用pool map来创建一系列放置映射（placement maps），这些映
 # 2. 放置映射
 放置映射本质上是一个抽象的，经过排列过的存储池映射。它不一定包含存储池映射的所有细节信息。相反，它只保留了相关组件关系，该组件关系用于分发对象分片以满足应用程序的弹性和性能要求。
 
-![pool_and_placement_map](../../../static/images/pool_and_placement_map.png)
+![pool_and_placement_map](https://raw.githubusercontent.com/henglgh/articles/main/static/images/pool_and_placement_map.png)
 
 放置映射不会去维护相关联存储池映射组件状态和任何特征的副本，仅仅是引用存储池映射组件。所以，每次DAOS根据一个放置映射计算出某个对象的分布时，它还需要从存储池映射中检查相关联组件的状态和属性。这为间接内存访问增加了一个额外的步骤，但是当一个DAOS存储池有很多放置映射而只有一个存储池映射时，这可以显著减少缓存污染和内存消耗。
 

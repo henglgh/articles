@@ -1,5 +1,5 @@
 ---
-title: daos文件存储部署
+title: DAOS文件存储部署
 date: 2024-12-09T16:48:46+0800
 description: "本文详细介绍如何部署daos文件存储系统。"
 tags: [daos]

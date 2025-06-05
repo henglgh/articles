@@ -22,7 +22,7 @@ DAOS控制平面处理所有的SSD配置，DAOS数据平面借助SPDK来处理�
 ## 2.1. SPDK（Storage Performance Development Kit）
 SPDK是一个开源的C库，当应用于存储应该程序是，可以提供比标准NVMe内核驱动高7倍以上的性能。SPDK的高性能主要归功于用户态的NVMe驱动程序，消除了所有系统调用并实现了来自应用程序的零拷贝访问。在SPDK中，会以轮询硬件的方式来获取完成情况，而不是依赖中断，从而降低总延迟和延迟差异。SPDK还提供了一个名为bdev的块设备层，它位于设备驱动程序之上，就像传统的内核存储堆栈中一样。此模块提供了可插拔模块的API，用于实现与各种不同类型的块设备连接。它包含的用于 NVMe、Malloc（ramdisk）、Linux AIO、Ceph RBD等驱动模块。
 
-![spdk](../../../static/images/spdk.png)
+![spdk](https://raw.githubusercontent.com/henglgh/articles/main/static/images/spdk.png)
 
 **SPDK NVMe Driver**
 
@@ -65,7 +65,7 @@ BIO在内部管理着一个per-xstream DMA安全缓冲区，目的是可以在�
 - `Device Owner Xstream`：如果VOS XStream没有直接按照1:1方式映射到NVMe SSD，那么首先打开SPDK blobstore的VOS xstream将被命名为`Device Owner`。Device Owner Xstream主要负责维护和更新blobstore健康状况数据、处理设备状态转换以及媒介错误事件。所有非Device Owner Xstream都将事件转发给device owner。
 - `Init Xstream`：第一个启动的VOS xstream被称为`Init Xstream`。init xstream主要负责SPDK bdev的初始化和完成、SPDK热插拔轮询器的注册、处理和定期检查NVMe SSD热删除和热插拔事件，以及处理所有VMD LED设备事件。
 
-![nvme_thread_model](../../../static/images/nvme_thread_model.png)
+![nvme_thread_model](https://raw.githubusercontent.com/henglgh/articles/main/static/images/nvme_thread_model.png)
 
 以上是当前NVMe线程模型，图中有2大类VOS Xstream：VOS Xstream1和VOS Xstream2。Xstream1中又包含了Device Owner Xstream和Init Xstream。Device Owner Xstream负责所有故障设备/设备重集成的回调，以及设备健康状况数据的更新。Init Xstream负责SPDK热插拔轮询器的注册以及当前SPDK bdevs设备列表和已经移除和拔出的设备列表的维护。所有的xstream都将通过`bio_nvme_poll`接口定期轮询I/O统计信息（如果在配置文件中开启），但是只有Device Owner Xstream会轮询设备事件，进行必要的状态转换，并更新设备健康状况统计信息。而init xstream将轮询任何设备移除/设备热插拔事件。另外，图中展示了三种操作：元数据操作，blob读写操作，以及轮询操作。元数据操作流程中展示了：当在Xstream1以外的任何Xstream上发生的错误事件都会通过SPDK事件框架转发给Xstream1中对应的Xstream。
 
@@ -108,7 +108,7 @@ SSD身份识别功能是一个快速而又直观地定位设备地方法。但�
 ## 9.1. VMD（Intel Volume Management Device）
 英特尔的VMD是一种嵌入到处理器芯片中的技术，该技术将NVMe PCIe SSDs聚合连接到芯片根端口，就像HBA对SATA和SAS一样。目前，PCIe存储缺乏一种标准化的方法来闪烁LED并指示设备的状态。英特尔的VMD，再结合NVMe，为LED的管理提供了支持。
 
-![intel_vmd](../../../static/images/intel_vmd.png)
+![intel_vmd](https://raw.githubusercontent.com/henglgh/articles/main/static/images/intel_vmd.png)
 
 英特尔的VMD在服务器的PCIe根复合体中放置了一个控制点，这意味着NVMe驱动器可以热插拔，并且状态指示LED灯始终可靠。
 
@@ -142,6 +142,6 @@ Ameber LED（即：状态指示LED灯）是由VMD设备提供的。Green LED是�
 - `UNPLUGGED`：之前被DAOS使用的设备现在已经被拔出。
 - `NEW`：可以被DAOS使用的全新设备。
 
-![device_state](../../../static/images/device_state.png)
+![device_state](https://raw.githubusercontent.com/henglgh/articles/main/static/images/device_state.png)
 
 查询设备状态的管理员命令：`dmg storage query list-devices`
