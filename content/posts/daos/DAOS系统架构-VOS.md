@@ -52,7 +52,7 @@ DAOS支持2种类型的值：Single value和Array value。每种类型的值都�
 
 VOS对象不是显式创建的，而是在第一次写入时，通过创建元数据并在容器的对象索引中插入指向它的引用时创建的。所有对象的更新操作都会被记录，这个更新可能包含整个对象的更新、 DKEY/AKEY的更新、数组值的打孔操作等等。请注意，对数组对象的拓展块进行打孔操作，意味着该拓展块被标记为清零拓展块，而不是删除相关的拓展块或者相关的key values。一个对象、DKEY、AKEY或者single value的打孔操作也会被记录，因此在此之后的时间戳读取数据时不会看到任何数据。这可以确保对象的完整版本的历史仍然可访问。但是，DAOS API只允许在快照中访问数据，因此VOS聚合功能可以主动删除在已经快照中不再访问的对象、keys以及values。
 
-![vos_pool_layout](../../../static/images/vos_pool_layout.png)
+![vos_pool_layout](https://raw.githubusercontent.com/henglgh/articles/main/static/images/vos_pool_layout.png)
 
 在对某个对象执行查找某个single value时，将遍历对象索引，查找最高epoch的数值接近与key匹配的所请求的epoch数值（接近：小于或等于）的索引节点。如果找到了，则返回数值，否则将返回"miss"。miss意味着此VOS中从未更新过该key。这可以确保始终返回的是epoch历史中的最新值，无论这些数据是按照什么时间顺序组织的，并且会自动忽略所请求时间点之后的所有更新。
 
@@ -165,7 +165,7 @@ Example VOS KV Store input for Update/Punch
 
 Example B+树索引
 
-![B+树索引](../../../static/images/B+tree.png)
+![B+树索引](https://raw.githubusercontent.com/henglgh/articles/main/static/images/B+tree.png)
 
 
 与传统的二叉树一样，红黑树将小于根节点key的key组织到左子树，大于根节点key的key组织到右子树。值的指针和key一起被存储在每个节点中。另一方面，基于B+树的索引将key以升序的方式存储在叶子节点中，叶子节点也是值存储的地方。根节点（蓝色）和内部节点（红色）有助于定位到适当的叶子节点。每个B+树节点都有很多插槽，插槽的数量由阶数决定。节点最多可以有（阶数-1）个插槽。在红黑树的情况下，容器句柄的cookie必须与key一起存储，但在B+树中，cookie存储在叶子节点中就足够了，因为cookie不用于遍历。
@@ -198,7 +198,7 @@ VOS支持的第二种对象类型是Key-Array类型的。与KV存储类似，KA�
 
 Example of extents and epochs in a Key Array object
 
-![ka_object_extents_epoch](../../../static/images/ka_object_extents_epoch.png)
+![ka_object_extents_epoch](https://raw.githubusercontent.com/henglgh/articles/main/static/images/ka_object_extents_epoch.png)
 
 在上面的示例中，不同区段范围之间存在显著的重叠。VOS支持nearest-epoch访问，这就需要读取任何给定区段范围上的最新的值。例如，在上图所示，如果在epoch=10处读取4-10区段范围的数据，那么生成的读缓存应该包含epoch=1时的4-5区段，epoch=5时的5-7区段，以及epoch=9时的7-10区段。
 
@@ -222,11 +222,11 @@ R树提供了一种合理的方法来表示区段和epoch的有效范围，以�
 
 下图展示的是使用上表中的输入，创建了一个新的矩形图，用来表示4阶EV树在在2-D空间中extent和epoch的排列。
 
-![extents_epoch_rectangle](../../../static/images/extents_epoch_rectangle.png)
+![extents_epoch_rectangle](https://raw.githubusercontent.com/henglgh/articles/main/static/images/extents_epoch_rectangle.png)
 
 下图展示了基于EV树拆分和修剪操作而构建的矩形。作为案例，也采用之前表中的输入，以考虑广泛拆分的情况。
 
-![order_4_ev_tree](../../../static/images/order_4_ev_tree.png)
+![order_4_ev_tree](https://raw.githubusercontent.com/henglgh/articles/main/static/images/order_4_ev_tree.png)
 
 EV树中的插入操作是通过检查重叠来定位要插入的相应的叶子节点。如果多个边界框重叠，则选择放大幅度最小的边界框。通过选择面积最小的边界框来解决进一步的冲突情况。每个插入操作的最大成本可以是 O(logbn)。
 
@@ -275,7 +275,7 @@ struct vos_ts_pair {
 ## 6.3. 写入时间戳
 为了检测epoch不确定性违规行为，VOS还为每个container, object, dkey, and akey维护着一对写入时间戳。从逻辑上讲，时间戳表示对条目本身或者子树中条目的最近两次更新。如果以后有任何更新时，至少需要2个时间戳以避免出现假设的不确定性。下图展示了需要2个时间戳的场景。在仅有一个时间戳的场景下，第一种、第二种、第三种情况将无法区分，并且会因为不确定性而被拒绝。在所有情况下都使用最准确的写入时间戳。例如，如果访问的是数组的获取，在没有对相应的key或者object进行这种不确定性的打孔操作的情况下，我们将检查是否存在冲突的区段。
 
-![write_timestamp_cache](../../../static/images/write_timestamp_cache.png)
+![write_timestamp_cache](https://raw.githubusercontent.com/henglgh/articles/main/static/images/write_timestamp_cache.png)
 
 ## 6.4. MVCC规则
 每个DAOS I/O操作都属于一个事务。如果用户没有将某个操作与事务关联起来，那么DAOS会将该操作视为`单一操作型事务`。因此，条件型更新操作会被视为包含有条件检查的事务，如果检查通过，则执行更新或者打孔操作。
@@ -386,7 +386,7 @@ VOS负责在对象更新期间存储校验和，并在对象提取时检索校�
 
 下图说明了整体VOS的布局以及校验和的存储位置。请注意，校验和类型实际上并不存储在vos_cont_df结构中。
 
-![vos_layout](../../../static/images/vos_layout.png)
+![vos_layout](https://raw.githubusercontent.com/henglgh/articles/main/static/images/vos_layout.png)
 
 ## 8.3. 校验和流程
 在执行更新（update）操作时，校验和是I/O描述器的一部分。然后在inakey_update_single/akey_update_recx接口中，校验和缓冲区指针被包含在内部的结构中，该结构用于树的更新操作（比如用于SV树的vos_rec_bundle接口和用于EV树的接口evt_entry_in）。正如之前所说，持久化结构的大小包含了校验和的大小。最后，在存储record（svt_rec_store）或extent（evt_insert）时，校验和被拷贝到持久化结构的末尾。
@@ -427,7 +427,7 @@ DAOS支持多副本以实现数据的高可用性。如果某个target在更新�
 
 DTX模型被构建在DAOS容器中。每个容器都维护着自己的DTX表，该表在SCM中被组织成2个B+树：active DTXs和committed DTXs。下图表示在DTX模型下对副本对象的修改。
 
-![replicated_obj_modify_dtx](../../../static/images/replicated_obj_modify_dtx.png)
+![replicated_obj_modify_dtx](https://raw.githubusercontent.com/henglgh/articles/main/static/images/replicated_obj_modify_dtx.png)
 
 以下针对DTX_1简单的说明一下流程：如之前所说，每个容器都维护着3个索引：1个指向object tree，另外2个指向DTX tree的。图中紫色表示对extent数据的更新过程。首先会在本地启动一个DTX事务，该事务会被记录在active DTX tree中。针对图中的每个树的操作都会被记录在一个DTX record。该record会被记录在DTX表中，同时record的索引会被记录在extent中。在图中，DTX1-record1记录着对object的更新操作，DTX1-record2记录着对dkey的更新操作，DTX1-record3记录着对akey的更新操作，DTX1-record4记录着对extent的值的更新操作。record之间是有先后顺序的，并且使用了epoch。
 

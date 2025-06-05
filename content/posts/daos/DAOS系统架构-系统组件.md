@@ -7,8 +7,7 @@ tags: [daos]
 
 
 # 1. 概述
-
-![system_architecture](../../../static/images/system_architecture.png)
+![system_architecture](https://raw.githubusercontent.com/henglgh/articles/main/static/images/system_architecture.png)
 
 如上如所示，一个完整的DAOS系统是由管理节点组件、客户端节点组件、服务端节点组件以及网络通信组件四个部分组成。管理节点组件通过管理网络通道（蓝色）对DAOS服务管理和监控。客户端节点组件通过数据网络通道（红色）与服务端节点组件通信实现数据读取和写入。服务端节点组件是整个DAOS系统的核心组件，用于集群数据的管理。
 

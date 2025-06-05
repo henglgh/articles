@@ -1,5 +1,5 @@
 ---
-title: DAOS 系统架构-Object
+title: DAOS系统架构-Object
 date: 2025-04-25T09:00:00+0800
 description: "本文详细介绍DAOS中Object（对象）的设计思想"
 tags: [daos]
@@ -8,7 +8,7 @@ tags: [daos]
 # 1. 概述
 DAOS对象负责存储用户的数据，它由对象ID标识，该对象ID在其所属的DAOS容器中是唯一的。对象可以分布在存储池中的任意target上，以实现性能和弹性。下图有助于理解DAOS对象在存储层次结构中的位置。
 
-![](/static/images/daos_object_layout.png)
+![daos_object_layout](https://raw.githubusercontent.com/henglgh/articles/main/static/images/daos_object_layout.png)
 
 从上图可以看到DAOS对象分为两类：`byte Array类型`的和`KV类型`的。byte Array类型的对象没有key，而这种对象主要用来存储真实的用户数据。KV这种结构的对象，做常见的是用来存储属性。
 

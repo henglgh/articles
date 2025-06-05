@@ -1,5 +1,5 @@
 ---
-title: daos集群部署(单机模式)
+title: DAOS集群部署(单机模式)
 date: 2024-12-09T16:48:44+0800
 description: "本文详细介绍如何在almalinux8.9上部署daos.2.0.0单机集群。"
 tags: [daos]
