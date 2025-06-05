@@ -90,6 +90,26 @@ ul > li::before {
   font-weight: bold;
 }
 
+/*--------------------表格配置---------------------*/
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+table, table th, table td {
+  border: 1px dotted #dfe2e5;
+}
+
+table th, table td {
+  padding: 6px 13px;
+  text-align: left;
+}
+
+table th {
+  color: var(--maincolor);
+  background-color: #ececec;
+}
+
 /*--------------------代码块配置---------------------*/
 code {
   background-color: #ececec;

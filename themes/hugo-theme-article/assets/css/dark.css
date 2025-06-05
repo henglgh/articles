@@ -22,6 +22,16 @@ hr {
   border-top-color: #c678dd;
 }
 
+/*--------------------表格配置---------------------*/
+table, table th, table td {
+  border-color: #abb2bf;
+}
+
+table th {
+  color: var(--darkMaincolor);
+  background-color: #3c3e42;
+}
+
 /* --------------------代码块配置------------------- */
 code {
   color: var(--darkMaincolor);
