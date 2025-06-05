@@ -392,7 +392,7 @@ img {
   scrollbar-color: #666 #ffffff;
 
   position: sticky;
-  top: 2em;
+  top: 4em;
   align-self: flex-start;
 }
 
@@ -407,6 +407,14 @@ img {
 
 .singleArticle .footerMenu a {
   color: inherit;
+}
+
+.singleArticle .titleSection {
+  margin-bottom: 2em;
+}
+
+.singleArticle .titleSection .title {
+  margin-bottom: 0.2em;
 }
 
 
