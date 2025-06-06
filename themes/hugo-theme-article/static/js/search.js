@@ -23,6 +23,7 @@ fetch(indexUrl)
   .then(response => response.json())
   .then(data => {
     const idx = lunr(function () {
+      this.use(lunr.multiLanguage('en', 'zh'));
       this.ref('url');
       this.field('title');
       // this.field('content');
@@ -31,21 +32,36 @@ fetch(indexUrl)
 
     // 搜索框逻辑
     searchInput.addEventListener('input', function () {
-      const query = searchInput.value;
+      const query = searchInput.value.trim();
       if (query.length < 2) {
         searchOutput.innerHTML = '';
         return;
       }
 
-      const results = idx.search(`*${query}*`);
-      searchOutput.innerHTML = '';
-      if (results.length > 0) {
-        results.forEach(result => {
-          const item = data.find(doc => doc.url === result.ref);
-          searchOutput.innerHTML += `<a href="${item.url}">${item.title}</a><br>`;
-        });
-      } else {
-        searchOutput.innerHTML = 'No results found';
-      }
+      // 构建更灵活的搜索查询
+      const searchTerms = query.split(/\s+/);
+      const wildcardTerms = searchTerms.map(term => `*${term}*`).join(' ');
+
+      try {
+            // 尝试多种搜索方式
+            let results = idx.search(wildcardTerms);
+            
+            // 如果没有结果，尝试更宽松的搜索
+            if (results.length === 0) {
+              results = idx.search(query);
+            }
+
+            searchOutput.innerHTML = '';
+            if (results.length > 0) {
+              results.forEach(result => {
+                const item = data.find(doc => doc.url === result.ref);
+                searchOutput.innerHTML += `<a href="${item.url}">${item.title}</a><br>`;
+              });
+            } else {
+              searchOutput.innerHTML = 'No results found';
+            }
+          } catch (e) {
+              searchOutput.innerHTML = 'No results found';
+          }
     });
   });
