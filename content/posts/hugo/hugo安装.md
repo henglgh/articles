@@ -1,3 +1,9 @@
+---
+title: Hugo安装
+date: 2025-03-26T16:03:00+0800
+description: "本文全面介绍如何在linux上安装hugo。"
+tags: [hugo]
+---
 
 # 1. Linux
 在 Linux 上安装 Hugo。

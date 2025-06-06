@@ -1,3 +1,11 @@
+---
+title: Hugo内容管理-原型
+date: 2025-03-31T10:03:00+0800
+description: "本文全面介绍Hugo原型的用法。"
+tags: [hugo]
+---
+
+
 # 1. 原型（Archetypes）
 原型是新内容的模板。
 

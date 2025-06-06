@@ -1,3 +1,10 @@
+---
+title: Hugo内容管理-评论
+date: 2025-03-31T16:03:00+0800
+description: "本文全面介绍Hugo评论的用法。"
+tags: [hugo]
+---
+
 # 1. 评论
 Hugo 附带了一个内部 Disqus 模板，但这并不是唯一适用于您的 New Hugo 网站的评论系统
 
