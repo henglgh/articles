@@ -5,7 +5,6 @@ description: "本文详细介绍如何部署daos文件存储系统。"
 tags: [daos]
 ---
 
-
 # 1. 前言
 本文详细介绍如何部署daos文件存储系统。系统环境如下：
 ```bash
@@ -200,7 +199,6 @@ echo "hello world" > /mnt/daosfs.3.11/test.txt
 
 &nbsp;
 &nbsp;
-
 # 4. 参考资料
 - [https://docs.daos.io/v2.0/user/filesystem](https://docs.daos.io/v2.0/user/filesystem/)
 - [https://github.com/daos-stack/daos/tree/v2.0.0/src/object](https://github.com/daos-stack/daos/tree/v2.0.0/src/object)

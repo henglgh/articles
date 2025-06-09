@@ -5,7 +5,6 @@ description: "本文详细介绍如何在almalinux8.9上编译daos.2.0.0源码�
 tags: [daos]
 ---
 
-
 # 1. 前言
 本文详细介绍如何在almalinux8.9上编译daos.2.0.0源码。系统环境如下：
 ```bash

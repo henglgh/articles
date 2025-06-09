@@ -5,7 +5,6 @@ description: "本文详细介绍如何在almalinux8.9上部署daos.2.0.0多机�
 tags: [daos]
 ---
 
-
 # 1. 前言
 本文详细介绍如何在almalinux8.9上部署daos.2.0.0多机集群。系统环境如下：
 ```bash
