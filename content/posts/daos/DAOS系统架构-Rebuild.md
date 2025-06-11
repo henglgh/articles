@@ -1,7 +1,7 @@
 ---
 title: DAOS系统架构-Rebuild
 date: 2025-06-09T14:03:00+0800
-description: "本文全面介绍DAOS系统，包括但不局限于DAOS系统特性、各个模块的功能等等。"
+description: "本文介绍当target发生故障时，如何进行数据重构。"
 tags: [daos]
 ---
 
@@ -46,7 +46,7 @@ tags: [daos]
 - 如果重构发起者在重构过程中发生故障，则应该忽略在发起者上正在重构的对象分片，这将由下一次重构处理。
 - 如果重构发起者无法从其他副本获取数据，他将从其他可用的副本上获取数据。
 - 在重构期间，如果已经发生了另外一个故障，那么对于当前正在修复的故障，正在参与重构的target无需再重新扫描其对象或重置其重构进度。
-- 当出现多个故障时，如果来自不同容灾域的故障targets的数量已经超过了容错级别，可能出现不可恢复的错误，应用程序可能会遭受数据丢失。在这种情况下，上层堆栈软件向确实数据的对象发送I/O时可能会看到错误。
+- 当出现多个故障时，如果来自不同容灾域的故障targets的数量已经超过了容错级别，可能出现不可恢复的错误，应用程序可能会遭受数据丢失。在这种情况下，上层堆栈软件向缺失数据的对象发送I/O时可能会看到错误。
 
 **多故障协议**
 
@@ -66,7 +66,7 @@ tags: [daos]
 如果在重构期间存在并发写入，重构协议应确保新写入的数据永远不会丢失。这些写入的数据要么直接被存储在新的对象分片中，要么写入到rebuild target拉取的对象分片中。并且还应该保证获取操作能够得到正确的数据。为了实现这些目标，应该遵守以下协议：
 - 获取操作将始终跳过正在重构的target。
 - 只有所有的对象分片的更新都成功完成后，更新才算真正的完成。
-- 如果这些更新中任何一个失败，客户端将无限重试，直到成功，或者pool map提示target出现故障。在第二种情况，客户端将切换到新的pool map，并将更新发送给新的rebuild target。
+- 如果这些更新操作中任何一个失败，客户端将无限重试，直到成功，或者pool map提示target出现故障。在第二种情况，客户端将切换到新的pool map，并将更新发送给新的rebuild target。
 - 普通I/O与重构过程不是同步的，因此在重构过程中，数据可能会被rebuild target和普通I/O重复写入。
 
 &nbsp;
@@ -110,15 +110,15 @@ Rebuild [aborted] (pool 8799e471 ver=41, toberb_obj=75, rb_obj=75, rec= 11937, d
 以下描述了在重构过程中一个校验和的生命周期中的“接触点（touch points）”。此处包含客户端task APIs以及packing/unpacking信息，因为重构是这些使用校验和的API的主要用户。
 
 ## 8.1. Rebuild Touch Points
-- **migrate_fetch_update_(inline|single|bulk)**：即rebuild/migrate相关函数，负责写入本地VOS中，同时必须确保校验和也被写入。这些函数必须使用checksum iov参数进行获取以得到校验和，然后将校验和解包到iod_csum中。
+- `migrate_fetch_update_(inline|single|bulk)`：即rebuild/migrate相关函数，负责写入本地VOS中，同时必须确保校验和也被写入。这些函数必须使用checksum iov参数进行获取以得到校验和，然后将校验和解包到iod_csum中。
 
-- **obj_enum.c**用于枚举要重构的对象。由于fetch_update函数会从提取操作中解包出校验和，也会为枚举操作解包校验和，因此obj_enum.c中的解包过程会简单的将csum_iov复制到enum_unpack_recxs的io结构（dc_obj_enum_unpack_io）中，然后在migrate_one_insert中深度复制到mrone（migrate_one）结构中。
+- `obj_enum.c`：用于枚举要重构的对象。由于fetch_update函数会从提取操作中解包出校验和，也会为枚举操作解包校验和，因此obj_enum.c中的解包过程会简单的将csum_iov复制到enum_unpack_recxs的io结构（dc_obj_enum_unpack_io）中，然后在migrate_one_insert中深度复制到mrone（migrate_one）结构中。
 
 ## 8.2. Client Task API Touch Points
-- **dc_obj_fetch_task_create**：将校验和iov设置为daos_obj_fetch_t参数。这些参数被设置为rw_cb_args.shard_args.api_args，并通过cli_shard.c中的访问器函数（rw_args2csum_iov）进行访问，以便rw_args_store_csum可以轻松地访问它。这个函数会将从server中接收到校验和打包到iov中。
-- **dc_obj_list_obj_task_create**：将校验和iov设置为daos_obj_list_obj_t参数。然后将args.args.csum复制到dc_obj_shard_list中的obj_enum_args.csum。在枚举回调函数dc_enumerate_cb中，已经打包的校验和缓存数据将从rpc参数复制到obj_enum_args.csum（其指向与调用者相同的缓冲区）
+- `dc_obj_fetch_task_create`：将校验和iov设置为daos_obj_fetch_t参数。这些参数被设置为rw_cb_args.shard_args.api_args，并通过cli_shard.c中的访问器函数（rw_args2csum_iov）进行访问，以便rw_args_store_csum可以轻松地访问它。这个函数会将从server中接收到校验和打包到iov中。
+- `dc_obj_list_obj_task_create`：将校验和iov设置为daos_obj_list_obj_t参数。然后将args.args.csum复制到dc_obj_shard_list中的obj_enum_args.csum。在枚举回调函数dc_enumerate_cb中，已经打包的校验和缓存数据将从rpc参数复制到obj_enum_args.csum（其指向与调用者相同的缓冲区）
 
 ## 8.3. Packing/unpacking checksums
 当校验和被打包时（无论是fetch还是list操作），只有数据的校验和被包括在内。对于object list操作，只有内联数据的校验和会被包括在内。在重构期间，如果数据不是内联的，则重构过程会获取其余数据并获取校验和。
-- **ci_serialize**：通过将结构体追加到iov中，然后将校验和信息缓冲数据追加到iov中来打包校验和。这会将实际的校验和放在描述该校验和的校验和结构之后。
-- **ci_cast**：解包校验和以及描述结构。它通过将iov缓冲区强制转换成dcs_csum_info结构体，并将csum_info的校验和指针设置为指向结构体之后的内存来实现这一点。它不复制任何内容，实际上只是进行强制类型转换。要获取所有的dcs_csum_infos，调用者需要先对iov进行强制类型转换，将csum_info复制到目标位置，然后移动到iov中的下一个csum_info中。由于这个过程会修改iov结构，因此最好使用iov的副本作为临时结构。
+- `ci_serialize`：通过将结构体追加到iov中，然后将校验和信息缓冲数据追加到iov中来打包校验和。这会将实际的校验和放在描述该校验和的校验和结构之后。
+- `ci_cast`：解包校验和以及描述结构。它通过将iov缓冲区强制转换成dcs_csum_info结构体，并将csum_info的校验和指针设置为指向结构体之后的内存来实现这一点。它不复制任何内容，实际上只是进行强制类型转换。要获取所有的dcs_csum_infos，调用者需要先对iov进行强制类型转换，将csum_info复制到目标位置，然后移动到iov中的下一个csum_info中。由于这个过程会修改iov结构，因此最好使用iov的副本作为临时结构。
