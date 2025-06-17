@@ -1,19 +1,19 @@
 ---
 title: DAOS文件存储部署
 date: 2024-12-09T16:48:46+0800
-description: "本文详细介绍如何部署daos文件存储系统。"
+description: "本文详细介绍如何部署DAOS文件存储系统。"
 tags: [daos]
 ---
 
 # 1. 前言
-本文详细介绍如何部署daos文件存储系统。系统环境如下：
+本文详细介绍如何部署DAOS文件存储系统。系统环境如下：
 ```bash
-daos:           2.0.0
+daos:           2.6.0
 linux os:       almalinux 8.9
 linux kernel:   4.18.0-513.5.1.el8_9.x86_64
 ```
-- 之所以选择2.0.0版本，是因为daos从2.0.0开始是一个全新的架构设计，与1.x版本是不兼容的。其次为了方便研究daos源码，当然是版本越早，功能越少，代码逻辑更清晰。
-- 本文默认已提前部署好daos集群，如果没有部署，参考[daos集群部署多机模式]({{< ref "daos集群部署多机模式.md" >}})。
+- DAOS从2.0.0开始是一个全新的架构设计，与1.x版本是不兼容的。另外，从2.6.0开始，DAOS开始支持Metadata-on-SSD，即支持非Intel Optane设备。
+- 本文默认已提前部署好DAOS集群，如果没有部署，参考[DAOS集群部署-多机模式]({{< ref "DAOS集群部署-多机模式.md" >}})。
 
 &nbsp;
 &nbsp;
@@ -28,12 +28,12 @@ daos container create test test --type=POSIX --oclass=RP_2GX --properties rd_fac
 ```
 这里重点讲解`--oclass`和`--properties`参数。
 - `oclass`：设置object容错模式（RP和EC）。此处`RP_2GX`中RP表示副本模式，2表示2个副本，G表示对象分片，X表示分片个数为最大，也就是等于所有可用的target数量。当然X也可以换成具体的数字，比如RP_2G2。
-- `rd_fac`：设置object的容灾域模式。目前daos只支持engine级别的容灾域。`rd_fac:1`表示允许1个engine出现故障。
+- `rd_fac`：设置object的容灾域模式。目前DAOS只支持engine级别的容灾域。`rd_fac:1`表示允许1个engine出现故障。
 
 rd_fac会影响oclass中object分片选择的target范围。当oclass设置以GX为结尾的模式时，rd_fac也会影响object分片的最大分片数量。
 
 下面是另外一套集群中的配置信息  
-daos system配置信息：
+DAOS system配置信息：
 ```bash
 connected to DAOS system:
 	name: daos_server
@@ -183,7 +183,7 @@ container配置信息：
   "status": 0
 }
 ```
-可以看到，该object的容错模式被daos自动设置为RP_2G8。object shard总数为8，每个shard都有2个副本，每个副本会随机的从rank[0-2]中任选2个。这里之所以被设置为G8，是因为在配置文件中每个rank（在这里即engine）被分别配置4个target用来存储数据。2个rank也就是8个object。
+可以看到，该object的容错模式被DAOS自动设置为RP_2G8。object shard总数为8，每个shard都有2个副本，每个副本会随机的从rank[0-2]中任选2个。这里之所以被设置为G8，是因为在配置文件中每个rank（在这里即engine）被分别配置4个target用来存储数据。2个rank也就是8个object。
 
 &nbsp;
 &nbsp;
@@ -200,5 +200,5 @@ echo "hello world" > /mnt/daosfs.3.11/test.txt
 &nbsp;
 &nbsp;
 # 4. 参考资料
-- [https://docs.daos.io/v2.0/user/filesystem](https://docs.daos.io/v2.0/user/filesystem/)
-- [https://github.com/daos-stack/daos/tree/v2.0.0/src/object](https://github.com/daos-stack/daos/tree/v2.0.0/src/object)
+- [https://docs.daos.io/v2.6/user/filesystem/](https://docs.daos.io/v2.6/user/filesystem/)
+- [https://github.com/daos-stack/daos/blob/v2.6.0/src/object/README.md](https://github.com/daos-stack/daos/blob/v2.6.0/src/object/README.md)

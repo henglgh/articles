@@ -1,18 +1,18 @@
 ---
-title: DAOS集群部署(单机模式)
+title: DAOS集群部署-单机模式
 date: 2024-12-09T16:48:44+0800
-description: "本文详细介绍如何在almalinux8.9上部署daos.2.0.0单机集群。"
+description: "本文详细介绍如何在almalinux8.9上部署DAOS.2.6.0单机集群。"
 tags: [daos]
 ---
 
 # 1. 前言
-本文详细介绍如何在almalinux8.9上部署daos.2.0.0单机集群。系统环境如下：
+本文详细介绍如何在almalinux8.9上部署DAOS.2.6.0单机集群。系统环境如下：
 ```bash
-daos:           2.0.0
+daos:           2.6.0
 linux os:       almalinux 8.9
 linux kernel:   4.18.0-513.5.1.el8_9.x86_64
 ```
-之所以选择2.0.0版本，是因为daos从2.0.0开始是一个全新的架构设计，与1.x版本是不兼容的。其次为了方便研究daos源码，当然是版本越早，功能越少，代码逻辑更清晰。
+DAOS从2.0.0开始是一个全新的架构设计，与1.x版本是不兼容的。另外，从2.6.0开始，DAOS开始支持Metadata-on-SSD，即支持非Intel Optane设备。
 
 &nbsp;
 &nbsp;
@@ -47,12 +47,12 @@ grub2-mkconfig --output=/boot/grub2/grub.cfg
 ```
 
 &nbsp;
-## 3.3. 配置daos yum源
+## 3.3. 配置DAOS yum源
 在`/etc/yum.repos.d/`目录下创建`daos.repo`文件，并添加以下内容：
 ```bash
-[daos-2.0.0]
-name=DAOS v2.0.0 Packages Packages
-baseurl=https://packages.daos.io/v2.0.0/CentOS8/packages/x86_64/
+[daos-2.6.0]
+name=DAOS v2.6.0 Packages Packages
+baseurl=https://packages.daos.io/v2.6.0/EL8/packages/x86_64/
 enabled=1
 #gpgcheck=1
 gpgcheck=0
@@ -104,10 +104,15 @@ provider: ofi+tcp;ofi_rxm
 control_log_mask: INFO
 control_log_file: /var/log/daos/daos_server.log
 control_metadata:
-  path: /var/lib/daos/daos_control
+  path: /var/lib/daos
+
 socket_dir: /var/lib/daos/daos_server
+
+telemetry_port: 9191
+
 transport_config:
    allow_insecure: true
+
 enable_vmd: false
 
 engines:
@@ -118,7 +123,7 @@ engines:
   fabric_iface: enp0s8
   fabric_iface_port: 31416
   log_mask: INFO
-  log_file: /var/log/daos/daos_engine.0.log
+  log_file: /var/log/daos/daos_engine.log
 
   env_vars:
     - FI_SOCKETS_MAX_CONN_RETRY=1
@@ -126,20 +131,22 @@ engines:
     - DAOS_SCHED_UNIT_RUNTIME_MAX=0
 
   # Storage definitions
-  scm_mount: /var/lib/daos/daos_scm
-  scm_class: ram
-  scm_size: 4
-
-  bdev_class: file
-  bdev_size: 16
-  bdev_list: [/var/lib/daos/dev/daos-bdev]
+  storage:
+  -
+    class: ram
+    scm_mount: /var/lib/daos/daos_scm
+    scm_size: 4
+  -
+    class: file
+    bdev_list: [/var/lib/daos/dev/daos-bdev]
+    bdev_size: 16
 ```
 以上配置效果为：启动一个server（node0），该server将启动一个engine，该engine将挂载1个scm和1个nvme。scm将占用4G的系统内存，nvme是本地的文件模拟出来的设备，大小为16G。
 - `provider`：配置网卡，可以使用`daos_server network scan`命令查找。
-- `engines`: 存储引擎，daos数据平面。1个engine对应1个物理cpu。默认是等于NUMA节点数。
+- `engines`: 存储引擎，DAOS数据平面。1个engine对应1个物理cpu。默认是等于NUMA节点数。
 - `targets`：I/O service threads。负责管理scm和bdev。1个target对应1个物理cpu core。targets的值应该是bdev的整数倍。
 - `nr_xs_helpers`：I/O offloading threads。也可以说是targets的辅助线程，用来分担主I/O service任务。1个helper thread对应1个物理cpu core。nr_xs_helpers与targets的比例关系：nr_xs_helpers = targets / 4。
-- `env_vars`：配置DAOS系统环境变量，所有的环境变量可以在[https://docs.daos.io/v2.0/admin/env_variables/](https://docs.daos.io/v2.0/admin/env_variables/)中查找。
+- `env_vars`：配置DAOS系统环境变量，所有的环境变量可以在[https://docs.daos.io/v2.6/admin/env_variables/](https://docs.daos.io/v2.6/admin/env_variables/)中查找。
 - `scm`：storage-class memory，用来存元数据。
 - `scm_class`：dcpm和ram。dcpm需要用Optane device，ram直接使用内存。
 - `bdev`：用来存数据。
@@ -156,8 +163,8 @@ systemctl enable daos_server.service
 ```bash
 dmg storage format
 ```
-- dmg是daos-client的命令行工具，上述命令需要在客户端执行。上述命令执行后，daos server将会启动engine进程，并挂载scm。
-- 启动engine可能会失败，大概率是内存不够daos分配，测试发现，对于1个engine和1个target的配置，至少需要9G内存。
+- dmg是daos-client的命令行工具，上述命令需要在客户端执行。上述命令执行后，DAOS server将会启动engine进程，并挂载scm。
+- 启动engine可能会失败，大概率是内存不够DAOS分配，测试发现，对于1个engine和1个target的配置，至少需要9G内存。
 
 
 &nbsp;
@@ -237,4 +244,4 @@ systemctl enable daos_agent.service
 &nbsp;
 &nbsp;
 # 5. 参考资料
-- [https://docs.daos.io/v2.0/admin/deployment/](https://docs.daos.io/v2.0/admin/deployment/)
+- [https://docs.daos.io/v2.6/admin/deployment/](https://docs.daos.io/v2.6/admin/deployment/)
