@@ -59,7 +59,7 @@ h3, h4, h5 {
 
 /*--------------------引用块配置--------------------- */
 blockquote {
-  background: white;
+  background: rgba(250, 235, 215, 0.4);
   color: var(--maincolor);
   padding: 0.5em;
   margin: 15px 0;
