@@ -200,7 +200,7 @@ img {
 }
 
 .headerMenuSearch .searchOutput {
-  background: #f7f7f7ef;
+  background: rgba(255, 255, 255, 0.9);
   font-size: medium;
   font-weight: normal;
   line-height: 1.5em;
@@ -209,7 +209,7 @@ img {
   width: 100%;
   border-bottom-left-radius: 4px;
   border-bottom-right-radius: 4px;
-  box-shadow: 0 4px 8px rgba(199, 37, 78, 0.1);
+  /* box-shadow: 0 4px 8px rgba(199, 37, 78, 0.1); */
 }
 
 .headerMenuSearch .searchOutput a {
