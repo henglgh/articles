@@ -75,7 +75,7 @@ gpgcheck=0
 ## 2.4. 设置epel源
 ### 2.4.1. 安装epel源
 有些ceph依赖的rpm在almalinux上没有，需要安装epel源。
-```
+```bash
 wget https://dl.fedoraproject.org/pub/epel/8/Everything/x86_64/Packages/e/epel-release-8-20.el8.noarch.rpm
 rpm -i epel-release-8-20.el8.noarch.rpm
 ```
