@@ -1,13 +1,13 @@
 ---
 title: DAOS集群部署-Docker模式
-date: 2025-6-24T13:24:58+0800
+date: 2025-06-24T13:24:58+0800
 description: "本文详细介绍如何在almalinux8.9上使用docker部署DAOS.2.6.0单机集群（基于Metadata-on-SSD架构）。"
 tags: [daos]
 ---
 
 
 # 1. 前言
-本文详细介绍如何在almalinux8.9上部署DAOS.2.6.0单机集群，配置方式采用Metadata-on-SSD模式。系统环境如下：
+本文详细介绍如何在almalinux8.9上使用docker部署DAOS.2.6.0单机集群，配置方式采用Metadata-on-SSD模式。系统环境如下：
 ```bash
 daos:           2.6.0
 linux os:       almalinux 8.9
@@ -123,7 +123,8 @@ RUN dnf clean all &&                                                            
 
 ENTRYPOINT [ "/sbin/init" ]
 ```
-上述`COPY yum.repos.d/* /etc/yum.repos.d/`指令，需要提前将`yum.repos.d`目录拷贝到宿主机`Dockerfile`同级目录下。yum.repos.d目录是提前做好的almalinux daos epel的国内镜像源。
+- 上述`COPY yum.repos.d/* /etc/yum.repos.d/`指令，需要提前将`yum.repos.d`目录拷贝到宿主机`Dockerfile`同级目录下。yum.repos.d目录是提前做好的关于`almalinux、daos、epel`的国内镜像源。
+- `ENTRYPOINT [ "/sbin/init" ]`表示docker运行时默认执行`/sbin/init`命令，必须可少。
 
 
 ## 5.4. 创建docker-compose.yml并添加内容
@@ -147,6 +148,7 @@ services:
       - type: tmpfs
         target: /run
 ```
+- `privileged`授予docker运行时拥有最高权限，否则无法运行systemctl命令。
 
 ## 5.5. 开始构建
 ```bash
@@ -208,8 +210,10 @@ docker load -i daos-base-image-2.6.0.tar
       - type: tmpfs
         target: /run
 ```
-- `image`：指定依赖的镜像名，必须和daos_base中保持一致，目的是不需要重新在制作新的的镜像，因此上面配置也将build移除了。
+- `image`：指定依赖的镜像名，必须和daos_base中保持一致，目的是不需要重新再制作新的的镜像，因此上面配置也将build移除了。
 - `network_mode`：指定容器的网络模式，根据DAOS官网所说，目前只支持host模式，因此这里只能填写`host`。
+- `extra_hosts`：用于配置docker的/etc/hosts文件。docker不支持在容器运行时修改hosts文件，因此必须在启动容器时配置。
+- `volumes`：用于挂载宿主机的目录到容器，任何一个都不能少。尤其是`/lib/modules`，这是spdk运行时需要用到的目录。
 
 ## 6.2. 创建并启动daos_server容器
 ```bash
@@ -226,3 +230,9 @@ CONTAINER ID   IMAGE                      COMMAND        CREATED          STATUS
 &nbsp;
 # 7. 集群部署
 单机集群部署可以参考[DAOS集群部署-单机模式]({{< ref "DAOS集群部署-单机模式.md" >}})。
+
+&nbsp;
+&nbsp;
+# 8. 参考资料
+- [https://docs.daos.io/latest/QSG/docker/](https://docs.daos.io/latest/QSG/docker/)
+- [https://github.com/daos-stack/daos/tree/v2.6.0/utils/docker](https://github.com/daos-stack/daos/tree/v2.6.0/utils/docker)
