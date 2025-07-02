@@ -136,17 +136,17 @@ dnf install daos-server
 ```bash
 mkdir -p /var/log/daos
 chown -R daos_server:daos_server /var/log/daos
-mkdir -p /var/lib/daos/daos_scm
-mkdir -p /var/lib/daos/daos_server
+mkdir -p /var/lib/daos
 chown -R daos_server:daos_server /var/lib/daos
+mkdir -p /var/run/daos_server
+chown -R daos_server:daos_server /var/run/daos_server
+mkdir -p /mnt/daos_scm
 ```
 
 ### 4.2.3. 添加磁盘（可选）
 本文采用使用本地文件模拟nvme的方式，因此需要提前创建好指定大小的文件。实际部署中，nvme设备应该已经准备好，可以忽略这一步。
 ```bash
-mkdir -p /var/lib/daos/dev
-dd if=/dev/zero of=/var/lib/daos/dev/daos-bdev bs=1M count=16384
-chown -R daos_server:daos_server /var/lib/daos/dev
+dd if=/dev/zero of=/var/tmp/daos-bdev bs=1M count=16384
 ```
 
 ### 4.2.4. 网卡设置
@@ -162,8 +162,6 @@ control_log_mask: INFO
 control_log_file: /var/log/daos/daos_server.log
 control_metadata:
   path: /var/lib/daos
-
-socket_dir: /var/lib/daos/daos_server
 
 telemetry_port: 9191
 
@@ -191,11 +189,11 @@ engines:
   storage:
   -
     class: ram
-    scm_mount: /var/lib/daos/daos_scm
+    scm_mount: /mnt/daos_scm
     scm_size: 4
   -
     class: file
-    bdev_list: [/var/lib/daos/dev/daos-bdev]
+    bdev_list: [/var/tmp/daos-bdev]
     bdev_size: 16
     bdev_roles:
       - meta
@@ -259,7 +257,6 @@ port: 10001
 transport_config:
   allow_insecure: true
 
-runtime_dir: /var/run/daos_agent
 log_file: /var/log/daos/daos_agent.log
 
 fabric_ifaces:
@@ -270,7 +267,6 @@ fabric_ifaces:
 ```
 - `name`：必须和server配置一致。
 - `access_points`：必须和server配置一致。
-- `runtime_dir`：截至目前版本为止，不支持自定义目录，必须是`/var/run/daos_agent`。
 
 需要注意`fabric_ifaces`参数，默认情况下，如果不配置，daos_agent会自动检测有效的网卡。如果配置了，如果是verbs provider（InfiniBand），还需要提供interfaces domain，domain可以通过`ibdev2netdev`命令查询，比如：
 ```bash
