@@ -12,7 +12,7 @@ DAOS的日志功能是在DEBUG模块基础之上构建的，覆盖三个领域�
 DEBUG是整个日志管理系统的基础模块，也是通用模块。所以，DEBUG相关的所有定义都是在GURT模块种。DEBUG模块的设计思想：使用`D_FOREACH_GURT_FAC`宏来控制需要调试的组件，使用`D_FOREACH_GURT_DB`宏来控制需要调试的操作流。
 
 D_FOREACH_GURT_FAC的定义如下：
-```C
+```c
 #define D_FOREACH_GURT_FAC(ACTION, arg)                           \
   ACTION(misc, misc, arg)  /* misc debug messages */              \
   ACTION(mem,  mem,  arg)  /* memory debug messages */            \
@@ -21,7 +21,7 @@ D_FOREACH_GURT_FAC的定义如下：
   ACTION(telem, telem, arg)  /* telemetry debug messages */
 ```
 D_FOREACH_GURT_DB的定义如下：
-```C
+```c
 #define D_FOREACH_GURT_DB(ACTION, arg)          \
   /** Set all debug bits */                     \
   ACTION(DB_ALL,   all,   all,   0, arg)        \
@@ -40,13 +40,13 @@ D_FOREACH_GURT_DB的定义如下：
 ```
 
 DEBUG对外提供D_DEBUG接口，以便在整个DAOS中使用，相关定义如下：
-```C
+```c
 #define D_DEBUG(flag, fmt, ...)                 \
   _D_DEBUG(_D_LOG_NOCHECK, flag, fmt, ##__VA_ARGS__)
 ```
 
 除了D_DEBUG接口之外，提供了基于D_DEBUG接口衍生出来的D_INFO、D_WARN、D_ERROR等接口，相关定义如下：
-```C
+```c
 #define D_INFO(fmt, ...)	D_DEBUG(DLOG_INFO, fmt, ## __VA_ARGS__)
 #define D_NOTE(fmt, ...)	D_DEBUG(DLOG_NOTE, fmt, ## __VA_ARGS__)
 #define D_WARN(fmt, ...)	D_DEBUG(DLOG_WARN, fmt, ## __VA_ARGS__)

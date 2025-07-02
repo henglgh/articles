@@ -67,7 +67,7 @@ VOS对象不是显式创建的，而是在第一次写入时，通过创建元�
 
 ## 3.2. 对象列表
 VOS提供了一个通用的迭代器，该迭代器可用于迭代VOS存储池中的容器、对象、DKEY、AKEY、单值和数组扩展数据块。迭代函数的API如下：
-```C
+```c
 /**
  * Iterate VOS entries (i.e., containers, objects, dkeys, etc.) and call \a
  * cb(\a arg) for each entry.
@@ -260,7 +260,7 @@ VOS维护读取和写入时间戳的内存缓存，以强制执行MVCC语义。�
 对于任何叶子节点，low==high。对于任何非叶子节点，low<=high。
 
 相关定义如下：
-```C
+```c
 struct vos_ts_pair {
 	/** Low read time or read time for the object/key */
 	daos_epoch_t	tp_ts_rl;
@@ -305,7 +305,7 @@ MVCC规则确保事务的执行就好像按照各自的epoch顺序序列化执�
 每次读和写都是针对以下4个级别中的一个操作：container、object、dkey和akey。当以自身为根节点，那么针对该节点的访问操作将被视为针对整个子树的访问。即便这引入了一些错误的冲突（例如，list操作与低级的更新操作之间的对比），但该假设简化了规则。
 
 以下是描述在epoch e时执行读操作所遵循的规则：
-```C
+```c
 // 对不确定性的epoch进行检查
 if e 是不确定的
   if 有重叠, 则在(e, e_orig + epsilon]期间终止写操作
@@ -323,7 +323,7 @@ for level i from container to the read's level lv
 更新 lv.low
 ```
 以下是描述在epoch e时执行写操作所遵循的规则：
-```C
+```c
 // 对不确定性的epoch进行检查
 if e 是不确定的
   if 有重叠, 则在(e, e_orig + epsilon]期间终止写操作

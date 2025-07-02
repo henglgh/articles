@@ -28,7 +28,7 @@ I/O Engine提供了一种DAOS module接口，该接口允许按照需求加载�
 - dRPC 句柄
 
 **DAOS module 接口**
-```C
+```c
 struct dss_module {
   /* Name of the module */
   const char    *sm_name;
@@ -41,7 +41,7 @@ struct dss_module {
 ```
 
 **DAOS module 结构定义**
-```C
+```c
 struct dss_module mgmt_module = {
 	.sm_name          = "mgmt",
 	.sm_mod_id        = DAOS_MGMT_MODULE,
@@ -59,7 +59,7 @@ struct dss_module mgmt_module = {
 ```
 
 **DAOS module 加载**
-```C
+```c
 dss_module_load(const char *modname) {
   /* load the dynamic library */
   sprintf(name, "lib%s.so", modname);
@@ -79,7 +79,7 @@ I/O Engine是一个使用Argobots进行非阻塞处理的多线程进程。
 
 默认情况下，系统会为每个target创建1个main xstream，0个offload xstream。offload xstream的数量可以通过daos_engine命令行参数进行配置。此外系统还会创建1个额外的xstream，用来处理元数据请求。每个xstream与1个CPU core绑定。main xstream接收来自客户端和其他servers向target发起的请求。另外，一个特殊的ULT会被启动，用来推进网络和NVMe I/O操作。
 
-```C
+```c
 static int dss_xstreams_init(void) {
   /* start system service XS */
   for (i = 0; i < dss_sys_xs_nr; i++) {
@@ -119,7 +119,7 @@ static int dss_xstreams_init(void) {
 &nbsp;
 # 4. Thread-local Storage（TLS）
 每个xstream会分配私有的存储空间，该存储空间可以通过dss_tls_get函数访问。在每个DAOS module注册时，每个DAOS module都可以指定一个module key以及与该key相关联的一个数据结构，该数据结构将会在TSL中被每个xstream分配。dss_module_key_get函数会获取到该数据结构。
-```C
+```c
 static inline void *
 daos_module_key_get(struct daos_thread_local_storage *dtls, struct daos_module_key *key)
 {
@@ -142,7 +142,7 @@ dRPC server会定期的轮询传入的客户端连接和请求。它可以通过
 
 dRPC server轮询是运行在它自己的User-Level Thread (ULT)中，dRPC socket已经被设置为非阻塞模式，并且轮询的超时时间为0，这使得server可以运行在UTL中而不是它自己的xstream中。这种通道的流量是相对较低的。
 
-```C
+```c
 static void drpc_listener_run(void *arg) {
 	struct drpc_progress_context *ctx;
 

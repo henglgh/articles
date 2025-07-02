@@ -142,7 +142,7 @@ container在pool中代表着一个对象地址空间，每个container都有唯�
 为了访问container，一个应用首先要与pool建立连接，然后再打开container。如果该应用被授权访问container，该应用会获取一个container句柄。该句柄中包含授予该应用中任何一个进程访问当前container和container内容的能力。打开container的进程可以与该进程相关联的其他任何一个进程共享这个container句柄。
 
 container中的object在数据分布和冗余方面可能具有不同的模式。动态或静态条带化、副本或纠删码是定义object模式所需的一些参数。`object class`是定义一组object的共同的模型属性参数。在整个pool中，可能存在多个object class，不同的object class有各自唯一的标识，每一个object class与特性的模式绑定。可以在任何时候，针对可配置的模式，定义新的object class。但是一旦创建，模式就无法修改。为了方便使用，默认情况下，在创建pool的时候，常用的一些object class会被预先定义。(參考`daos_obj_class.h`文件)
-```C
+```c
 // 模式
 enum daos_obj_schema {
   DAOS_OS_SINGLE,		/**< Single stripe object */
@@ -170,7 +170,7 @@ struct daos_oclass_attr {
 ```
 
 通常，在一个container内部有成百上千个object，每一个object都有一个128位的地址标识。其中高32为是被保留给DAOS用于编码内部元数据，比如object class。其余96位由用户管理，并且在container内是唯一性的。
-```C
+```c
 /**
  * ID of an object, 128 bits
  * The high 32-bit of daos_obj_id_t::hi are reserved for DAOS, the rest is
@@ -221,7 +221,7 @@ DAOS快照是非常轻量级的，而且当快照被创建的时候就会被打�
 在初始实现中，事务API不支持读取自己未提交的更改。换句话说，在同一事务上下文中执行的后续操作无法看到事务性object或 key-value的修改。事务API支持所有object类型，并且可以与event和scheduler接口结合使用。
 
 下面是一个事务最典型的流程：
-```C
+```c
 daos_handle_t th = DAOS_TX_NONE;
 int           rc;
 

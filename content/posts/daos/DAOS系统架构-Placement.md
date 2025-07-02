@@ -15,7 +15,7 @@ DAOS使用pool map来创建一系列placement maps，这些maps被用于计算�
 
 
 **pool component types**
-```C
+```c
 typedef enum pool_comp_type {
 	PO_COMP_TP_TARGET = 0,   /** reserved, hard-coded */
 	PO_COMP_TP_RANK   = 1,   /** reserved, hard-coded */
@@ -30,7 +30,7 @@ typedef enum pool_comp_type {
 ```
 
 **pool map**
-```C
+```c
 struct pool_map {
 	/** Current version of pool map */
 	uint32_t		 po_version;
@@ -46,7 +46,7 @@ struct pool_map {
 ```
 
 **pool domain**
-```C
+```c
 struct pool_domain {
 	/** embedded component for myself */
 	struct pool_component	 do_comp;
@@ -79,7 +79,7 @@ placement map本质上是一个抽象的，经过排列过的pool map。它不�
 
 DAOS目前使用包括2种placement map算法：Jump Consistent Hashing algorithm和Ring Consistent Hashing algorithm。
 
-```C
+```c
 /** types of placement maps */
 typedef enum {
 	PL_TYPE_UNKNOWN,
