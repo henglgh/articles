@@ -128,8 +128,6 @@ dnf install daos-server
 
 ### 4.2.2. 初始化目录结构
 ```bash
-mkdir -p /var/log/daos
-chown -R daos_server:daos_server /var/log/daos
 mkdir -p /var/lib/daos
 chown -R daos_server:daos_server /var/lib/daos
 mkdir -p /var/run/daos_server
@@ -154,7 +152,7 @@ access_points: ['node0']
 provider: ofi+tcp;ofi_rxm
 
 control_log_mask: INFO
-control_log_file: /var/log/daos/daos_server.log
+control_log_file: /tmp/daos_server.log
 control_metadata:
   path: /var/lib/daos
 
@@ -162,8 +160,10 @@ telemetry_port: 9191
 
 transport_config:
    allow_insecure: true
-
+# 仅用于测试需要
 disable_vmd: true
+# 仅用于测试需要
+system_ram_reserved: 1
 
 engines:
 -
@@ -173,7 +173,7 @@ engines:
   fabric_iface: enp0s8
   fabric_iface_port: 31416
   log_mask: INFO
-  log_file: /var/log/daos/daos_engine.log
+  log_file: /tmp/daos_engine.log
 
   env_vars:
     - FI_SOCKETS_MAX_CONN_RETRY=1
@@ -214,14 +214,15 @@ engines:
 systemctl start daos_server.service
 systemctl enable daos_server.service
 ```
-测试发现，daos_server.service服务默认是使用daos_server用户运行，在虚拟机上部署的集群总是会启动失败，是因为虚拟机并不支持IOMMU。在这种情况下，可以修改`/usr/lib/systemd/system/daos_server.service`，将用户改成root。
+- 启动daos_server可能会失败，多数情况下是内存不够分配，可以调大内存，测试发现，对于1个engine和1个target的配置，至少需要9G内存。
 
 ### 4.2.7. 存储格式化
 ```bash
 dmg storage format
 ```
 - dmg是daos-admin中的命令行工具，上述命令需要配置daos_control.yml之后才能使用。上述命令执行后，DAOS server将会启动engine进程，并挂载scm。
-- 启动engine可能会失败，大概率是内存不够DAOS分配，测试发现，对于1个engine和1个target的配置，至少需要9G内存。
+- 启动engine可能会失败，可能是CPU数量不够，测试发现，对于1个engine和1个target的配置，至少需要2+2=4的cpus，其中有2个是DAOS预留的，代码写死了。
+- 启动engine时提示初始化SPDK环境失败，是因为daos_server.service默认是使用daos_server用户运行，并且虚拟机并不支持IOMMU功能，在这种情况下，可以修改`/usr/lib/systemd/system/daos_server.service`，将用户改成root。
 
 
 &nbsp;
@@ -233,8 +234,6 @@ dnf install daos-client
 
 ### 4.3.2. 初始化目录结构
 ```bash
-mkdir -p /var/log/daos
-chown -R daos_agent:daos_agent /var/log/daos
 mkdir -p /var/run/daos_agent
 chown -R daos_agent:daos_agent /var/run/daos_agent
 ```
@@ -252,13 +251,13 @@ port: 10001
 transport_config:
   allow_insecure: true
 
-log_file: /var/log/daos/daos_agent.log
+log_file: /tmp/daos_agent.log
 
 fabric_ifaces:
 -
   numa_node: 0
   devices:
-  - iface: enp94s0f1
+  - iface: enp0s8
 ```
 - `name`：必须和server配置一致。
 - `access_points`：必须和server配置一致。
