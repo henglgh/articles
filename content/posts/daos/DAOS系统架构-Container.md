@@ -1,7 +1,7 @@
 ---
 title: DAOS系统架构-Container
 date: 2025-04-23T16:05:00+0800
-description: "本文详细介绍DAOS中Container（容器）设计思想。"
+description: "本文详细介绍DAOS.2.6.0中Container（容器）设计思想。"
 tags: [daos]
 ---
 

@@ -1,7 +1,7 @@
 ---
 title: DAOS系统架构-BIO
 date: 2025-06-04T09:00:00+0800
-description: "本文详细介绍DAOS中BIO（Blob IO）的设计思想"
+description: "本文详细介绍DAOS.2.6.0中BIO（Blob IO）的设计思想"
 tags: [daos]
 ---
 

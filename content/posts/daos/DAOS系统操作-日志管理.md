@@ -1,7 +1,7 @@
 ---
 title: DAOS系统操作-日志管理
 date: 2025-07-01T09:37:39+0800
-description: "本文详细介绍如何开启、关闭以及管理DAOS系统日志。"
+description: "本文详细介绍如何开启、关闭以及管理DAOS.2.6.0系统日志。"
 tags: [daos]
 ---
 

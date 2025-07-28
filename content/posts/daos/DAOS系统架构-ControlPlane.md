@@ -1,7 +1,7 @@
 ---
 title: DAOS系统架构-Control Plane
 date: 2025-06-11T10:25:00+0800
-description: "本文介绍DAOS中Control Plane的模块化设计思想。"
+description: "本文介绍DAOS.2.6.0中Control Plane的模块化设计思想。"
 tags: [daos]
 ---
 

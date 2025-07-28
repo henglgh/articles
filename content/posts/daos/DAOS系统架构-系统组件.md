@@ -1,7 +1,7 @@
 ---
 title: DAOS系统架构-系统组件
 date: 2025-04-03T16:03:00+0800
-description: "本文详细介绍DAOS系统组件。"
+description: "本文详细介绍DAOS.2.6.0系统组件。"
 tags: [daos]
 ---
 
