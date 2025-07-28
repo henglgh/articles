@@ -5,6 +5,8 @@ description: "本文详细介绍DAOS中关于对象的placement map的设计思�
 tags: [daos]
 ---
 
+> daos:           2.6.0
+
 # 1. 概述
 DAOS使用pool map来创建一系列placement maps，这些maps被用于计算对象布局的算法中。该算法是基于一致性哈希算法，使用对象的ID、对象的概要、以及其中一个placement map来生成对象的布局。DAOS使用一种模块化方法，允许不同的对象使用不同的placement map来获得应用程序所需的性能特征。
 

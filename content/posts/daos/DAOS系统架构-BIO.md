@@ -5,6 +5,8 @@ description: "本文详细介绍DAOS中BIO（Blob IO）的设计思想"
 tags: [daos]
 ---
 
+> daos:           2.6.0
+
 # 1. 概述
 BIO模块是专为NVMe固态硬盘的I/O操作而设计的。BIO模块涵盖：NVMe SSD支持、故障设备检测、设备健康状况监控、NVMe SSD热插拔功能，以及基于英特尔VMD设备的SSD身份识别功能。
 

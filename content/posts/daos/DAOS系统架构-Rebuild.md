@@ -5,6 +5,8 @@ description: "本文介绍当target发生故障时，如何进行数据重构。
 tags: [daos]
 ---
 
+> daos:           2.6.0
+
 # 1. 概述
 在DAOS中，如果数据在不同target上进行多副本复制，一旦其中一个target发生故障，其数据将自动的在其他target上进行重建，因此数据冗余不会因为target故障而受到影响。
 
