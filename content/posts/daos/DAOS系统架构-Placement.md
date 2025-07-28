@@ -1,7 +1,7 @@
 ---
 title: DAOS系统架构-Placement
 date: 2025-06-03T16:24:00+0800
-description: "本文详细介绍DAOS中关于对象的placement map的设计思想"
+description: "本文详细介绍DAOS.2.6.0中关于对象的placement map的设计思想"
 tags: [daos]
 ---
 

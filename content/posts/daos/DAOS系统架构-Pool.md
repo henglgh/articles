@@ -1,7 +1,7 @@
 ---
 title: DAOS系统架构-Pool
 date: 2025-04-23T13:34:00+0800
-description: "本文详细介绍DAOS中Pool（存储池）设计思想。"
+description: "本文详细介绍DAOS.2.6.0中Pool（存储池）设计思想。"
 tags: [daos]
 ---
 

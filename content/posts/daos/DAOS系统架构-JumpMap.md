@@ -1,7 +1,7 @@
 ---
 title: DAOS系统架构-JumpMap
 date: 2025-06-10T13:10:00+0800
-description: "本文介绍DAOS中JumpMap算法的实现原理。"
+description: "本文介绍DAOS.2.6.0中JumpMap算法的实现原理。"
 tags: [daos]
 ---
 
