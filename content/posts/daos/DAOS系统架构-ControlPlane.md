@@ -5,6 +5,8 @@ description: "本文介绍DAOS中Control Plane的模块化设计思想。"
 tags: [daos]
 ---
 
+> daos:           2.6.0
+
 # 1. 概述
 `Control Plane`也称为`daos_server`。负责实例化和管理daos_engine。`src/control/server`目录是实现daos_server的内部功能，而`src/control/cmd/daos_server`目录是实现daos_server的应用端功能。
 

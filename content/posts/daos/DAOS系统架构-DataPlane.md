@@ -5,6 +5,8 @@ description: "本文介绍DAOS中数据平面（也称daos_engine）的模块化
 tags: [daos]
 ---
 
+> daos:           2.6.0
+
 # 1. 概述
 `Data Plane`也称为`daos_engine`（即I/O Engine）。daos_engine是一个多线程进程，每个daos_engine都有一组`target xstream set`，主要负责I/O处理。每组中target xstream set的数量由`dss_tgt_nr`指定。每个target xstream set都包含1个`main xstream`和一组`offload xstream`。offload xstream的数量由`dss_tgt_offload_xs_nr`指定。另外每个daos_engine还有1个`system xstream set`，负责系统级别的任务处理（比如元数据请求处理）。
 

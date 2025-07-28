@@ -5,6 +5,8 @@ description: "本文详细介绍DAOS系统组件。"
 tags: [daos]
 ---
 
+> daos:           2.6.0
+
 # 1. 概述
 ![system_architecture](https://raw.githubusercontent.com/henglgh/articles/main/static/images/system_architecture.png)
 

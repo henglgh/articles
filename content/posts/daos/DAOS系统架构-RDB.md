@@ -5,6 +5,8 @@ description: "本文详细介绍DAOS中RDB（Replicated Data Base）的设计思
 tags: [daos]
 ---
 
+> daos:           2.6.0
+
 # 1. 概述
 基于Raft共识算法和强大的领导地位策略，pool service和container service可以通过复制其内部的元数据来实现高可用。通过这种方法实现具有副本能力的服务可以容忍少数副本中的任何一个出现故障。通过将每个服务的副本分布在容灾域中，pool service和container service可以容忍合理数量的targets出现故障。
 
