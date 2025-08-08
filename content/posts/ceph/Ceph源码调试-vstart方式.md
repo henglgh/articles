@@ -1,6 +1,6 @@
 ---
-title: ceph源码调试(vstart方式)
-date: 2024-12-09T14:50:34+0800
+title: Ceph源码调试-vstart方式
+date: 2021-05-09T14:50:34+0800
 description: "本文介绍如何调试使用vstart脚本部署的ceph集群。"
 tags: [ceph]
 ---

@@ -1,6 +1,6 @@
 ---
-title: ceph集群部署(deploy多机模式)
-date: 2024-12-09T14:45:15+0800
+title: Ceph集群部署-deploy多机模式
+date: 2021-05-01T14:45:15+0800
 description: "本文介绍如何使用ceph-deploy工具在ubuntu 18.04系统上部署ceph 14.2.22集群。"
 tags: [ceph]
 ---

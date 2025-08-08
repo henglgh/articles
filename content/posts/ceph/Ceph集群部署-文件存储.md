@@ -1,6 +1,6 @@
 ---
-title: ceph文件存储部署
-date: 2024-12-09T14:47:49+0800
+title: Ceph集群部署-文件存储
+date: 2021-05-03T14:47:49+0800
 description: "本文介绍如何部署ceph文件存储系统，并使用ceph文件存储系统。"
 tags: [ceph]
 ---

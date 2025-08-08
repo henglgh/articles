@@ -1,6 +1,6 @@
 ---
-title: ceph多站点功能
-date: 2024-12-09T14:48:54+0800
+title: Ceph对象存储-多站点
+date: 2021-05-11T14:48:54+0800
 description: "本文详细介绍如何搭建ceph多站点，以及如何使用多站点功能。"
 tags: [ceph]
 ---

@@ -1,6 +1,6 @@
 ---
-title: ceph对象存储部署
-date: 2024-12-09T14:48:19+0800
+title: Ceph集群部署-对象存储
+date: 2021-05-04T14:48:19+0800
 description: "本文介绍如何部署ceph对象存储系统，并使用ceph对象存储系统。"
 tags: [ceph]
 ---
