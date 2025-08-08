@@ -1,6 +1,6 @@
 ---
-title: ceph分层机制中读写流程源码分析
-date: 2024-12-09T14:51:29+0800
+title: Ceph系统架构-CacheTier中的读写
+date: 2021-05-16T14:51:29+0800
 description: "本文从ceph源码角度详细讲ceph cache tier机制中缓存层读写逻辑和实现过程。"
 tags: [ceph]
 ---

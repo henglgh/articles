@@ -1,6 +1,6 @@
 ---
-title: ceph分层机制中flush和evict源码分析
-date: 2024-12-09T14:51:42+0800
+title: Ceph系统架构-CacheTier中flush和evict
+date: 2021-05-15T14:51:42+0800
 description: "本文从ceph源码角度详细讲ceph cache tier机制中对象flush和evict逻辑和实现过程。"
 tags: [ceph]
 ---

@@ -1,6 +1,6 @@
 ---
-title: ceph集群部署(cmd单机模式)
-date: 2024-12-09T14:45:55+0800
+title: Ceph集群部署-cmd单机模式
+date: 2021-05-02T14:45:55+0800
 description: "本文详细介绍如何使用ceph原生命令部署一个完整的ceph集群。"
 tags: [ceph]
 ---

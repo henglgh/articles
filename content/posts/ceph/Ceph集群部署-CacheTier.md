@@ -1,6 +1,6 @@
 ---
-title: ceph分层存储功能
-date: 2024-12-09T14:48:33+0800
+title: Ceph集群部署-CacheTier
+date: 2021-05-06T14:48:33+0800
 description: "本文介绍如何部署ceph分层存储，并使用ceph分层存储功能。"
 tags: [ceph]
 ---
