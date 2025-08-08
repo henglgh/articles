@@ -16,7 +16,7 @@ linux os:       ubuntu 18.04
 &nbsp;
 &nbsp;
 # 2. 源码编译
-如何编译ceph源码，请参考[ceph源码编译]({{< ref "ceph源码编译.md" >}})。本文不再做介绍。
+如何编译ceph源码，请参考[Ceph源码编译]({{< ref "Ceph源码编译.md" >}})。本文不再做介绍。
 
 &nbsp;
 &nbsp;
