@@ -5,7 +5,6 @@ description: "本文详细介绍如何搭建ceph多站点，以及如何使用�
 tags: [ceph]
 ---
 
-
 # 1. 前言
 本文详细介绍如何搭建ceph多站点功能。系统环境如下：
 ```bash
@@ -24,7 +23,7 @@ second 集群        192.168.3.13        node2
 &nbsp;
 &nbsp;
 # 3. Master集群配置
-### 3.1. 创建realm并设置为default
+## 3.1. 创建realm并设置为default
 ```bash
 radosgw-admin realm create --rgw-realm=movies --default
 -----------------------------------------------------------------------------------------------------------------------
@@ -37,7 +36,7 @@ radosgw-admin realm create --rgw-realm=movies --default
 ```
 其中`--rgw-realm`的值为rgw realm的名字，`--default`表示将movies设置为多站点中默认的rgw realm，该命令将会创建名为movies的rgw realm，并将movies设置为默认的rgw realm。
 
-### 3.2. 创建master zonegroup并设置为default
+## 3.2. 创建master zonegroup并设置为default
 `radosgw-admin zonegroup create --rgw-realm={realm name} --rgw-zonegroup={zonegroup name} --endpoints={url} --master --default`
 ```bash
 radosgw-admin zonegroup create --rgw-realm=movies --rgw-zonegroup=us --endpoints=http://192.168.3.12:7480 --master --default
@@ -60,7 +59,7 @@ radosgw-admin zonegroup create --rgw-realm=movies --rgw-zonegroup=us --endpoints
 }
 ```
 
-### 3.3. 创建master zone并设置为default
+## 3.3. 创建master zone并设置为default
 `radosgw-admin zone create --rgw-zonegroup={zonegroup name} --rgw-zone={zone name} --endpoints={url} --master --default`
 ```bash
 radosgw-admin zone create --rgw-zonegroup=us --rgw-zone=us-east --endpoints=http://192.168.3.12:7480 --master --default
@@ -105,7 +104,7 @@ radosgw-admin zone create --rgw-zonegroup=us --rgw-zone=us-east --endpoints=http
 }
 ```
 
-### 3.4. 创建system用户
+## 3.4. 创建system用户
 `radosgw-admin user create --uid={user name} --display-name={user name} --system`
 ```bash
 radosgw-admin user create --uid="muti-site" --display-name="muti-site" --system
@@ -152,7 +151,7 @@ radosgw-admin user create --uid="muti-site" --display-name="muti-site" --system
 ```
 access_key和secret_key在后续创建zone以及拉去realm配置信息时需要。
 
-### 3.5. 更新master zone的access-key和secret-key
+## 3.5. 更新master zone的access-key和secret-key
 `radosgw-admin zone modify --rgw-zone={zone name} --access-key={key} --secret-key={key}`
 ```bash
 radosgw-admin zone modify --rgw-zone=us-east --access-key=RR1SZ9BPSGXBQQ78ZHLF --secret-key=HbuDM9yJPrJvpg9mKuARHNpPhadcNLafZ3WqbUo1
@@ -197,7 +196,7 @@ radosgw-admin zone modify --rgw-zone=us-east --access-key=RR1SZ9BPSGXBQQ78ZHLF -
 }
 ```
 
-### 3.6. 更新并提交period
+## 3.6. 更新并提交period
 `radosgw-admin period update --commit`
 ```bash
 radosgw-admin period update --commit
@@ -283,7 +282,7 @@ radosgw-admin period update --commit
 ```
 对于zone、zonegroup的任何修改，只有commit period才会生效，commit period过程中会将当前period时期的所有配置修改信息发送给多站点中的其他rgw实例，其他rgw实例收到后会更新本地配置信息。
 
-### 3.7. 更新rgw实例配置并与master zone绑定
+## 3.7. 更新rgw实例配置并与master zone绑定
 ```bash
 [client.rgw.node1]
 host = node1
@@ -291,7 +290,7 @@ rgw frontends = "civetweb port=192.168.3.12:7480"
 rgw_zone=us-east
 ```
 
-### 3.8. 重启rgw服务
+## 3.8. 重启rgw服务
 ```bash
 systemctl restart ceph-radosgw@rgw.node1.service
 ```
@@ -299,7 +298,7 @@ systemctl restart ceph-radosgw@rgw.node1.service
 &nbsp;
 &nbsp;
 # 4. Second集群配置
-### 4.1. 拉取master zonegroup所属的realm配置信息
+## 4.1. 拉取master zonegroup所属的realm配置信息
 `radosgw-admin realm pull --url={current master url} --access-key={key} --secret-key={key}`
 ```bash
 radosgw-admin realm pull --url=http://192.168.3.12:7480 --access-key=RR1SZ9BPSGXBQQ78ZHLF --secret-key=HbuDM9yJPrJvpg9mKuARHNpPhadcNLafZ3WqbUo1
@@ -320,7 +319,7 @@ If the realm has been changed on the master zone, the master zone's gateway may 
 ```
 通过查看日志后，目前发现有2个原因会导致这种问题：master zone的access-key和secret-key为空值，另外一个是时间不同步。其中最坑人就是key值的缺失。在创建system用户时，一定要等master zone创建完成之后再创建，这个顺序不能乱，如果在还没有创建master zone之前就创建system用户，等执行到提交period，之前创建的system用户竟然被删除了。
 
-### 4.2. 创建second zone并与master zonegroup绑定
+## 4.2. 创建second zone并与master zonegroup绑定
 `radosgw-admin zone create --rgw-zonegroup={master zonegroup name} --rgw-zone={name} --endpoints={url} --access-key={key} --secret-key={key}`
 ```bash
 radosgw-admin zone create --rgw-zonegroup=us --rgw-zone=us-west --endpoints=http://192.168.3.13:7480 --access-key=RR1SZ9BPSGXBQQ78ZHLF --secret-key=HbuDM9yJPrJvpg9mKuARHNpPhadcNLafZ3WqbUo1
@@ -367,7 +366,7 @@ radosgw-admin zone create --rgw-zonegroup=us --rgw-zone=us-west --endpoints=http
 }
 ```
 
-### 4.3. 更新并提交period
+## 4.3. 更新并提交period
 `radosgw-admin period update --commit`
 ```bash
 radosgw-admin period update --commit
@@ -474,7 +473,7 @@ Sending period to new master zone b711f710-37c1-4532-984b-5073c052be28
 ```
 从上面输出信息可以看到us-west和us-east都是归属于us，并且us-east是master zone。
 
-### 4.4. 更新rgw实例配置并与second zone绑定
+## 4.4. 更新rgw实例配置并与second zone绑定
 ```bash
 [client.rgw.node2]
 host = node2
@@ -482,12 +481,12 @@ rgw frontends = "civetweb port=192.168.3.13:7480"
 rgw_zone=us-west
 ```
 
-### 4.5. 重启rgw服务
+## 4.5. 重启rgw服务
 ```bash
 systemctl restart ceph-radosgw@rgw.node2.service
 ```
 
-### 4.6. 查看同步状态
+## 4.6. 查看同步状态
 `radosgw-admin sync status`
 ```bash
 radosgw-admin sync status
@@ -511,7 +510,7 @@ radosgw-admin sync status
 # 5. 灾难恢复
 当由于某些原因导致master出现故障，导致无法写入数据，此时可以将second zone升级为master zone。当多站点中存在新的master zone后，如果出现故障的master恢复了，此时恢复后的master已经不再担任master角色，而是second角色，同时数据同步功能恢复正常。
 
-### 5.1. 将second zone提升为master zone
+## 5.1. 将second zone提升为master zone
 `radosgw-admin zone modify --rgw-zone={zone name} --master --default`
 ```bash
 radosgw-admin zone modify --rgw-zone=us-west --master --default
@@ -559,7 +558,7 @@ radosgw-admin zone modify --rgw-zone=us-west --master --default
 }
 ```
 
-### 5.2. 更新并提交period
+## 5.2. 更新并提交period
 `radosgw-admin period update --commit`
 ```bash
 radosgw-admin period update --commit
@@ -663,13 +662,13 @@ radosgw-admin period update --commit
 }
 ```
 
-### 5.3. 重启rgw服务
+## 5.3. 重启rgw服务
 ```bash
 systemctl restart ceph-radosgw@rgw.node2.service
 ```
 如果想让出现故障的master zone在恢复正常后依然执行master角色，如果多站点中已经存在master，此时只能通过手动修改zone的配置。如果多站点中不存在master，此时恢复正常的master zone自动成为master角色，以下是假设多站点中已经存在master的相关处理。
 
-### 5.4. 拉取master zonegroup所属的realm配置信息
+## 5.4. 拉取master zonegroup所属的realm配置信息
 `radosgw-admin realm pull --url={current master url} --access-key={key} --secret-key={key}`
 ```bash
 radosgw-admin realm pull --url=http://192.168.3.13:7480 --access-key=RR1SZ9BPSGXBQQ78ZHLF --secret-key=HbuDM9yJPrJvpg9mKuARHNpPhadcNLafZ3WqbUo1
@@ -682,7 +681,7 @@ radosgw-admin realm pull --url=http://192.168.3.13:7480 --access-key=RR1SZ9BPSGX
 }
 ```
 
-### 5.5. 恢复旧的master zone
+## 5.5. 恢复旧的master zone
 `radosgw-admin zone modify --rgw-zone={zone name} --master --default`
 ```bash
 radosgw-admin zone modify --rgw-zone=us-east --master --default
@@ -730,7 +729,7 @@ radosgw-admin zone modify --rgw-zone=us-east --master --default
 }
 ```
 
-### 5.6. 更新并提交period
+## 5.6. 更新并提交period
 `radosgw-admin period update --commit`
 ```bash
 radosgw-admin period update --commit
@@ -834,7 +833,7 @@ radosgw-admin period update --commit
 }
 ```
 
-### 5.7. 重启rgw服务
+## 5.7. 重启rgw服务
 ```bash
 systemctl restart ceph-radosgw@rgw.node1.service
 ```

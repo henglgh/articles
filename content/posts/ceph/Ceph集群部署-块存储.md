@@ -5,7 +5,6 @@ description: "本文详细介绍如何部署ceph块存储系统，以及如何�
 tags: [ceph]
 ---
 
-
 # 1. 前言
 本文详细介绍如何部署ceph块存储系统，以及如何使用ceph块存储系统。系统环境如下：
 ```bash
@@ -30,21 +29,21 @@ ceph-delpoy     192.168.3.10      node0
 &nbsp;
 &nbsp;
 # 3. 块存储部署
-### 3.1. 创建数据池
+## 3.1. 创建数据池
 在集群节点（node1）上执行以下命令：
 ```bash
 ceph osd pool create rbd_pool 1 1
 ```
 其中`rbd_pool`是数据池的名字，`1 1`分别是pg和pgp的数量，因为是测试集群，所以都设置为1。
 
-### 3.2. 创建块设备镜像
+## 3.2. 创建块设备镜像
 在集群节点（node1）上执行以下命令：
 ```bash
 rbd create --pool rbd_pool --image image1 --size 1024 --image-format 2 --image-feature layering
 ```
 其中`rbd_pool`是数据池的名字，`image1`是镜像的名字，`1024`是镜像的大小，其他参数不变即可。
 
-### 3.3. 查看创建的块设备镜像
+## 3.3. 查看创建的块设备镜像
 在集群节点（node1）上执行以下命令：
 ```bash
 rbd ls rbd_pool
@@ -53,7 +52,7 @@ image1
 ```
 上述命令中`rbd_pool`是数据池的名字。
 
-### 3.4. 查看块设备镜像详细信息
+## 3.4. 查看块设备镜像详细信息
 在集群节点（node1）上执行以下命令：
 ```bash
 rbd info --pool rbd_pool --image image1
@@ -77,14 +76,14 @@ rbd image 'image1':
 &nbsp;
 &nbsp;
 # 4. 块存储使用
-### 4.1. 映射块设备镜像到系统块设备
+## 4.1. 映射块设备镜像到系统块设备
 在集群节点（node1）上执行以下命令：
 ```bash
 rbd map --pool rbd_pool --image image1
 ```
 其中`rbd_pool`是数据池的名字`image1`是rbd_pool数据池中存在的镜像的名字。
 
-### 4.2. 查看所有镜像映射结果
+## 4.2. 查看所有镜像映射结果
 在集群节点（node1）上执行以下命令：
 ```bash
 rbd showmapped
@@ -94,21 +93,21 @@ id     pool        namespace     image      snap     device
 ```
 从结果显示rbd_pool数据池中的镜像image1已经被映射到成linux系统的一个块设备，块设备名字为`rbd0`。
 
-### 4.3. 格式化块设备
+## 4.3. 格式化块设备
 在集群节点（node1）上执行以下命令：
 ```bash
 mkfs.ext4 -m0 /dev/rbd0
 ```
 其中`/dev/rbd0`为映射出的块设备路径。
 
-### 4.4. 挂载块设备
+## 4.4. 挂载块设备
 在集群节点（node1）上执行以下命令：
 ```bash
 mount /dev/rbd0 /mnt/rbd
 ```
 其中`/dev/rbd0`是映射出的块设备路径，`/mnt/rbd`是挂载路径。
 
-### 4.5. 查看挂载结果
+## 4.5. 查看挂载结果
 在集群节点（node1）上执行以下命令：
 ```bash
 df -h
@@ -128,13 +127,13 @@ tmpfs                      395M     0  395M   0% /run/user/0
 /dev/rbd0                  976M  1.3M  959M   1% /mnt/rbd
 ```
 
-### 4.6. 添加文件到挂载路径
+## 4.6. 添加文件到挂载路径
 在集群节点（node1）上执行以下命令：
 ```bash
 cp test /mnt/rbd
 ```
 
-### 4.7. 查看集群I/O读写状态
+## 4.7. 查看集群I/O读写状态
 在集群节点（node1）上执行以下命令：
 ```bash
 ceph -s
@@ -159,7 +158,7 @@ ceph -s
     client:   3.0 KiB/s wr, 0 op/s rd, 0 op/s wr
 ```
 
-### 4.8. 查看数据池使用状况
+## 4.8. 查看数据池使用状况
 在集群节点（node1）上执行以下命令：
 ```bash
 ceph df
@@ -174,7 +173,7 @@ POOLS:
     rbd_pool             1       1      32 MiB          19      99 MiB      0.38       8.5 GiB
 ```
 
-### 4.9. 查看数据池存储中的对象
+## 4.9. 查看数据池存储中的对象
 在集群节点（node1）上执行以下命令：
 ```bash
 rados -p rbd_ pool ls

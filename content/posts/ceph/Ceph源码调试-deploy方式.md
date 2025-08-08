@@ -5,7 +5,6 @@ description: "本文介绍如何调试使用ceph-deploy部署的ceph集群。"
 tags: [ceph]
 ---
 
-
 # 1. 前言
 本文介绍如何调试使用ceph-deploy部署的ceph集群。系统环境如下：
 ```bash
@@ -21,18 +20,16 @@ ceph-deploy默认使用官方发布的ceph安装包来搭建集群，如果想�
 
 &nbsp;
 &nbsp;
-
 # 3. 部署
 集群部署既可以采用离线部署也可以采用在线部署方式。为了加快部署进程，本文采用在线部署方式，详细部署可以参考[Ceph集群部署-deploy多机模式]({{< ref "Ceph集群部署-deploy多机模式.md" >}})。另外，本文需要调试文件系统方面的功能，因此需要搭建好文件系统，详细部署可以参考[Ceph集群部署-文件存储]({{< ref "Ceph集群部署-文件存储.md" >}})。
-
 
 &nbsp;
 &nbsp;
 # 4. 调试
-### 4.1. 替换二进制文件和动态库文件
+## 4.1. 替换二进制文件和动态库文件
 默认情况下，官方发布版本是不可以调试，需要使用build/bin和/build/lib编译出来的关于mds的文件替系统默认安装的。系统默认把ceph相关的二进制文件安装到/usr/bin，把ceph依赖的动态库安装到/usr/lib中。本文需要调试文件系统mds管理元数据功能，只需要替换ceph-mds二进制文件。
 
-### 4.2. 查看mds进程号
+## 4.2. 查看mds进程号
 ```bash
 ps -e| grep ceph-mds
 -----------------------------------------------------------------------------------------------------------------------
@@ -40,8 +37,8 @@ ps -e| grep ceph-mds
 ```
 从结果可以看到mds进程号为 `15201`。
 
-### 4.3. GDB调试
-**进入gdb模式**
+## 4.3. GDB调试
+### 4.3.1. 进入gdb模式
 gdb调试需要以管理员权限，本文默认是root用户，所以直接输入gdb即可进入gdb模式。
 ```bash
 gdb
@@ -63,7 +60,7 @@ Type "apropos word" to search for commands related to "word".
 (gdb)
 ```
 
-**attach mds进程**
+### 4.3.2. attach mds进程
 ```bash
 (gdb) attach 15201
 -----------------------------------------------------------------------------------------------------------------------
@@ -97,7 +94,7 @@ pthread_cond_wait@aGLIBC_2.3.2 () at ../sysdeps/unix/sysv/linux/x86_64/pthread_c
 (gdb)
 ```
 
-**设置断点**
+### 4.3.3. 设置断点
 因为需要调试新建目录时，mds对元数据的管理，因此断点设置在Server::handle_client_mkdir起始处。
 ```bash
 (gdb) b Server.cc:5913
@@ -110,7 +107,7 @@ Breakpoint 1 at 0x56086dc98df6: file /work/ceph-14.2.22/src/mds/Server.cc, line 
 Continuing.
 ```
 
-**测试**
+### 4.3.4. 测试
 在挂载出来的文件系统目录下，新建一个目录，代码会跳到之前设置的断点处。
 ```bash
 Thread 9 "ms_dispatch" hit Breakpoint 1, Server::handle_client_mkdir (this=0x560870f16dc0, mdr=...)

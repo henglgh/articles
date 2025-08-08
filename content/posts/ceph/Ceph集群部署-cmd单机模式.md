@@ -5,7 +5,6 @@ description: "本文详细介绍如何使用ceph原生命令部署一个完整�
 tags: [ceph]
 ---
 
-
 # 1. 前言
 本文详细介绍如何使用ceph原生命令部署一个完整的ceph集群。系统环境如下：
 ```bash
@@ -36,7 +35,6 @@ osd.1           192.168.3.12      quincy
 osd.2           192.168.3.12      quincy
 ```
 
-&nbsp;
 ## 2.2. 更换almalinux yum源
 ```bash
 sed -e 's|^mirrorlist=|#mirrorlist=|g' \
@@ -45,7 +43,6 @@ sed -e 's|^mirrorlist=|#mirrorlist=|g' \
        -i.bak /etc/yum.repos.d/almalinux*.repo
 ```
 
-&nbsp;
 ## 2.3. 设置ceph yum源
 ```bash
 [ceph]
@@ -71,7 +68,6 @@ gpgcheck=0
 ```
 默认情况下gpgcheck=1，表示安装rpm包时要进行签名验证，需要安装ceph签名。这里问了省事，直接关闭gpgcheck。
 
-&nbsp;
 ## 2.4. 设置epel源
 ### 2.4.1. 安装epel源
 有些ceph依赖的rpm在almalinux上没有，需要安装epel源。
@@ -93,13 +89,11 @@ priority=3
 countme=1
 ```
 
-&nbsp;
 ## 2.5. 更新
 ```bash
 dnf makecache
 ```
 
-&nbsp;
 ## 2.6. 安装依赖
 ```bash
 dnf install gperftools-libs liboath python3-asyncssh \
@@ -111,7 +105,6 @@ dnf install gperftools-libs liboath python3-asyncssh \
 	python3-influxdb python3-saml
 ```
 
-&nbsp;
 ## 2.7. 安装ceph
 ```bash
 dnf install ceph ceph-mon ceph-mgr ceph-osd ceph-mds radosgw
@@ -223,7 +216,6 @@ systemctl enable ceph-mon@c.service
 ```
 至此，如果mon正常启动，`ceph -s`命令可以正常执行并有结果输出。如果`ceph -s`命令没有输出结果或者卡住了，一定是部署失败了。可以在ceph.conf文件中`global`配置项添加`debug ms = 1`打开客户端调试功能查看问题。
 
-&nbsp;
 ## 3.2. 创建mgr
 ### 3.2.1. 创建mgr data
 ```bash
@@ -297,7 +289,6 @@ systemctl start ceph-mgr@c.service
 systemctl enable ceph-mgr@c.service
 ```
 
-&nbsp;
 ## 3.3. 创建osd
 ### 3.3.1. 创建osd data
 ```bash
@@ -494,7 +485,6 @@ systemctl enable ceph-osd@2.service
 ```
 上述使用`systemctl start ceph-osd@0.service`方式启动osd服务时会失败，原因是`/usr/lib/systemd/system/ceph-osd@.service`文件会先执行`/usr/lib/ceph/ceph-osd-prestart.sh`脚本，在这个脚本中需要将`data="/var/lib/ceph/osd/${cluster:-ceph}-$id"`修改成实际osd目录`data="/var/lib/ceph/osd/osd.$id"`。
 
-&nbsp;
 ## 3.4. 创建mds
 ### 3.4.1. 创建mds data
 ```bash
@@ -561,7 +551,6 @@ systemctl enable ceph-mds@a.service
 ```
 默认情况下使用`ceph -s`命令无法显示出mds服务，需要创建fs才能用`ceph -s`显示出来。
 
-&nbsp;
 ## 3.5. 创建rgw
 ### 3.5.1. 创建rgw data
 ```bash
