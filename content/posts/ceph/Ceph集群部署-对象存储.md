@@ -12,7 +12,7 @@ tags: [ceph]
 ceph:           14.2.22
 linux os:       ubuntu 18.04
 ```
-本文默认已经提前部署ceph集群，如果没有部署，请参考[ceph集群部署deploy多机模式]({{< ref "ceph集群部署deploy多机模式.md" >}})。
+本文默认已经提前部署ceph集群，如果没有部署，请参考[Ceph集群部署-deploy多机模式]({{< ref "Ceph集群部署-deploy多机模式.md" >}})。
 
 &nbsp;
 &nbsp;
