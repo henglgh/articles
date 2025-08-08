@@ -12,6 +12,15 @@
   </article>
   <aside class="singleRightSide">
     {{ .TableOfContents }}
+    {{ if .Params.tags }}
+      <nav class="tags">
+        <ul>
+          {{ range .Params.tags }}
+          <li><a href="{{ "tags/"| absURL }}{{ . | urlize }}">{{ . }}</a></li>
+          {{ end }}
+        </ul>
+      </nav>
+    {{ end }}
   </aside>
 </main>
 {{ end }}

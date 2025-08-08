@@ -106,5 +106,8 @@ pre {
 
 .singleRightSide {
   color: #abb2bf;
+}
+
+#TableOfContents {
   scrollbar-color: #abb2bf #202124;
 }

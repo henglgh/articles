@@ -399,19 +399,30 @@ img {
 .singleRightSide {
   width: 30%;
   color: #232333;
-  max-height: 85%;
-  overflow-y: auto;
-  scrollbar-width: thin;
-  scrollbar-color: #666 #ffffff;
-
   position: sticky;
   top: 0em;
   align-self: flex-start;
 }
 
+#TableOfContents {
+  max-height: 80vh;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #666 #ffffff;
+}
+
+.singleRightSide .tags ul{
+  display: flex;
+  gap: 20px;
+}
+
 .singleRightSide li {
   font-size: small;
   line-height: normal;
+}
+
+.singleRightSide .tags li::before{
+  content: "🏷️";
 }
 
 .singleArticle a {
