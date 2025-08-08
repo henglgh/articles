@@ -1,10 +1,9 @@
 ---
-title: lustre源码编译(ldiskfs模式)
+title: Lustre源码编译-基于ldiskfs
 date: 2024-12-09T16:27:15+0800
 description: "本文详细介绍如何编译后端存储类型为ldiskfs的lustre源码，并制作离线rpm安装包。"
 tags: [lustre]
 ---
-
 
 # 1. 前言
 本文详细介绍如何编译后端存储类型为ldiskfs的lustre源码，并制作离线rpm安装包。系统环境如下：
@@ -41,14 +40,14 @@ dnf makecache
 # 3. 编译kernel
 ## 3.1. 安装依赖
 ### 3.1.1. 安装内核相关包
-**查看内核版本**
+#### 3.1.1.1. 查看内核版本
 ```bash
 uname -r
 --------
 4.18.0-513.5.1.el8_9.x86_64
 ```
 
-**安装内核**
+#### 3.1.1.2. 安装内核
 ```bash
 dnf install kernel-headers-4.18.0-513.5.1.el8_9.x86_64 \
     kernel-devel-4.18.0-513.5.1.el8_9.x86_64 \
@@ -68,7 +67,6 @@ dnf install asciidoc audit-libs-devel binutils-devel \
     python3-docutils xmlto xz-devel zlib-devel
 ```
 
-&nbsp;
 ## 3.2. 构建编译环境
 ### 3.2.1. 获取内核源码
 ```bash
@@ -78,26 +76,26 @@ rpm -ivh kernel-4.18.0-513.5.1.el8_9.src.rpm
 `rpm -i`命令会将src.rpm包解压到`/root/rpmbuild`目录下。
 
 ### 3.2.2. 修改/root/kernel/rpmbuild/SPECS/kernel.spec
-**找到带有`find $RPM_BUILD_ROOT/lib/modules/$KernelVer`的行，在其下面插入以下两行内容**
+找到带有`find $RPM_BUILD_ROOT/lib/modules/$KernelVer`的行，在其下面插入以下两行内容
 ```bash
 cp -a fs/ext4/* $RPM_BUILD_ROOT/lib/modules/$KernelVer/build/fs/ext4
 rm -f $RPM_BUILD_ROOT/lib/modules/$KernelVer/build/fs/ext4/ext4-inode-test*
 ```
 
-**找到带有`empty final patch to facilitate testing of kernel patches`的行，在其下面插入以下两行内容**
+找到带有`empty final patch to facilitate testing of kernel patches`的行，在其下面插入以下两行内容
 ```bash
 # adds Lustre patches
 Patch99995: patch-4.18.0-lustre.patch
 ```
 
-**找到带有`ApplyOptionalPatch linux-kernel-test.patch`的行，在其下面插入以下两行内容**
+找到带有`ApplyOptionalPatch linux-kernel-test.patch`的行，在其下面插入以下两行内容
 ```bash
 # lustre patch
 ApplyOptionalPatch patch-4.18.0-lustre.patch
 ```
 
 ### 3.2.3. 打内核补丁
-**从lustre源码中生成内核源码补丁**
+从lustre源码中生成内核源码补丁
 ```bash
 cd /root/lustre-2.15.4/lustre/kernel_patches/series
 
@@ -116,13 +114,14 @@ rpmbuild -bp --with firmware --with baseonly --without kabichk \
 如果需要修改kernel rpm包名字，比如将`kernel-4.18.0-305.3.1.el8`修改成`kernel-4.18.0-513.5.1.el8_9`，需要添加参数`--define "buildid _9"`。
 
 ### 3.2.5. 修改/root/rpmbuild/BUILD/kernel-4.18.0-513.5.1.el8_9/linux-4.18.0-513.5.1.el8_9.x86_64/configs/kernel-4.18.0-x86_64.config
-**找到带有`# IO Schedulers`的行，在其下面插入以下内容**
+
+找到带有`# IO Schedulers`的行，在其下面插入以下内容
 ```bash
 CONFIG_IOSCHED_DEADLINE=y
 CONFIG_DEFAULT_IOSCHED="deadline"
 ```
 
-**将config文件覆盖lustre kernel config文件**
+将config文件覆盖lustre kernel config文件
 ```bash
 cp /root/lustre-2.15.4/lustre/kernel_patches/kernel_configs/kernel-4.18.0-4.18-rhel8.9-x86_64.config \
     /root/lustre-2.15.4/lustre/kernel_patches/kernel_configs/kernel-4.18.0-4.18-rhel8.9-x86_64.config.org
@@ -131,7 +130,6 @@ cp /root/rpmbuild/BUILD/kernel-4.18.0-513.5.1.el8_9/linux-4.18.0-513.5.1.el8_9.x
     /root/lustre-2.15.4/lustre/kernel_patches/kernel_configs/kernel-4.18.0-4.18-rhel8.9-x86_64.config
 ```
 
-&nbsp;
 ## 3.3. 编译
 ### 3.3.1. 构建kernel rpms
 ```bash
@@ -170,14 +168,14 @@ dnf install asciidoc audit binutils clang dwarves java-devel kabi-dw \
 ### 4.1.3. 安装第三方IB驱动（可选）
 如果要开启lustre的RDMA功能，系统需要有IB网卡设备驱动程序相关的devel包。一般情况下，系统内核提供了IB网卡驱动程序，需要自己安装devel包。如果不安装，lustre默认会关闭RDMA功能。然而，实际生产上都需要安装和IB网卡匹配的第三方驱动。大多数情况下都是安装英伟达的IB网卡驱动。
 
-**下载IB网卡驱动**
+#### 4.1.3.1. 下载IB网卡驱动
 ```bash
 https://network.nvidia.com/products/infiniband-drivers/linux/mlnx_ofed
 ```
 - 建议下载后缀`.tgz`的压缩包，方便解压。
 - 下载之前到对应的驱动版本的`Release Notes`查看支持的网卡类型和内核版本。
 
-**解压并安装驱动**
+#### 4.1.3.2. 解压并安装驱动
 ```bash
 tar -zxvf MLNX_OFED_LINUX-5.8-5.1.1.2-rhel8.9-x86_64.tgz
 cd MLNX_OFED_LINUX-5.8-5.1.1.2-rhel8.9-x86_64
@@ -189,12 +187,12 @@ cd MLNX_OFED_LINUX-5.8-5.1.1.2-rhel8.9-x86_64
 e2fsprogs是lustre高度定制的，必须要从[https://downloads.whamcloud.com/public/e2fsprogs]()
 上下载。每个lustre发行版本日志中都有说明依赖哪个版本的e2fsprogs。
 
-**查看lustre依赖的e2fsprogs版本**
+####  4.1.4.1. 查看lustre依赖的e2fsprogs版本
 ```bash
 vim /root/lustre-2.15.4/lustre/ChangeLog
 ```
 
-**下载e2fsprogs**
+#### 4.1.4.2. 下载e2fsprogs
 ```bash
 e2fsprogs_url="https://downloads.whamcloud.com/public/e2fsprogs/1.47.0.wc5/el8/RPMS/x86_64"
 wget $e2fsprogs_url/e2fsprogs-1.47.0.wc5-1.el8.x86_64.rpm
@@ -206,12 +204,11 @@ wget $e2fsprogs_url/libcom_err-1.47.0-wc5.el8.x86_64
 wget $e2fsprogs_url/libcom_err-devel-1.47.0-wc5.el8.x86_64
 ```
 
-**安装e2fsprogs**
+#### 4.1.4.3. 安装e2fsprogs
 ```bash
 rpm --upgrade --reinstall --install -vh e2fsprogs/*.rpm
 ```
 
-&nbsp;
 ## 4.2. 构建server rpms
 ### 4.2.1. 配置server
 ```bash
@@ -225,7 +222,6 @@ rpm --upgrade --reinstall --install -vh e2fsprogs/*.rpm
 make rpms -j4
 ```
 
-&nbsp;
 ## 4.3. 构建client rpms
 构建client rpm包不需要修改内核源码，因此不需重新构建kernel rpm包，系统自带的原生的kernel rpm包即可。
 

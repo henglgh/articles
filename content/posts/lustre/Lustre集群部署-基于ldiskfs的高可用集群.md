@@ -1,10 +1,9 @@
 ---
-title: lustre集群部署(ldiskfs高可用模式)
+title: Lustre集群部署-基于ldiskfs的高可用集群
 date: 2024-12-09T16:27:20+0800
 description: "本文详细介绍如何在almalinux8.9上部署基于ldiskfs的lustre高可用集群。"
 tags: [lustre]
 ---
-
 
 # 1. 前言
 本文详细介绍如何在almalinux8.9上部署基于ldiskfs的lustre高可用集群。系统环境如下：
@@ -23,17 +22,19 @@ mgt         192.168.3.11 192.168.3.12
 mdt0        192.168.3.11 192.168.3.12
 ost0        192.168.3.11 192.168.3.12
 client      192.168.3.13
+pacemaker   192.168.3.11 192.168.3.12
+corosync    192.168.3.11 192.168.3.12
 ```
 
 &nbsp;
 &nbsp;
 # 3. lustre集群部署
-lustre容灾集群详细部署文档可以参照[lustre集群部署ldiskfs多机模式]({{< ref "lustre集群部署ldiskfs多机模式.md" >}})，本文将不再介绍。
+lustre容灾集群详细部署文档可以参照[Lustre集群部署-基于ldiskfs的多机集群]({{< ref "Lustre集群部署-基于ldiskfs的多机集群.md" >}})，本文将不再介绍。
 
 &nbsp;
 &nbsp;
 # 4. pacemaker集群部署
-pacemaker集群部署文档可以参照[pacemaker集群部署]({{< ref "pacemaker集群部署.md" >}})，本文将不再介绍。
+Lustre本身没有自动容灾机制，需要借助第三方集群管理工具pacemaker来实现高可用。pacemaker集群部署文档可以参照[pacemaker集群部署]({{< ref "pacemaker集群部署.md" >}})，本文将不再介绍。
 
 &nbsp;
 &nbsp;
@@ -66,7 +67,6 @@ pcs resource create \
     mountpoint="/lustre/ost/ost0"
 ```
 
-&nbsp;
 ## 5.2. 配置resourse规则
 ### 5.2.1. 添加location规则
 ```bash
@@ -101,7 +101,6 @@ pcs constraint order \
 
 该规则是将多组ordering set组合成一个ordering，set之间成为了相互依赖关系。如果想要将set独立，只要单独执行`pcs constraint order set`即可。
 
-&nbsp;
 ## 5.3. 配置fence
 当pacemaker无法停掉某个服务时，可以通过fence强制将该服务所在的机器关机，然后将该服务在其他机器上再次启动。
 

@@ -5,7 +5,6 @@ description: "本文详细介绍如何在almalinux8.9上部署pacemaker集群。
 tags: [lustre]
 ---
 
-
 # 1. 前言
 本文详细介绍如何在almalinux8.9上部署pacemaker集群。系统环境如下：
 ```bash
