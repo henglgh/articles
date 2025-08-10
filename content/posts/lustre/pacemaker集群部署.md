@@ -1,6 +1,6 @@
 ---
 title: pacemaker集群部署
-date: 2021-07-02T16:27:19+0800
+date: 2021-07-01T09:27:19+0800
 description: "本文详细介绍如何在almalinux8.9上联网部署pacemaker集群。"
 tags: [lustre]
 ---

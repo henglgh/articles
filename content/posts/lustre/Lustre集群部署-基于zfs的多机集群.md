@@ -1,6 +1,6 @@
 ---
 title: Lustre集群部署-基于zfs的多机集群
-date: 2021-07-01T10:27:16+0800
+date: 2021-07-01T16:27:17+0800
 description: "本文详细介绍如何在almalinux8.9上联网部署基于zfs的lustre主备模式的多机集群。"
 tags: [lustre]
 ---

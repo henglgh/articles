@@ -1,6 +1,6 @@
 ---
 title: Lustre集群部署-基于ldiskfs的高可用集群
-date: 2021-07-03T10:27:20+0800
+date: 2021-07-03T16:27:17+0800
 description: "本文详细介绍如何在almalinux8.9上部署基于ldiskfs的lustre主备模式的高可用集群。"
 tags: [lustre]
 ---

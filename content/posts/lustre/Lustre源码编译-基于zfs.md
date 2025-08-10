@@ -1,6 +1,6 @@
 ---
 title: Lustre源码编译-基于zfs
-date: 2021-07-03T16:27:14+0800
+date: 2021-07-05T10:27:15+0800
 description: "本文详细介绍如何编译后端存储类型为zfs的lustre源码，并制作离线rpm安装包。"
 tags: [lustre]
 ---
