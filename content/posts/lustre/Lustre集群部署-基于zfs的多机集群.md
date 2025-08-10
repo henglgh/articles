@@ -159,7 +159,7 @@ dnf install kmod-lustre-client lustre-client
 &nbsp;
 # 5. 服务端部署
 ## 5.1. 加载zfs和lustre内核模块
-```
+```bash
 modprobe -v zfs
 modprobe -v lustre
 ```
