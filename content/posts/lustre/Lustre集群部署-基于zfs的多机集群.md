@@ -1,12 +1,12 @@
 ---
-title: Lustre集群部署-基于zfs的单机集群
+title: Lustre集群部署-基于zfs的多机集群
 date: 2021-07-01T10:27:16+0800
-description: "本文详细介绍如何在almalinux8.9上联网部署基于zfs的lustre单机集群。"
+description: "本文详细介绍如何在almalinux8.9上联网部署基于zfs的lustre主备模式的多机集群。"
 tags: [lustre]
 ---
 
 # 1. 前言
-本文详细介绍如何在almalinux8.9上联网部署基于zfs的lustre单机集群。系统环境如下：
+本文详细介绍如何在almalinux8.9上联网部署基于zfs的lustre主备模式的多机集群。系统环境如下：
 ```bash
 lustre:         2.15.4
 linux os:       almalinux 8.9
@@ -17,10 +17,10 @@ linux kernel:   4.18.0-513.5.1.el8_9.x86_64
 &nbsp;
 # 2. 集群规划
 ```bash
-mgt        192.168.3.11
-mdt0       192.168.3.11
-ost0       192.168.3.11
-client     192.168.3.12
+mgt      192.168.3.11:192.168.3.12
+mdt0     192.168.3.11:192.168.3.12
+ost0     192.168.3.11:192.168.3.12
+client   192.168.3.13
 ```
 
 &nbsp;
@@ -171,55 +171,59 @@ lustre集群内部通过LNet网络通信，LNet支持InfiniBand and IP networks�
 ```bash
 lnetctl lnet configure
 ```
-- 默认情况下`lnetctl lnet configure`会加载第一个up状态的网卡，所以一般情况下不需要再配置net。
-- 可以使用`lnetctl net show`命令列出所有的net配置信息，如果没有符合要求的net信息，需要按照下面步骤添加。
+默认情况下`lnetctl lnet configure`会加载第一个up状态的网卡，所以一般情况下不需要再配置net，可以使用`lnetctl net show`命令列出所有的net配置信息，如果没有符合要求的net信息，需要按照下面步骤添加。
 
 ### 5.2.2. 添加tcp
 ```bash
-lnetctl net add --net tcp0 --if enp0s8
+lnetctl net add --net tcp --if enp0s8
 ```
-- 如果`lnetctl lnet configure`已经将添加了tcp0，使用`lnetctl net del`删除tcp0，然后用`lnetctl net add`重新添加。
-- `tcp0`可以理解为一个子网，原则上tcp后面的数字可以任意写。如果定义成`tcp0`，那么集群中所有的服务以及客户端都应该设置成同一子网，即`tcp0`。
+如果`lnetctl lnet configure`已经将添加了tcp，使用`lnetctl net del`删除tcp，然后用`lnetctl net add`重新添加。
 
 ### 5.2.3. 查看添加的tcp
 ```bash
-lnetctl net show --net tcp0
+lnetctl net show --net tcp
 ```
 
 ### 5.2.4. 保存到配置文件
 ```bash
-lnetctl net show --net tcp0 >> /etc/lnet.conf
+lnetctl net show --net tcp >> /etc/lnet.conf
 ```
 
 ### 5.2.5. 开机自启动lnet服务
 ```bash
 systemctl enable lnet
 ```
+注：所有的服务端都需要执行以上操作。
 
 ## 5.3. 部署MGS服务
 ### 5.3.1. 创建mgtpool
 ```bash
-zpool create -f -O canmount=off -o cachefile=none mgtpool /dev/sdb
+zpool create -f -O canmount=off -o multihost=on -o cachefile=none mgtpool /dev/sdb
 ```
-使用`zpool`创建pool池可以同时绑定多个磁盘，并采用raid0模式来存储数据。如果需要对pool扩容，必须使用`zpool add`添加磁盘到指定的pool中。
+- 容灾模式下使用zpool创建pool时，必须要开启了multihost功能支持。multihost要求为每一个host提供不同的hostid，如果不提供，该命令执行失败。在每一个host上执行`zgenhostid $(hostid)`便可以生成不同的hostid。  
+- 使用`zpool`创建pool池可以同时绑定多个磁盘，并采用raid0模式来存储数据。如果需要对pool扩容，必须使用`zpool add`添加磁盘到指定的pool中。
 
 ### 5.3.2. 创建mgt
 ```bash
-mkfs.lustre --mgs --backfstype=zfs --reformat mgtpool/mgt
+mkfs.lustre --mgs \
+--servicenode=192.168.3.11@tcp \
+--servicenode=192.168.3.12@tcp \
+--backfstype=zfs \
+--reformat mgtpool/mgt
 ```
-`mgtpool/mgt`是`mgtpool`的一个逻辑卷，逻辑卷的数量和容量都是可以通过`zfs`命令控制。
+`mgtpool/mgt`是`mgtpool`的一个逻辑卷，逻辑卷的数量和容量都是可以通过`zfs`命令控制。  
+`servicenode`参数指定当前创建的mgt能够在哪些节点上被使用(容灾)。该参数的数量没有限制。可以将多个`servicenode`参数合并成一个，比如上面的参数可以改写成`--servicenode=192.168.3.11@tcp:192.168.3.12@tcp`。
 
 ### 5.3.3. 启动mgs服务
 ```bash
 mkdir -p /lustre/mgt/mgt
 mount -t lustre mgtpool/mgt /lustre/mgt/mgt -v
 ```
-原则上挂载点的名字可以任意取名，建议和mgt名字保持一致。如果忘记mgt的名字。可以通过`zfs list`命令查找。
 
 ## 5.4. 部署MDS服务
 ### 5.4.1. 创建mdtpool
 ```bash
-zpool create -f -O canmount=off -o cachefile=none mdtpool /dev/sdc
+zpool create -f -O canmount=off -o multihost=on -o cachefile=none mdtpool /dev/sdc
 ```
 
 ### 5.4.2. 创建mdt
@@ -227,13 +231,17 @@ zpool create -f -O canmount=off -o cachefile=none mdtpool /dev/sdc
 mkfs.lustre --mdt \
 --fsname fs00 \
 --index 0 \
---mgsnode=192.168.3.11@tcp \
+--mgsnode 192.168.3.11@tcp \
+--mgsnode 192.168.3.12@tcp \
+--servicenode 192.168.3.11@tcp \
+--servicenode 192.168.3.12@tcp \
 --backfstype=zfs \
 --reformat mdtpool/mdt0
 ```
-`mdtpool/mdt0`是`mdspool`的一个逻辑卷，使用`mount`挂载一个逻辑卷，表示启动一个mds服务。  
-如果想要在同一个节点上启动多个mds，则需要在`mdtpool`中再申请一个逻辑卷，此时`--reformat`参数可以省略，`--index`必须递增。  
-一个mds可以同时管理多个逻辑卷，只需要在`--reformat`参数后同时指定多个逻辑卷。
+- 如果mgs服务有多个，必须要同时指定多个mgsnode，而且第一个mgsnode必须是primary mgs。
+- 对于每一个lustre文件系统，mdt index序号必须从0开始，0代表整个文件系统的根目录。
+- `mdtpool/mdt0`是`mdtpool`的一个逻辑卷，使用`mount`挂载一个逻辑卷，表示启动一个mds服务。如果想要在同一个节点上启动多个mds，则需要在`mdtpool`中再申请一个逻辑卷，此时`--reformat`参数可以省略，`--index`必须递增。
+- 一个mds可以同时管理多个逻辑卷，只需要在`--reformat`参数后同时指定多个逻辑卷。
 
 ### 5.4.3. 启动mds服务
 ```bash
@@ -244,7 +252,7 @@ mount -t lustre mdtpool/mdt0 /lustre/mdt/mdt0 -v
 ## 5.5. 部署OSS服务
 ### 5.5.1. 创建ostpool
 ```bash
-zpool create -f -O canmount=off -o cachefile=none ostpool /dev/sdd
+zpool create -f -O canmount=off -o multihost=on -o cachefile=none ostpool /dev/sdd
 ```
 
 ### 5.5.2. 创建ost
@@ -252,7 +260,10 @@ zpool create -f -O canmount=off -o cachefile=none ostpool /dev/sdd
 mkfs.lustre --ost \
 --fsname fs00 \
 --index 0 \
---mgsnode=192.168.3.11@tcp \
+--mgsnode 192.168.3.11@tcp \
+--mgsnode 192.168.3.12@tcp \
+--servicenode 192.168.3.11@tcp \
+--servicenode 192.168.3.12@tcp \
 --backfstype=zfs \
 --reformat ostpool/ost0
 ```
@@ -263,9 +274,9 @@ mkdir -p /lustre/ost/ost0
 mount -t lustre ostpool/ost0 /lustre/ost/ost0 -v
 ```
 
+&nbsp;
+&nbsp;
 # 6. 客户端部署
-lustre客户端软件不能和服务端软件安装在同一台机器上，因为lustre服务端软件已经包含了客户端软件所有的文件。所以，非必要，可以直接在服务端挂载lustre文件系统，而无需再另外一台机器上安装客户端软件。
-
 ## 6.1. 加载lustre内核模块
 ```bash
 modprobe -v lustre
@@ -278,61 +289,37 @@ lustre集群内部通过LNet网络通信，LNet支持InfiniBand and IP networks�
 ```bash
 lnetctl lnet configure
 ```
-- 默认情况下`lnetctl lnet configure`会加载第一个up状态的网卡，所以一般情况下不需要再配置net。
-- 可以使用`lnetctl net show`命令列出所有的net配置信息，如果没有符合要求的net信息，需要按照下面步骤添加。
+默认情况下`lnetctl lnet configure`会加载第一个up状态的网卡，所以一般情况下不需要再配置net，可以使用`lnetctl net show`命令列出所有的net配置信息，如果没有符合要求的net信息，需要按照下面步骤添加。
 
 ### 6.2.2. 添加tcp
 ```bash
-lnetctl net add --net tcp0 --if enp0s8
+lnetctl net add --net tcp --if enp0s8
 ```
-- 如果`lnetctl lnet configure`已经将添加了tcp0，使用`lnetctl net del`删除tcp0，然后用`lnetctl net add`重新添加。
-- `tcp0`可以理解为一个子网，原则上tcp后面的数字可以任意写。如果定义成`tcp0`，那么集群中所有的服务以及客户端都应该设置成同一子网，即`tcp0`。
+如果`lnetctl lnet configure`已经将添加了tcp，使用`lnetctl net del`删除tcp，然后用`lnetctl net add`重新添加。
 
 ### 6.2.3. 查看添加的tcp
 ```bash
-lnetctl net show --net tcp0
+lnetctl net show --net tcp
 ```
 
 ### 6.2.4. 保存到配置文件
 ```bash
-lnetctl net show --net tcp0 >> /etc/lnet.conf
+lnetctl net show --net tcp >> /etc/lnet.conf
 ```
 
 ### 6.2.5. 开机自启动lnet服务
 ```bash
 systemctl enable lnet
 ```
+注：所有的客户端都需要执行以上操作。
 
 ## 6.3. 挂载文件系统
 ```bash
 mkdir -p /mnt/fs00
-mount -t lustre 192.168.3.11@tcp0:/fs00 /mnt/fs00 -v
+mount -t lustre 192.168.3.11@tcp:192.168.3.12@tcp:/fs00 /mnt/fs00 -v
 ```
 
 &nbsp;
 &nbsp;
-# 7. 集群卸载
-## 7.1. 服务端
-### 7.1.1. 关闭所有的服务
-```bash
-umount mdtpool/mdt0
-umount ostpool/ost0
-umount mgtpool/mgt
-```
-### 7.1.2. 删除所有的逻辑卷
-```bash
-zfs destroy mgtpool/mgt
-zfs destroy mdtpool/mdt0
-zfs destroy ostpool/ost0
-```
-### 7.1.3. 删除所有的pool
-```bash
-zpool destroy mgtpool
-zpool destroy mdtpool
-zpool destroy ostpool
-```
-
-&nbsp;
-&nbsp;
-# 8. 参考资料
+# 7. 参考资料
 - [https://wiki.lustre.org/Category:Lustre_Systems_Administration](https://wiki.lustre.org/Category:Lustre_Systems_Administration)
