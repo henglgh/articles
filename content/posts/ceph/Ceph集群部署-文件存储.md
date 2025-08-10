@@ -5,7 +5,6 @@ description: "本文介绍如何部署ceph文件存储系统，并使用ceph文�
 tags: [ceph]
 ---
 
-
 # 1. 前言
 本文介绍如何部署ceph文件存储系统，并使用ceph文件存储系统。系统环境如下：
 ```bash
@@ -31,35 +30,35 @@ ceph-delpoy     192.168.3.10      node0
 &nbsp;
 &nbsp;
 # 3. 文件存储部署
-### 3.1. 创建mds服务
+## 3.1. 创建mds服务
 在管理节点（node0）上执行以下命令：
 ```bash
 ceph-deploy --overwrite-conf mds create node1
 ```
 其中`node1`为集群节点的hostname，该命令将在node1上安装mds软件。
 
-### 3.2. 创建数据池
+## 3.2. 创建数据池
 在集群节点（node1）上执行以下命令：
 ```bash
 ceph osd pool create cephfs_data 1 1
 ```
 其中`cephfs_data`是数据池的名字，`1 1`分别表示pg和pgp的数量，因为是测试，所以都设置为1。
 
-### 3.3. 创建元数据池
+## 3.3. 创建元数据池
 在集群节点（node1）上执行以下命令：
 ```bash
 ceph osd pool create cephfs_metadata 1 1
 ```
 其中`cephfs_metadata`是元数据池的名字，`1 1`分别表示pg和pgp的数量，因为是测试，所以都设置为1。
 
-### 3.4. 创建文件系统
+## 3.4. 创建文件系统
 在集群节点（node1）上执行以下命令：
 ```bash
 ceph fs new cephfs cephfs_metadata cephfs_data
 ```
 其中`cephfs `为文件系统的名字，`cephfs_metadata和cephfs_data`分别表示元数据池的名字和数据池的名字。该命令将会创建一个名为cephfs的文件系统，文件系统的元数据将存在cephfs_metadata元数据池中，文件系统的数据将存在cephfs_data数据池中。
 
-### 3.5. 查看创建的文件系统
+## 3.5. 查看创建的文件系统
 在集群节点（node1）上执行以下命令：
 ```bash
 ceph fs ls
@@ -70,14 +69,14 @@ name: cephfs, metadata pool: cephfs_metadata, data pools: [cephfs_data ]
 &nbsp;
 &nbsp;
 # 4. 使用文件系统
-### 4.1. 挂载文件系统
+## 4.1. 挂载文件系统
 在集群节点（node1）上执行以下命令：
 ```bash
 ceph-fuse /mnt/cephfs_fuse/
 ```
 其中`/mnt/cephfs_fuse/`是文件系统cephfs将要挂载的路径。在Linux上挂载ceph文件系统有2种方式：内核挂载和ceph-fuse挂载，ceph-fuse是用户态挂在方式。
 
-### 4.2. 查看挂载路径
+## 4.2. 查看挂载路径
 在集群节点（node1）上执行以下命令：
 ```bash
 df -h
@@ -97,13 +96,13 @@ tmpfs                      2.0G   52K  2.0G   1% /var/lib/ceph/osd/ceph-2
 ceph-fuse                  8.5G     0  8.5G   0% /mnt/cephfs_fuse
 ```
 
-### 4.3. 添加文件到挂载路径
+## 4.3. 添加文件到挂载路径
 在集群节点（node1）上执行以下命令：
 ```bash
 cp test /mnt/cephfs_fuse
 ```
 
-### 4.4. 查看集群I/O读写状态
+## 4.4. 查看集群I/O读写状态
 在集群节点（node1）上执行以下命令：
 ```bash
 ceph -s
@@ -128,7 +127,7 @@ io:
   client:   767 B/s wr, 0 op/s rd, 0 op/s wr
 ```
 
-### 4.5. 查看数存储池使用状况
+## 4.5. 查看数存储池使用状况
 在集群节点（node1）上执行以下命令：
 ```bash
 ceph df
@@ -144,7 +143,7 @@ POOLS:
     cephfs_metadata      2       1     12 KiB          22     1.5 MiB         0       8.5 GiB 
 ```
 
-### 4.6. 查看数据池存储中的对象
+## 4.6. 查看数据池存储中的对象
 在集群节点（node1）上执行以下命令：
 ```bash
 rados -p cephfs_data ls

@@ -5,7 +5,6 @@ description: "本文介绍如何制作ceph deb包，并构建ceph本地apt源，
 tags: [ceph]
 ---
 
-
 # 1. 前言
 本文介绍如何构建ceph本地apt源，以方便离线安装ceph。系统环境如下：
 ```bash
@@ -25,7 +24,6 @@ dpkg-buildpackage --build=binary -us -ui -uc -nc -j4
 ```
 ceph官网提供制作deb包方法，经过测试发现会有问题。如果直接执行dpkg-buildpackage，会出现签证问题，导致制作失败。此处应该禁用签证，并开启多线程。
 
-&nbsp;
 ## 2.2. 构建本地deb仓库
 ### 2.2.1. 创建本地deb仓库目录
 ```bash
@@ -58,7 +56,6 @@ dpkg-scanpackages ceph.14.2.22/ | gzip -9c > ceph.14.2.22/Packages.gz
 └── ceph-fuse-dbg_14.2.22-1_amd64.deb
 ```
 
-&nbsp;
 ## 2.3. 添加本地源
 添加本地源有2种方式：`http`和`file`。file方式只能在本地访问，http方式可以在整个内网都可以访问。
 

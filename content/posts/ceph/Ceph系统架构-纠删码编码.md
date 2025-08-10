@@ -5,7 +5,6 @@ description: "本文从ceph源码角度详细讲解ceph纠删码机制中编码�
 tags: [ceph]
 ---
 
-
 # 前言
 本文从ceph源码角度详细讲解ceph纠删码机制中编码部分的逻辑以及实现过程。源码环境如下：
 ```bash

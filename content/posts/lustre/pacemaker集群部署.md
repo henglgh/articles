@@ -1,13 +1,12 @@
 ---
 title: pacemaker集群部署
-date: 2024-12-09T16:27:19+0800
-description: "本文详细介绍如何在almalinux8.9上部署pacemaker集群。"
+date: 2021-07-01T09:27:19+0800
+description: "本文详细介绍如何在almalinux8.9上联网部署pacemaker集群。"
 tags: [lustre]
 ---
 
-
 # 1. 前言
-本文详细介绍如何在almalinux8.9上部署pacemaker集群。系统环境如下：
+本文详细介绍如何在almalinux8.9上联网部署pacemaker集群。系统环境如下：
 ```bash
 pacemaker:      2.0.5
 linux os:       almalinux 8.9

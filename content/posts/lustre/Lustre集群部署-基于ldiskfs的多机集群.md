@@ -1,13 +1,12 @@
 ---
-title: lustre集群部署(ldiskfs多机模式)
-date: 2024-12-09T16:27:18+0800
-description: "本文详细介绍如何在almalinux8.9上部署基于ldiskfs的lustre多机集群。"
+title: Lustre集群部署-基于ldiskfs的多机集群
+date: 2021-07-03T10:27:18+0800
+description: "本文详细介绍如何在almalinux8.9上部署基于ldiskfs的lustre主备模式的多机集群。"
 tags: [lustre]
 ---
 
-
 # 1. 前言
-本文详细介绍如何在almalinux8.9上部署基于ldiskfs的lustre多机集群。系统环境如下：
+本文详细介绍如何在almalinux8.9上部署基于ldiskfs的lustre主备模式的多机集群。系统环境如下：
 ```bash
 lustre:         2.15.4
 linux os:       almalinux 8.9
@@ -34,7 +33,6 @@ systemctl stop firewalld.service
 systemctl disable firewalld.service
 ```
 
-&nbsp;
 ## 3.2. selinux设置
 ### 3.2.1. 关闭selinux
 ```bash
@@ -54,66 +52,145 @@ getenforce
 
 &nbsp;
 &nbsp;
-# 4. 集群部署
+## 3.3. yum源配置
+### 3.3.1. 添加Lustre yum源
+在`/etc/yum.repos.d`目录下新增`lustre-online.repo`文件并添加以下内容：
+```ini
+[lustre-server-2.15.4]
+name=Lustre Server v2.15.4 Packages
+baseurl=https://downloads.whamcloud.com/public/lustre/lustre-2.15.4/el8.9/server/
+enabled=1
+gpgcheck=0
+
+[lustre-client-2.15.4]
+name=Lustre Client v2.15.4 Packages
+baseurl=https://downloads.whamcloud.com/public/lustre/lustre-2.15.4/el8.9/client/
+enabled=0
+gpgcheck=0
+
+[e2fsprogs-1.47.0.wc5]
+name=e2fsprogs v1.47.0.wc5 Packages
+baseurl=https://downloads.whamcloud.com/public/e2fsprogs/1.47.0.wc5/el8/
+enabled=0
+gpgcheck=0
+```
+Lustre server和Lustre client的yum源不能同时打开，rpm包会产生冲突。所以在服务端和客户端安装软件时，需要按需关闭相应的yum源。
+
+### 3.3.2. 添加epel yum源
+在`/etc/yum.repos.d`目录下新增`epel-online.repo`文件并添加以下内容：
+```ini
+[epel]
+name=Extra Packages for Enterprise Linux 8 - $basearch
+baseurl=https://mirrors.tuna.tsinghua.edu.cn/epel/8/Everything/$basearch
+enabled=1
+priority=3
+gpgcheck=0
+countme=1
+```
+
+&nbsp;
+&nbsp;
+# 4. 安装软件
+因为Lustre是内核态文件系统，所有的软件包都需要与编译时的kernel版本匹配。Lustre提供2种安装方式：`dkms`和`kmod`。
+
+`dkms`方式安装后会依据当前kernel版本执行编译操作，编译出针对当前kernel版本的kmod，这种方式的好处在于可以在任何kernel版本上动态编译和安装。但是坏处也很明显，因为需要编译，所以安装起来可能很慢。而`kmod`方式是已经提前编译好的kmod，但这种方式只与当时编译时的kernel版本适配。
+
+下文以kmod方式安装lustre步骤。
+
 ## 4.1. 服务端
-### 4.1.1. 安装服务端软件
+### 4.1.1. 启动和关闭相应的YUM源
 ```bash
-rpm --upgrade --reinstall --install -vh e2fsprogs/*.rpm
-rpm --upgrade --reinstall --install -vh kernel/*.rpm
-rpm --upgrade --reinstall --install -vh lustre/server/*.rpm
+dnf config-manager --enable appstream baseos extras epel
+dnf config-manager --enable lustre-server-2.15.4 e2fsprogs-1.47.0.wc5
+dnf config-manager --disable lustre-client-2.15.4
+dnf clean all && dnf makecache
 ```
 
-如果已经做了离线yum源，也可以使用`dnf install`和`dnf reinstall`命令安装。
-```bash
-dnf reinstall e2fsprogs e2fsprogs-libs libcom_err libss
-dnf reinstall kernel kernel-modules \
-    kernel-modules-extra kernel-headers \
-    kernel-core kernel-tools kernel-tools-libs
-dnf install kmod-lustre kmod-lustre-osd-ldiskfs \
-    lustre lustre-osd-ldiskfs-mount \
-    lustre-iokit lustre-resource-agents
+### 4.1.2. 查看Lustre的依赖版本
+Lustre的每个发布版本的源码文件`ChangeLog`中都会说明所发行软件的版本以及依赖的软件版本信息，通过2.15.4的[ChangeLog](https://git.whamcloud.com/?p=fs/lustre-release.git;a=blob;f=lustre/ChangeLog;h=782557e3f587a9897f4bba43f7cb850c7f4f5339;hb=cac870cf4d2bd9905b1b2bbe563defe6d748ac94)文件可以查看到如下版本信息：
+```plaintext
+* Server primary kernels built and tested during release cycle:
+  4.18.0-513.9.1.el8   (RHEL8.9)
+* ldiskfs needs an ldiskfs patch series for that kernel, ZFS does not
+* Client primary kernels built and tested during release cycle:
+  4.18.0-513.9.1.el8   (RHEL8.9)
+* Recommended e2fsprogs version: 1.47.0-wc5 or newer
+* Recommended ZFS version: 2.1.11
 ```
-一定要保证kernel的包是除了lustre之外的最后一个安装，防止定制化的kernel包被其他覆盖。
+由此可以得知，`Lustre 2.15.4`依赖`kernel 4.18.0-513.9.1.el8`、`e2fsprogs 1.47.0-wc5`。
 
-### 4.1.2. 加载lustre内核模块
+### 4.1.3. 安装e2fsprogs
+```bash
+dnf install e2fsprogs-1.47.0 e2fsprogs-libs-1.47.0
+```
+
+### 4.1.4. 安装kernel
+ldiskfs是ext4的变体，它修改了kernel层的代码，因此需要安装修改之后的kernel。
+```bash
+dnf install kernel-4.18.0-513.9.1.el8_lustre kernel-core-4.18.0-513.9.1.el8_lustre kernel-modules-4.18.0-513.9.1.el8_lustre
+```
+
+### 4.1.5. 安装lustre server
+```bash
+dnf install kmod-lustre kmod-lustre-osd-ldiskfs
+```
+
+## 4.2. 客户端
+### 4.2.1. 启动和关闭相应的YUM源
+```bash
+dnf config-manager --enable appstream baseos extras epel
+dnf config-manager --disable lustre-server-2.15.4 e2fsprogs-1.47.0.wc5
+dnf config-manager --enable lustre-client-2.15.4
+dnf clean all && dnf makecache
+```
+
+### 4.2.2. 安装lustre client
+```bash
+dnf install kmod-lustre-client lustre-client
+```
+
+&nbsp;
+&nbsp;
+# 5. 服务端部署
+## 5.1. 加载lustre内核模块
 ```
 modprobe -v lustre
 ```
 
-### 4.1.3. 配置网络
+## 5.2. 配置网络
 lustre集群内部通过LNet网络通信，LNet支持InfiniBand and IP networks。本案例采用TCP模式。
 
-**初始化配置lnet**
+### 5.2.1. 初始化配置lnet
 ```bash
 lnetctl lnet configure
 ```
 - 默认情况下`lnetctl lnet configure`会加载第一个up状态的网卡，所以一般情况下不需要再配置net。
 - 可以使用`lnetctl net show`命令列出所有的net配置信息，如果没有符合要求的net信息，需要按照下面步骤添加。
 
-**添加tcp**
+### 5.2.2. 添加tcp
 ```bash
 lnetctl net add --net tcp0 --if enp0s8
 ```
 - 如果`lnetctl lnet configure`已经将添加了tcp0，使用`lnetctl net del`删除tcp0，然后用`lnetctl net add`重新添加。
 - `tcp0`可以理解为一个子网，原则上tcp后面的数字可以任意写。如果定义成`tcp0`，那么集群中所有的服务以及客户端都应该设置成同一子网，即`tcp0`。
 
-**查看添加的tcp**
+### 5.2.3. 查看添加的tcp
 ```bash
 lnetctl net show --net tcp0
 ```
 
-**保存到配置文件**
+### 5.2.4. 保存到配置文件
 ```bash
 lnetctl net show --net tcp0 >> /etc/lnet.conf
 ```
 
-**开机自启动lnet服务**
+### 5.2.5. 开机自启动lnet服务
 ```bash
 systemctl enable lnet
 ```
 
-### 4.1.4. 部署MGS服务
-**创建mgt**
+## 5.3. 部署MGS服务
+### 5.3.1. 创建mgt
 ```bash
 mkfs.lustre --mgs \
 --servicenode=192.168.3.11@tcp0 \
@@ -124,7 +201,7 @@ mkfs.lustre --mgs \
 - `servicenode`参数指定当前创建的mgt能够在哪些节点上被使用(容灾)。该参数的数量没有限制。
 - 可以将多个`servicenode`参数合并成一个，比如上面的参数可以改写成`--servicenode=192.168.3.11@tcp0:192.168.3.12@tcp0`。
 
-**启动mgs服务**
+### 5.3.2. 启动mgs服务
 ```bash
 mkdir -p /lustre/mgt
 mount -t lustre -U 95d74a36-996f-403a-84b4-1912bec0143b /lustre/mgt -v
@@ -132,8 +209,8 @@ mount -t lustre -U 95d74a36-996f-403a-84b4-1912bec0143b /lustre/mgt -v
 - `95d74a36-996f-403a-84b4-1912bec0143b`是`/dev/sdb`的uuid，可以通过`blkid`命令查询。建议采用`uuid`，因为磁盘盘符会改变。
 - 原则上挂载点的名字可以任意取名，建议和mgt名字保持一致。
 
-### 4.1.5. 部署MDS服务
-**创建mdt**
+## 5.4. 部署MDS服务
+### 5.4.1. 创建mdt
 ```bash
 mkfs.lustre --mdt \
 --fsname fs00 \
@@ -149,14 +226,14 @@ mkfs.lustre --mdt \
 - 如果mgs服务有多个，必须要同时指定多个mgsnode，而且第一个mgsnode必须是primary mgs。
 - 对于每一个lustre文件系统，mdt index序号必须从0开始，0代表整个文件系统的根目录。
 
-**启动mds服务**
+### 5.4.2. 启动mds服务
 ```bash
 mkdir -p /lustre/mdt/mdt0
 mount -t lustre -U 6feb0516-e2b1-4075-8b37-de94bb65c93b /lustre/mdt/mdt0 -v
 ```
 
-### 4.1.6. 部署OSS服务
-**创建ost**
+## 5.5. 部署OSS服务
+### 5.5.1. 创建ost
 ```bash
 mkfs.lustre --ost \
 --fsname fs00 \
@@ -169,64 +246,53 @@ mkfs.lustre --ost \
 --reformat /dev/sde
 ```
 
-**启动oss服务**
+### 5.5.2. 启动oss服务
 ```bash
 mkdir -p /lustre/ost/ost0
 mount -t lustre -U 930e22ba-969c-4f95-820a-d7f521b47b0d /lustre/ost/ost0 -v
 ```
 
-&nbsp;
-## 4.2. 客户端
+# 6. 客户端部署
 lustre客户端软件不能和服务端软件安装在同一台机器上，因为lustre服务端软件已经包含了客户端软件所有的文件。所以，非必要，可以直接在服务端挂载lustre文件系统，而无需再另外一台机器上安装客户端软件。
 
-### 4.2.1. 安装客户端软件
-```bash
-rpm --upgrade --reinstall --install -vh lustre/server/*.rpm
-```
-
-如果已经做了离线yum源，也可以使用`dnf install`命令安装。
-```bash
-dnf install kmod-lustre-client lustre-client lustre-iokit
-```
-
-### 4.2.2. 加载lustre内核模块
+## 6.1. 加载lustre内核模块
 ```bash
 modprobe -v lustre
 ```
 
-### 4.2.3. 配置网络
+## 6.2. 配置网络
 lustre集群内部通过LNet网络通信，LNet支持InfiniBand and IP networks。本案例采用TCP模式。
 
-**初始化配置lnet**
+### 6.2.1. 初始化配置lnet
 ```bash
 lnetctl lnet configure
 ```
 - 默认情况下`lnetctl lnet configure`会加载第一个up状态的网卡，所以一般情况下不需要再配置net。
 - 可以使用`lnetctl net show`命令列出所有的net配置信息，如果没有符合要求的net信息，需要按照下面步骤添加。
 
-**添加tcp**
+### 6.2.2. 添加tcp
 ```bash
 lnetctl net add --net tcp0 --if enp0s8
 ```
 - 如果`lnetctl lnet configure`已经将添加了tcp0，使用`lnetctl net del`删除tcp0，然后用`lnetctl net add`重新添加。
 - `tcp0`可以理解为一个子网，原则上tcp后面的数字可以任意写。如果定义成`tcp0`，那么集群中所有的服务以及客户端都应该设置成同一子网，即`tcp0`。
 
-**查看添加的tcp**
+### 6.2.3. 查看添加的tcp
 ```bash
 lnetctl net show --net tcp0
 ```
 
-**保存到配置文件**
+### 6.2.4. 保存到配置文件
 ```bash
 lnetctl net show --net tcp0 >> /etc/lnet.conf
 ```
 
-**开机自启动lnet服务**
+### 6.2.5. 开机自启动lnet服务
 ```bash
 systemctl enable lnet
 ```
 
-### 4.2.4. 挂载文件系统
+## 6.3. 挂载文件系统
 ```bash
 mkdir -p /mnt/fs00
 mount -t lustre 192.168.3.11@tcp0:192.168.3.12@tcp0:/fs00 /mnt/fs00 -v
@@ -234,5 +300,5 @@ mount -t lustre 192.168.3.11@tcp0:192.168.3.12@tcp0:/fs00 /mnt/fs00 -v
 
 &nbsp;
 &nbsp;
-# 5. 参考资料
+# 7. 参考资料
 - [https://wiki.lustre.org/Category:Lustre_Systems_Administration](https://wiki.lustre.org/Category:Lustre_Systems_Administration)
