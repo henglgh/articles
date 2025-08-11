@@ -157,53 +157,54 @@ dnf install kmod-lustre-client lustre-client
 
 &nbsp;
 &nbsp;
-# 5. 服务端部署
-## 5.1. 加载zfs和lustre内核模块
+# 5. 集群部署
+## 5.1. 服务端
+### 5.1.1. 加载zfs和lustre内核模块
 ```bash
 modprobe -v zfs
 modprobe -v lustre
 ```
 
-## 5.2. 配置网络
+### 5.1.2. 配置网络
 lustre集群内部通过LNet网络通信，LNet支持InfiniBand and IP networks。本案例采用TCP模式。
 
-### 5.2.1. 初始化配置lnet
+#### 5.1.2.1. 初始化配置lnet
 ```bash
 lnetctl lnet configure
 ```
 默认情况下`lnetctl lnet configure`会加载第一个up状态的网卡，所以一般情况下不需要再配置net，可以使用`lnetctl net show`命令列出所有的net配置信息，如果没有符合要求的net信息，需要按照下面步骤添加。
 
-### 5.2.2. 添加tcp
+#### 5.1.2.2. 添加tcp
 ```bash
 lnetctl net add --net tcp --if enp0s8
 ```
 如果`lnetctl lnet configure`已经将添加了tcp，使用`lnetctl net del`删除tcp，然后用`lnetctl net add`重新添加。
 
-### 5.2.3. 查看添加的tcp
+#### 5.1.2.3. 查看添加的tcp
 ```bash
 lnetctl net show --net tcp
 ```
 
-### 5.2.4. 保存到配置文件
+#### 5.1.2.4. 保存到配置文件
 ```bash
 lnetctl net show --net tcp >> /etc/lnet.conf
 ```
 
-### 5.2.5. 开机自启动lnet服务
+#### 5.1.2.5. 开机自启动lnet服务
 ```bash
 systemctl enable lnet
 ```
 注：所有的服务端都需要执行以上操作。
 
-## 5.3. 部署MGS服务
-### 5.3.1. 创建mgtpool
+### 5.1.3. 部署MGS服务
+#### 5.1.3.1. 创建mgtpool
 ```bash
 zpool create -f -O canmount=off -o multihost=on -o cachefile=none mgtpool /dev/sdb
 ```
 - 容灾模式下使用zpool创建pool时，必须要开启了multihost功能支持。multihost要求为每一个host提供不同的hostid，如果不提供，该命令执行失败。在每一个host上执行`zgenhostid $(hostid)`便可以生成不同的hostid。  
 - 使用`zpool`创建pool池可以同时绑定多个磁盘，并采用raid0模式来存储数据。如果需要对pool扩容，必须使用`zpool add`添加磁盘到指定的pool中。
 
-### 5.3.2. 创建mgt
+#### 5.1.3.2. 创建mgt
 ```bash
 mkfs.lustre --mgs \
 --servicenode=192.168.3.11@tcp \
@@ -214,19 +215,19 @@ mkfs.lustre --mgs \
 `mgtpool/mgt`是`mgtpool`的一个逻辑卷，逻辑卷的数量和容量都是可以通过`zfs`命令控制。  
 `servicenode`参数指定当前创建的mgt能够在哪些节点上被使用(容灾)。该参数的数量没有限制。可以将多个`servicenode`参数合并成一个，比如上面的参数可以改写成`--servicenode=192.168.3.11@tcp:192.168.3.12@tcp`。
 
-### 5.3.3. 启动mgs服务
+#### 5.1.3.3. 启动mgs服务
 ```bash
 mkdir -p /lustre/mgt/mgt
 mount -t lustre mgtpool/mgt /lustre/mgt/mgt -v
 ```
 
-## 5.4. 部署MDS服务
-### 5.4.1. 创建mdtpool
+### 5.1.4. 部署MDS服务
+#### 5.1.4.1. 创建mdtpool
 ```bash
 zpool create -f -O canmount=off -o multihost=on -o cachefile=none mdtpool /dev/sdc
 ```
 
-### 5.4.2. 创建mdt
+#### 5.1.4.2. 创建mdt
 ```bash
 mkfs.lustre --mdt \
 --fsname fs00 \
@@ -243,19 +244,19 @@ mkfs.lustre --mdt \
 - `mdtpool/mdt0`是`mdtpool`的一个逻辑卷，使用`mount`挂载一个逻辑卷，表示启动一个mds服务。如果想要在同一个节点上启动多个mds，则需要在`mdtpool`中再申请一个逻辑卷，此时`--reformat`参数可以省略，`--index`必须递增。
 - 一个mds可以同时管理多个逻辑卷，只需要在`--reformat`参数后同时指定多个逻辑卷。
 
-### 5.4.3. 启动mds服务
+#### 5.1.4.3. 启动mds服务
 ```bash
 mkdir -p /lustre/mdt/mdt0
 mount -t lustre mdtpool/mdt0 /lustre/mdt/mdt0 -v
 ```
 
-## 5.5. 部署OSS服务
-### 5.5.1. 创建ostpool
+### 5.1.5. 部署OSS服务
+#### 5.1.5.1. 创建ostpool
 ```bash
 zpool create -f -O canmount=off -o multihost=on -o cachefile=none ostpool /dev/sdd
 ```
 
-### 5.5.2. 创建ost
+#### 5.1.5.2. 创建ost
 ```bash
 mkfs.lustre --ost \
 --fsname fs00 \
@@ -268,7 +269,7 @@ mkfs.lustre --ost \
 --reformat ostpool/ost0
 ```
 
-### 5.5.3. 启动oss服务
+#### 5.1.5.3. 启动oss服务
 ```bash
 mkdir -p /lustre/ost/ost0
 mount -t lustre ostpool/ost0 /lustre/ost/ost0 -v
@@ -276,44 +277,44 @@ mount -t lustre ostpool/ost0 /lustre/ost/ost0 -v
 
 &nbsp;
 &nbsp;
-# 6. 客户端部署
-## 6.1. 加载lustre内核模块
+## 5.2. 客户端
+### 5.2.1. 加载lustre内核模块
 ```bash
 modprobe -v lustre
 ```
 
-## 6.2. 配置网络
+### 5.2.2. 配置网络
 lustre集群内部通过LNet网络通信，LNet支持InfiniBand and IP networks。本案例采用TCP模式。
 
-### 6.2.1. 初始化配置lnet
+#### 5.2.2.1. 初始化配置lnet
 ```bash
 lnetctl lnet configure
 ```
 默认情况下`lnetctl lnet configure`会加载第一个up状态的网卡，所以一般情况下不需要再配置net，可以使用`lnetctl net show`命令列出所有的net配置信息，如果没有符合要求的net信息，需要按照下面步骤添加。
 
-### 6.2.2. 添加tcp
+#### 5.2.2.2. 添加tcp
 ```bash
 lnetctl net add --net tcp --if enp0s8
 ```
 如果`lnetctl lnet configure`已经将添加了tcp，使用`lnetctl net del`删除tcp，然后用`lnetctl net add`重新添加。
 
-### 6.2.3. 查看添加的tcp
+#### 5.2.2.3. 查看添加的tcp
 ```bash
 lnetctl net show --net tcp
 ```
 
-### 6.2.4. 保存到配置文件
+#### 5.2.2.4. 保存到配置文件
 ```bash
 lnetctl net show --net tcp >> /etc/lnet.conf
 ```
 
-### 6.2.5. 开机自启动lnet服务
+#### 5.2.2.5. 开机自启动lnet服务
 ```bash
 systemctl enable lnet
 ```
 注：所有的客户端都需要执行以上操作。
 
-## 6.3. 挂载文件系统
+### 5.2.3. 挂载文件系统
 ```bash
 mkdir -p /mnt/fs00
 mount -t lustre 192.168.3.11@tcp:192.168.3.12@tcp:/fs00 /mnt/fs00 -v
@@ -321,5 +322,5 @@ mount -t lustre 192.168.3.11@tcp:192.168.3.12@tcp:/fs00 /mnt/fs00 -v
 
 &nbsp;
 &nbsp;
-# 7. 参考资料
+# 6. 参考资料
 - [https://wiki.lustre.org/Category:Lustre_Systems_Administration](https://wiki.lustre.org/Category:Lustre_Systems_Administration)

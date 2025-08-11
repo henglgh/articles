@@ -150,51 +150,52 @@ dnf install kmod-lustre-client lustre-client
 
 &nbsp;
 &nbsp;
-# 5. 服务端部署
-## 5.1. 加载lustre内核模块
+# 5. 集群部署
+## 5.1. 服务端
+### 5.1.1. 加载lustre内核模块
 ```bash
 modprobe -v lustre
 ```
 
-## 5.2. 配置网络
+### 5.1.2. 配置网络
 lustre集群内部通过LNet网络通信，LNet支持InfiniBand and IP networks。本案例采用TCP模式。
 
-### 5.2.1. 初始化配置lnet
+#### 5.1.2.1. 初始化配置lnet
 ```bash
 lnetctl lnet configure
 ```
 - 默认情况下`lnetctl lnet configure`会加载第一个up状态的网卡，所以一般情况下不需要再配置net。
 - 可以使用`lnetctl net show`命令列出所有的net配置信息，如果没有符合要求的net信息，需要按照下面步骤添加。
 
-### 5.2.2. 添加tcp
+#### 5.1.2.2. 添加tcp
 ```bash
 lnetctl net add --net tcp0 --if enp0s8
 ```
 - 如果`lnetctl lnet configure`已经将添加了tcp0，使用`lnetctl net del`删除tcp0，然后用`lnetctl net add`重新添加。
 - `tcp0`可以理解为一个子网，原则上tcp后面的数字可以任意写。如果定义成`tcp0`，那么集群中所有的服务以及客户端都应该设置成同一子网，即`tcp0`。
 
-### 5.2.3. 查看添加的tcp
+#### 5.1.2.3. 查看添加的tcp
 ```bash
 lnetctl net show --net tcp0
 ```
 
-### 5.2.4. 保存到配置文件
+#### 5.1.2.4. 保存到配置文件
 ```bash
 lnetctl net show --net tcp0 >> /etc/lnet.conf
 ```
 
-### 5.2.5. 开机自启动lnet服务
+#### 5.1.2.5. 开机自启动lnet服务
 ```bash
 systemctl enable lnet
 ```
 
-## 5.3. 部署MGS服务
-### 5.3.1. 创建mgt
+### 5.1.3. 部署MGS服务
+#### 5.1.3.1. 创建mgt
 ```bash
 mkfs.lustre --mgs --backfstype=ldiskfs --reformat /dev/sdb
 ```
 
-### 5.3.2. 启动mgs服务
+#### 5.1.3.2. 启动mgs服务
 ```bash
 mkdir -p /lustre/mgt
 mount -t lustre -U 95d74a36-996f-403a-84b4-1912bec0143b /lustre/mgt -v
@@ -202,8 +203,8 @@ mount -t lustre -U 95d74a36-996f-403a-84b4-1912bec0143b /lustre/mgt -v
 - `95d74a36-996f-403a-84b4-1912bec0143b`是`/dev/sdb`的uuid，可以通过`blkid`命令查询。建议采用`uuid`，因为磁盘盘符会改变。
 - 原则上挂载点的名字可以任意取名，建议和mgt名字保持一致。
 
-## 5.4. 部署MDS服务
-### 5.4.1. 创建mdt
+### 5.1.4. 部署MDS服务
+#### 5.1.4.1. 创建mdt
 ```bash
 mkfs.lustre --mdt \
 --fsname fs00 \
@@ -214,14 +215,14 @@ mkfs.lustre --mdt \
 ```
 如果磁盘空间容量比较大，可以添加参数`--mkfsoptions="-E nodiscard"`，加快格式化过程。
 
-### 5.4.2. 启动mds服务
+#### 5.1.4.2. 启动mds服务
 ```bash
 mkdir -p /lustre/mdt/mdt0
 mount -t lustre -U 6feb0516-e2b1-4075-8b37-de94bb65c93b /lustre/mdt/mdt0 -v
 ```
 
-## 5.5. 部署OSS服务
-### 5.5.1. 创建ost
+### 5.1.5. 部署OSS服务
+#### 5.1.5.1. 创建ost
 ```bash
 mkfs.lustre --ost \
 --fsname fs00 \
@@ -231,53 +232,53 @@ mkfs.lustre --ost \
 --reformat /dev/sdd
 ```
 
-### 5.5.2. 启动oss服务
+#### 5.1.5.2. 启动oss服务
 ```bash
 mkdir -p /lustre/ost/ost0
 mount -t lustre -U 930e22ba-969c-4f95-820a-d7f521b47b0d /lustre/ost/ost0 -v
 ```
 
-# 6. 客户端部署
+## 5.2. 客户端
 lustre客户端软件不能和服务端软件安装在同一台机器上，因为lustre服务端软件已经包含了客户端软件所有的文件。所以，非必要，可以直接在服务端挂载lustre文件系统，而无需再另外一台机器上安装客户端软件。
 
-## 6.1. 加载lustre内核模块
+### 5.2.1. 加载lustre内核模块
 ```bash
 modprobe -v lustre
 ```
 
-## 6.2. 配置网络
+### 5.2.2. 配置网络
 lustre集群内部通过LNet网络通信，LNet支持InfiniBand and IP networks。本案例采用TCP模式。
 
-### 6.2.1. 初始化配置lnet
+#### 5.2.2.1. 初始化配置lnet
 ```bash
 lnetctl lnet configure
 ```
 - 默认情况下`lnetctl lnet configure`会加载第一个up状态的网卡，所以一般情况下不需要再配置net。
 - 可以使用`lnetctl net show`命令列出所有的net配置信息，如果没有符合要求的net信息，需要按照下面步骤添加。
 
-### 6.2.2. 添加tcp
+#### 5.2.2.2. 添加tcp
 ```bash
 lnetctl net add --net tcp0 --if enp0s8
 ```
 - 如果`lnetctl lnet configure`已经将添加了tcp0，使用`lnetctl net del`删除tcp0，然后用`lnetctl net add`重新添加。
 - `tcp0`可以理解为一个子网，原则上tcp后面的数字可以任意写。如果定义成`tcp0`，那么集群中所有的服务以及客户端都应该设置成同一子网，即`tcp0`。
 
-### 6.2.3. 查看添加的tcp
+#### 5.2.2.3. 查看添加的tcp
 ```bash
 lnetctl net show --net tcp0
 ```
 
-### 6.2.4. 保存到配置文件
+#### 5.2.2.4. 保存到配置文件
 ```bash
 lnetctl net show --net tcp0 >> /etc/lnet.conf
 ```
 
-### 6.2.5. 开机自启动lnet服务
+#### 5.2.2.5. 开机自启动lnet服务
 ```bash
 systemctl enable lnet
 ```
 
-## 6.3. 挂载文件系统
+### 5.2.3. 挂载文件系统
 ```bash
 mkdir -p /mnt/fs00
 mount -t lustre 192.168.3.11@tcp0:/fs00 /mnt/fs00 -v
@@ -285,5 +286,5 @@ mount -t lustre 192.168.3.11@tcp0:/fs00 /mnt/fs00 -v
 
 &nbsp;
 &nbsp;
-# 7. 参考资料
+# 6. 参考资料
 - [https://wiki.lustre.org/Category:Lustre_Systems_Administration](https://wiki.lustre.org/Category:Lustre_Systems_Administration)
