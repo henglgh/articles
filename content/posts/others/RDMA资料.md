@@ -13,4 +13,4 @@ tags: [others]
 # 2. 参考资料
 1. [https://www.openfabrics.org/](https://www.openfabrics.org/)
 2. [https://www.infinibandta.org/](https://www.infinibandta.org/)
-3. [(https://www.roceinitiative.org/](https://www.roceinitiative.org/)
+3. [https://www.roceinitiative.org/](https://www.roceinitiative.org/)
