@@ -1,5 +1,5 @@
 ---
-title: Lustre系统功能-LNet
+title: Lustre系统架构-LNet
 date: 2021-07-07T10:27:14+0800
 description: "本文介绍Lustre 2.15.4的LNet功能和使用方法。"
 tags: [lustre]
