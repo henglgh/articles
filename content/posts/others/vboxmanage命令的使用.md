@@ -1,5 +1,5 @@
 ---
-title: lvm逻辑卷创建和使用
+title: vboxmanage命令的使用
 date: 2021-03-02T16:45:15+0800
 description: "本文简单介绍vboxmanage常用的使用方法。"
 tags: [others]
