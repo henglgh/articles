@@ -2,6 +2,9 @@
 body {
   color: #afafaf;
   background-color: #202124;
+  background-image:
+    linear-gradient(to right, rgba(224, 108, 117, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(224, 108, 117, 0.05) 1px, transparent 1px);
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -31,28 +34,33 @@ hr {
 
 /*--------------------表格配置---------------------*/
 table, table th, table td {
-  border-color: #abb2bf;
+  /* border-color: #abb2bf; */
+  border-color: var(--tableDarkcolor);
 }
 
 table th {
   color: var(--darkMaincolor);
-  background-color: #3c3e42;
+  /* background-color: #3c3e42; */
+  background-color: var(--codeblockDarkcolor) !important;
 }
 
 /* --------------------代码块配置------------------- */
 code {
   color: var(--darkMaincolor);
-  background-color: #3c3e42;
+  /* background-color: #3c3e42; */
+  background-color: var(--codeblockDarkcolor) !important;
 }
 
 pre {
-  scrollbar-color: #abb2bf #202124;
-  background-color: #3c3e42 !important;
+  /* scrollbar-color: #abb2bf #202124; */
+  /* background-color: #3c3e42 !important; */
+  scrollbar-color: rgba(171, 186, 191, 0.2) #202124;
+  background-color: var(--codeblockDarkcolor) !important;
 }
 
 /* --------------------header配置------------------- */
 .headerMain {
-  background-color: #202124;
+  /* background-color: #202124; */
 }
 
 .headerMenu a {
@@ -63,7 +71,8 @@ pre {
 /*---------------------搜索框配置------------------- */
 .headerMenuSearch .searchInput {
   color: #abb2bf;
-  background-color: #202124;
+  /* background-color: #202124; */
+  background-color: unset;
   border-bottom-color: var(--darkMaincolor);
 }
 

@@ -6,6 +6,10 @@
 --callouctcolor:dodgerblue;
 --hovercolor:navy;
 --darkMaincolor: #e06c75;
+--codeblockcolor: rgba(236, 236, 236, 0.5);
+--codeblockDarkcolor: rgba(60, 62, 66, 0.4);
+--tablecolor: rgba(199, 37, 78, 0.4);
+--tableDarkcolor: rgba(171, 186, 191, 0.4)
 }
 
 html {
@@ -21,6 +25,10 @@ body{
   margin-top: 0;
   overflow: hidden;
   height: 100vh;
+  background-size: 20px 20px;
+  background-image:
+    linear-gradient(to right, rgba(199, 37, 78, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(199, 37, 78, 0.05) 1px, transparent 1px);
 }
 
 * {
@@ -110,7 +118,9 @@ table {
 }
 
 table, table th, table td {
-  border: 1px dotted #dfe2e5;
+  /* border: 1px dotted #dfe2e5; */
+  /* border: 1px dotted var(--maincolor); */
+  border: 1px solid var(--tablecolor);
 }
 
 table th, table td {
@@ -120,12 +130,14 @@ table th, table td {
 
 table th {
   color: var(--maincolor);
-  background-color: #ececec;
+  /* background-color: #ececec; */
+  background-color: var(--codeblockcolor);
 }
 
 /*--------------------代码块配置---------------------*/
 code {
-  background-color: #ececec;
+  /* background-color: #ececec; */
+  background-color: var(--codeblockcolor);
   color: #c7254e;
   padding: .0em .2em;
   font-family: 'Roboto Mono';
@@ -138,7 +150,9 @@ pre {
   border-radius: 4px;
   overflow-x: auto;
   scrollbar-width: thin;
-  scrollbar-color: #666 #ffffff;
+  /* scrollbar-color: #666 #ffffff; */
+  scrollbar-color: rgba(102, 102, 102, 0.2) #ffffff;
+  background-color: var(--codeblockcolor) !important;
 }
 
 pre code {
@@ -152,7 +166,8 @@ img {
   border-width: 1px;
   border-style: solid;
   border-radius: 4px;
-  border-color: #ececec;
+  /* border-color: #ececec; */
+  border-color: var(--codeblockcolor);
   max-width: 100%;
 }
 
@@ -166,7 +181,7 @@ img {
   overflow-wrap:break-word;
 
   /* 特有的 */
-  background-color: white;
+  /* background-color: white; */
   /* line-height: 2em; */
   font-size: 1.2rem;
   font-weight: bold;
@@ -227,7 +242,7 @@ img {
   width: 100%;
   padding-top: 3px;
   border-style: none;
-  background-color: white;
+  background-color: unset;
   border-bottom-style: solid;
   border-bottom-color: var(--maincolor);
 }
