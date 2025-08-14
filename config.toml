@@ -10,8 +10,9 @@ copyright = "© 阿根"
 ignoreFiles = ["themes/.*/content/.*"]
 
 [params]
-  mode="toggle"
-  useCDN=false
+  katex = true
+  mode = "toggle"
+  useCDN = false
   [[params.social]]
     name = "GitHub"
     icon = "github"

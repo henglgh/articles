@@ -15,18 +15,8 @@
  			{{- end -}}
 			{{ if eq .Site.Params.mode "toggle" -}}
 			<a id="dark-mode-toggle" onclick="toggleTheme()" href="javascript:void(0);"><i id="theme-icon" data-feather="sun"></i></a>
-			<script src="{{ absURL "js/themetoggle.js" }}"></script>
-			<script>
-				feather.replace();
-				document.getElementById('theme-icon').setAttribute('stroke-width', '3');
-			</script>
 			{{ end }}
 		</nav>
 	</div>
 	<div class="headerRightSide"></div>
 </header>
-{{- if (isset .Site.Params "social") -}}
-<script>
-	feather.replace()
-</script>
-{{- end -}}
