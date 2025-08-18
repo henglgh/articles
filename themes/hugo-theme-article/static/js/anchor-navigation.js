@@ -17,10 +17,17 @@ document.addEventListener('DOMContentLoaded', function() {
       const targetElement = document.getElementById(targetId);
 
       if (targetElement) {
-        // 获取headerMain的高度
+        // 获取headerMain的高度（包含外边距）
         const header = document.querySelector('.headerMain');
-        const headerHeight = header ? header.offsetHeight : 0;
-
+        let headerHeight = 0;
+        if (header) {
+          const rect = header.getBoundingClientRect();
+          const computedStyle = window.getComputedStyle(header);
+          const marginTop = parseFloat(computedStyle.marginTop);
+          const marginBottom = parseFloat(computedStyle.marginBottom);
+          headerHeight = rect.height + marginTop + marginBottom;
+        }
+        
         // 获取滚动容器
         const scrollContainer = document.querySelector('.singleMain');
 
