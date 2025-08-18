@@ -9,7 +9,7 @@
 --codeblockcolor: rgba(236, 236, 236, 0.5);
 --codeblockDarkcolor: rgba(60, 62, 66, 0.4);
 --tablecolor: rgba(199, 37, 78, 0.4);
---tableDarkcolor: rgba(171, 186, 191, 0.4)
+--tableDarkcolor: rgba(171, 186, 191, 0.4);
 }
 
 html {
@@ -461,8 +461,17 @@ img {
   line-height: normal;
 }
 
+.singleRightSide .tags a {
+  font-size: medium;
+  color: var(--maincolor);
+  background-color: rgba(245,222,179,0.3);
+  border-radius: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
 .singleRightSide .tags li::before{
-  content: "🏷️";
+  content: none;
 }
 
 .singleArticle a {

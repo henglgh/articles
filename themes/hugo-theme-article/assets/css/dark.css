@@ -117,6 +117,11 @@ pre {
   color: #abb2bf;
 }
 
+.singleRightSide .tags a {
+  color: var(--darkMaincolor);
+  background-color: rgba(245,222,179,0.2);
+}
+
 #TableOfContents {
   scrollbar-color: #abb2bf #202124;
 }

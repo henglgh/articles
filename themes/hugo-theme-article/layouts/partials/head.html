@@ -1,9 +1,11 @@
 <header class="headerMain">
 	<div class="headerMenu">
 		<nav class="headerMenuHome">
-			<a href="{{ absURL "" }}">Home</a>
+			<!-- <a href="{{ absURL "" }}">Home</a> -->
+			<a href="{{ absURL "" }}"><i data-feather="home"></i></a>
 			{{ range .Site.Menus.main }}
-			<a href="{{ .URL }}">{{ .Name }}</a>
+			<!-- <a href="{{ .URL }}">{{ .Name }}</a> -->
+			<a href="{{ .URL }}"><i data-feather="{{.Name}}"></i></a>
 			{{ end }}
 		</nav>
 		<nav class="headerMenuSearch">

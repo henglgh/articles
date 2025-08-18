@@ -23,7 +23,8 @@ ignoreFiles = ["themes/.*/content/.*"]
 
 [menus]
   [[menu.main]]
-    name = "Archive"
+    #name = "Archive"
+    name = "tag"
     url = "/tags"
     weight = 1
 
