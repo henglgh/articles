@@ -135,6 +135,10 @@ table th {
 }
 
 /*--------------------代码块配置---------------------*/
+.highlight {
+  position: relative;
+}
+
 code {
   /* background-color: #ececec; */
   background-color: var(--codeblockcolor);
@@ -176,9 +180,10 @@ pre code {
   cursor: pointer;
   opacity: 0;
   transition: opacity 0.3s;
+  z-index: 10;
 }
 
-pre:hover .copy-code-btn {
+.highlight:hover .copy-code-btn {
   opacity: 1;
 }
 
@@ -216,6 +221,7 @@ img {
 
   position: sticky;
   top: 1em;
+  z-index: 20;
 }
 
 .headerMenu {
