@@ -7,6 +7,7 @@ tags: [lustre]
 
 > lustre版本：2.15.4
 
+# 1. 简介
 QoS（Quality of Service）服务质量。
 
 ```bash
