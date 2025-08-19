@@ -62,26 +62,26 @@ options:
     --msgr21: use msgr2 and msgr1
 ```
 
-### 3.0.1. 新建集群
+## 3.0.1. 新建集群
 ```bash
 MON=1 OSD=6 MDS=0 MGR=1 RGW=0 ../src/vstart.sh -d -n -x --without-dashboard
 ```
 
-### 3.0.2. 重启集群或服务
+## 3.0.2. 重启集群或服务
 目前ceph 14.2.22的vstart.sh脚本还做不到可以单独重启某一个服务，如果需要重启某一个服务，只需要去掉`-n`参数即可。
 ```bash
 MON=1 OSD=6 MDS=0 MGR=1 RGW=0 ../src/vstart.sh -d -x --without-dashboard
 ```
 上述命令是重启集群所有服务，该命令不会新建集群。
 
-### 3.0.3. 停止集群或服务
+## 3.0.3. 停止集群或服务
 ceph 14.2.22的源码中提供了stop.sh脚本用来停止集群中的服务，目前该脚本还做不到单独停止某一个服务，但是可以停止某一类服务，也可以停止所有的服务，具体用法如下：
 ```bash
 ../src/stop.sh [all] [mon] [mds] [osd] [rgw]
 ```
 经过测试发现，对象存储、块存储都可以正常部署并调试，文件系统部署可以正常部署，但是无法挂载。如果想要调试所有功能，不建议采取这种方式。建议生成deb包，然后按正常ceph部署，最后替换对用的动态库和二进制可执行文件即可调试。
 
-### 3.0.4. 查看集群状态
+## 3.0.4. 查看集群状态
 ceph 14.2.22版本的vstart.sh脚本并没有将ceph可执行文件添加到系统环境变量中，所有的ceph命令都必须在build目录下执行。切换到build目录下，执行以下命令，查看集群状态。
 ```bash
 ./bin/ceph -s
@@ -109,13 +109,13 @@ data:
 ```
 如果不想输出这些信息，将ceph.conf文件中的参数`enable experimental unrecoverable data corrupting features = *`屏蔽掉就可以了。
 
-### 3.0.5. 部署ceph分级存储结构
+## 3.0.5. 部署ceph分级存储结构
 本案例需要调试ceph分级存储功能，因此简单的搭建一个分层存储结构。为集群分配6个OSD，创建2个pool，cache pool和ec pool，每个pool分配了3个osd。具体部署参考[分层存储部署](./分层存储部署.md)。
 
 &nbsp;
 &nbsp;
 # 4. 调试
-### 4.0.1. 查看PG-OSD映射关系
+## 4.0.1. 查看PG-OSD映射关系
 如果仔细阅读源码，会发现ceph分级存储主要是由主OSD进程来负责。如果不是主OSD，是无法调试到代码中的。所以需要查看分级存储中缓存池的PG映射关系。
 切换到build目录下，执行以下命令
 ```bash
@@ -126,7 +126,7 @@ PG OBJECTS DEGRADED MISPLACED UNFOUND BYTES OMAP_BYTES* OMAP_KEYS* LOG STATE 		S
 ```
 从结果可以看到PG5.0对应的主OSD为OSD.2。
 
-### 4.0.2. 查看主OSD进程
+## 4.0.2. 查看主OSD进程
 ```bash
 ps -ef | grep ceph
 -----------------------------------------------------------------------------------------------------------------------
