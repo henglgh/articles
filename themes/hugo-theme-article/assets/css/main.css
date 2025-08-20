@@ -457,6 +457,13 @@ img {
   scrollbar-color: #666 #ffffff;
 }
 
+/* 添加目录高亮样式 */
+#TableOfContents a.active {
+  font-weight: bold;
+  font-size: medium;
+  border-bottom: 2px solid var(--maincolor);
+}
+
 .singleRightSide .tags ul{
   display: flex;
   gap: 20px;

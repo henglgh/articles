@@ -2,7 +2,9 @@
   <span>{{ dateFormat "2006" now }} {{ with .Site.Copyright }} {{ . }} {{ end }}</span>
 </footer>
 
+{{- if eq .Kind "page" -}}
 <script src="{{ absURL "js/code-copy.js" }}"></script>
+{{- end -}}
 
 {{- if or (isset .Site.Params "social") (eq .Site.Params.mode "toggle") -}}
 <script src="{{ absURL "js/feather.min.js" }}"></script>
@@ -17,6 +19,7 @@
 {{- end -}}
 
 <!-- Mathjax support -->
+{{- if eq .Kind "page" -}}
 {{ with .Site.Params.mathjax }}
 <script type="text/javascript" src="https://lf9-cdn-tos.bytecdntp.com/cdn/expire-1-M/mathjax/2.7.1/MathJax.js"></script>
 
@@ -35,8 +38,10 @@ MathJax.Hub.Config({
 });
 </script>
 {{ end }}
+{{- end -}}
 
 <!-- KaTeX support -->
+{{- if eq .Kind "page" -}}
 {{ with .Site.Params.katex }}
 <script defer src="https://lf9-cdn-tos.bytecdntp.com/cdn/expire-1-M/KaTeX/0.15.2/katex.min.js"></script>
 <script defer src="https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/KaTeX/0.15.2/contrib/auto-render.min.js"></script>
@@ -53,6 +58,9 @@ MathJax.Hub.Config({
   });
 </script>
 {{ end }}
+{{- end -}}
 
 <!-- 导航栏跳转处理 -->
-<script src="{{ absURL "js/anchor-navigation.js" }}"></script>
+{{- if eq .Kind "page" -}}
+<script src="{{ absURL "js/toc-navigation.js" }}"></script>
+{{- end -}}
