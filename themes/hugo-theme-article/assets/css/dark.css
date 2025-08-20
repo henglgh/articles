@@ -8,7 +8,7 @@ body {
 }
 
 h1, h2, h3, h4, h5, h6 {
-  color: #abb2bf;
+  color: var(--darkfontcolor);
 }
 
 /*--------------------引用块配置--------------------- */
@@ -64,13 +64,13 @@ pre {
 }
 
 .headerMenu a {
-  color: #abb2bf;
+  color: var(--darkfontcolor);
   border-bottom: 2px solid var(--darkMaincolor);
 }
 
 /*---------------------搜索框配置------------------- */
 .headerMenuSearch .searchInput {
-  color: #abb2bf;
+  color: var(--darkfontcolor);
   /* background-color: #202124; */
   background-color: unset;
   border-bottom-color: var(--darkMaincolor);
@@ -91,22 +91,22 @@ pre {
 
 /* --------------------主页配置------------------- */
 .homeMain {
-  scrollbar-color: #abb2bf #202124;
+  scrollbar-color: var(--darkfontcolor) #202124;
 }
 
 /* --------------------列表页配置------------------- */
 .listMain {
-  scrollbar-color: #abb2bf #202124;
+  scrollbar-color: var(--darkfontcolor) #202124;
 }
 
 /* --------------------专栏页配置------------------- */
 .termsMain {
-  scrollbar-color: #abb2bf #202124;
+  scrollbar-color: var(--darkfontcolor) #202124;
 }
 
 /* --------------------单页配置------------------- */
 .singleMain {
-  scrollbar-color: #abb2bf #202124;
+  scrollbar-color: var(--darkfontcolor) #202124;
 }
 
 .singleArticle a {
@@ -114,7 +114,7 @@ pre {
 }
 
 .singleRightSide {
-  color: #abb2bf;
+  color: var(--darkfontcolor);
 }
 
 .singleRightSide .tags a {
@@ -123,5 +123,9 @@ pre {
 }
 
 #TableOfContents {
-  scrollbar-color: #abb2bf #202124;
+  scrollbar-color: var(--darkfontcolor) #202124;
+}
+
+#TableOfContents a.active {
+  color: var(--darkMaincolor);
 }

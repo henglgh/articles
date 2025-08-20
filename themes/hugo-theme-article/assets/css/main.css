@@ -10,6 +10,7 @@
 --codeblockDarkcolor: rgba(60, 62, 66, 0.4);
 --tablecolor: rgba(199, 37, 78, 0.4);
 --tableDarkcolor: rgba(171, 186, 191, 0.4);
+--darkfontcolor: #abb2bf;
 }
 
 html {
@@ -461,7 +462,7 @@ img {
 #TableOfContents a.active {
   font-weight: bold;
   font-size: medium;
-  border-bottom: 2px solid var(--maincolor);
+  color: var(--maincolor);
 }
 
 .singleRightSide .tags ul{
