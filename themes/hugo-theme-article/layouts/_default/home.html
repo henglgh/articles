@@ -9,9 +9,10 @@
 				{{ $filteredPages := where $pages "Params.hidden" "ne" true }}
 				{{ range $filteredPages }}
 				<section class="content">
-					<h1 class="title"><a href="{{ .RelPermalink }}">{{ .Title }}</a></h1>
-					<time>{{ dateFormat "2006-01-02 15:04:01" .Date }}</time>
-					<br>{{ template "partials/pagedescription.html" . }}
+					<time class="content-time">{{ dateFormat "2006.01.02 15:04" .Date }}</time>
+					<h3 class="content-title"><a href="{{ .RelPermalink }}">{{ .Title }}</a></h3>
+					{{ template "partials/pagedescription.html" . }}
+					<br>
 				</section>
 				{{ end }}
 				{{ partial "footer.html" . }}

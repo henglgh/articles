@@ -17,7 +17,7 @@ html {
   color: #232333;
   font-family: 'Roboto Mono';
   font-size: 15px;
-  line-height: 1.6em;
+  line-height: 1.4em;
   overflow: hidden;
 }
 
@@ -34,6 +34,8 @@ body{
 
 * {
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  scrollbar-width: thin;
+  scrollbar-color: rgba(102, 102, 102, 0.2) #ffffff;
 }
 
 ::selection {
@@ -155,9 +157,8 @@ pre {
   padding: .5em;
   border-radius: 4px;
   overflow-x: auto;
-  scrollbar-width: thin;
-  /* scrollbar-color: #666 #ffffff; */
-  scrollbar-color: rgba(102, 102, 102, 0.2) #ffffff;
+  /* scrollbar-width: thin;
+  scrollbar-color: rgba(102, 102, 102, 0.2) #ffffff; */
   background-color: var(--codeblockcolor) !important;
 }
 
@@ -207,7 +208,7 @@ img {
   margin-top: 1em;
   margin-bottom: 2em;
   /* height: 90vh; */
-  max-width: 100%;
+  /* max-width: 100%; */
   overflow-y: visible;
   overflow-wrap:break-word;
 
@@ -226,15 +227,20 @@ img {
 }
 
 .headerMenu {
-  width: 50%;
+  width: 80%;
   margin-left: auto;
-  margin-right: 0;
+  margin-right: auto;
   display: flex;
-  justify-content: space-between;
+  gap: 20px;
+  /* justify-content: space-between; */
 }
 
 .headerMenu a {
   border-bottom: 2px solid var(--maincolor);
+}
+
+.headerMenuHome {
+  flex: 0 0 41%;
 }
 
 .headerMenuHome, .headerMenuOthers {
@@ -242,9 +248,15 @@ img {
   gap: 10px;
 }
 
+.headerMenuOthers {
+  flex: 0 0;
+  margin-left: auto;
+}
+
 .headerRightSide {
-  width: 30%;
-  display: none;
+  width: 16%;
+  margin-right: auto;
+  /* display: none !important; */
 }
 
 /*--------------------搜索框配置------------------- */
@@ -253,12 +265,13 @@ img {
 }
 
 .headerMenuSearch {
+  flex: 0 0 30%;
   display: flex;
   align-items: center;
 }
 
 .headerMenuSearch.expanded {
-  width: 100%;
+  flex: 0 0 100%;
 }
 
 .headerMenuSearch .searchContainer {
@@ -328,8 +341,8 @@ img {
   max-width: 100%;
   overflow-y: auto;
   overflow-wrap:break-word;
-  scrollbar-width: thin;
-  scrollbar-color: #666 #ffffff;
+  /* scrollbar-width: thin;
+  scrollbar-color: rgba(102, 102, 102, 0.2) #ffffff; */
 
   /* 特有的 */
   display: flex;
@@ -337,21 +350,35 @@ img {
 }
 
 .homeArticle {
-  width: 50%;
+  width: 80%;
   margin-left: auto;
-  margin-right: 0;
+  margin-right: auto;
 }
 
 .homeRightSide {
-  width: 30%;
-  display: none;
+  width: 16%;
+  margin-right: auto;
+  display: none !important;
 }
 
 .homeArticle .content {
-  margin-bottom: 1em;
+  margin-bottom: 0.25em;
+  display: flex;
+  gap: 10px;
 }
-.homeArticle .content .title {
-  margin-bottom: 0.2em;
+
+.homeArticle .content-time {
+  flex: 0 0 16%;
+}
+
+.homeArticle .content-title {
+  /* margin-bottom: 0.2em; */
+  margin: unset;
+  flex: 0 1 26%;
+}
+
+.homeArticle .content .description {
+  flex: 0 2 66%;
 }
 
 
@@ -360,11 +387,11 @@ img {
   margin-bottom: 0;
   margin-top: 1em;
   height: 90vh;
-  max-width: 100%;
+  /* max-width: 100%; */
   overflow-y: auto;
   overflow-wrap:break-word;
-  scrollbar-width: thin;
-  scrollbar-color: #666 #ffffff;
+  /* scrollbar-width: thin;
+  scrollbar-color: rgba(102, 102, 102, 0.2) #ffffff; */
 
   /* 特有的 */
   display: flex;
@@ -372,14 +399,16 @@ img {
 }
 
 .termsArticle {
-  width: 50%;
+  /* width: 50%; */
+  width: 80%;
   margin-left: auto;
-  margin-right: 0;
+  margin-right: auto;
 }
 
 .termsRightSide {
-  width: 30%;
-  display: none;
+  width: 16%;
+  margin-right: auto;
+  display: none !important;
 }
 
 .termsArticle .content .tags li::before{
@@ -395,11 +424,11 @@ img {
   margin-bottom: 0;
   margin-top: 1em;
   height: 90vh;
-  max-width: 100%;
+  /* max-width: 100%; */
   overflow-y: auto;
   overflow-wrap:break-word;
-  scrollbar-width: thin;
-  scrollbar-color: #666 #ffffff;
+  /* scrollbar-width: thin;
+  scrollbar-color: rgba(102, 102, 102, 0.2) #ffffff; */
 
   /* 特有的 */
   display: flex;
@@ -407,14 +436,15 @@ img {
 }
 
 .listArticle {
-  width: 50%;
+  width: 80%;
   margin-left: auto;
-  margin-right: 0;
+  margin-right: auto;
 }
 
 .listRightSide {
-  width: 30%;
-  display: none;
+  width: 16%;
+  margin-right: auto;
+  display: none !important;
 }
 
 .listArticle .content a {
@@ -422,15 +452,22 @@ img {
 }
 
 /* -------------------单页配置---------------------- */
+.singleHeaderMenu {
+  width: 60%;
+  margin-left: auto;
+  margin-right: 0;
+}
+
+
 .singleMain {
   margin-bottom: 0;
   margin-top: 1em;
   height: 90vh;
-  max-width: 100%;
+  /* max-width: 100%; */
   overflow-y: auto;
   overflow-wrap:break-word;
-  scrollbar-width: thin;
-  scrollbar-color: #666 #ffffff;
+  /* scrollbar-width: thin;
+  scrollbar-color: rgba(102, 102, 102, 0.2) #ffffff; */
 
   /* 特有的 */
   display: flex;
@@ -438,24 +475,24 @@ img {
 }
 
 .singleArticle {
-  width: 50%;
+  width: 60%;
   margin-left: auto;
   margin-right: 0;
 }
 
 .singleRightSide {
-  width: 30%;
+  width: 16%;
+  margin-right: auto;
   color: #232333;
   position: sticky;
   top: 0em;
   align-self: flex-start;
+  /* display: none !important; */
 }
 
 #TableOfContents {
   max-height: 80vh;
   overflow-y: auto;
-  scrollbar-width: thin;
-  scrollbar-color: #666 #ffffff;
 }
 
 /* 添加目录高亮样式 */
@@ -508,51 +545,50 @@ img {
 /*------------------窗口适配----------------------*/
 @media (max-width: 768px) {
   .singleRightSide {
+    display: none !important;
+  }
+
+  .homeArticle .content {
+    display: block;
+  }
+
+  .homeArticle .content-time {
     display: none;
   }
 
   .headerMenu, .homeArticle, .listArticle, .termsArticle, .singleArticle {
-    margin-right: auto;
     width: 90%;
+    margin-right: auto;
   }
   .listArticle time {
     display: none;
   }
-
-  .headerMenuSearch {
-    width: 38%;
-  }
 }
 
 @media (min-width: 769px) and (max-width: 1024px) {
-  .singleRightSide {
-    display: none;
+  .singleRightSide, .headerRightSide{
+    display: none !important;
   }
   .headerMenu, .homeArticle, .listArticle, .termsArticle, .singleArticle {
-    margin-right: auto;
     width: 90%;
+    margin-right: auto;
+  }
+  .homeArticle .content-time {
+    flex: 0 0 20%;
   }
 }
 
 @media (min-width: 1025px) and (max-width: 1440px) {
-  .headerRightSide, .homeRightSide, .termsRightSide, .listRightSide {
-    display: block;
+  .singleRightSide, .headerRightSide {
+    display: none !important;
   }
-
   .headerMenu, .homeArticle, .listArticle, .termsArticle, .singleArticle {
-    width: 60%;
-  }
-
-  .singleArticle {
-    width: 60%;
+    width: 80%;
+    margin-right: auto;
   }
 }
 
 @media (min-width: 1441px) {
-  .headerRightSide, .homeRightSide, .termsRightSide, .listRightSide {
-    display: block;
-  }
-
   .headerMenu, .homeArticle, .listArticle, .termsArticle, .singleArticle {
     width: 60%;
   }
