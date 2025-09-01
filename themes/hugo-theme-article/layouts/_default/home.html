@@ -1,23 +1,33 @@
 <!DOCTYPE html>
 <html>
-	{{ partial "header.html" . }}
-	<body>
-		{{ partial "head.html" . }}
-		<main class="commonMain homeMain">
-			<article class="commonArticle homeArticle">
-				{{ $pages := .Site.RegularPages }}
-				{{ $filteredPages := where $pages "Params.hidden" "ne" true }}
-				{{ range $filteredPages }}
-				<section class="content">
-					<time class="content-time">{{ dateFormat "2006.01.02 15:04" .Date }}</time>
-					<h3 class="content-title"><a href="{{ .RelPermalink }}">{{ .Title }}</a></h3>
-					{{ template "partials/pagedescription.html" . }}
-					<br>
-				</section>
-				{{ end }}
-				{{ partial "footer.html" . }}
-			</article>
-			<aside class="commonRightSide homeRightSide"></aside>
-		</main>
-	</body>
+  {{ partial "header.html" . }}
+  <body>
+    {{ partial "head.html" . }}
+    <main class="commonMain homeMain">
+      <article class="commonArticle homeArticle">
+        {{ $pages := .Site.RegularPages }}
+        {{ $filteredPages := where $pages "Params.hidden" "ne" true }}
+        {{ range $filteredPages }}
+        <section class="content">
+          <time class="content-time">{{ dateFormat "2006.01.02 15:04" .Date }}</time>
+          <h3 class="content-title"><a href="{{ .RelPermalink }}">{{ .Title }}</a></h3>
+          {{ template "partials/pagedescription.html" . }}
+          <br>
+        </section>
+        {{ end }}
+      </article>
+      <aside class="commonRightSide homeRightSide">
+        <section class="content">
+          <ul class="tags">
+            {{ range $name, $taxonomy := .Site.Taxonomies.tags }}
+            <li>
+              <a href="{{ "tags/" | absURL }}{{ $name | urlize }}"><i data-feather="tag"></i>{{ $name }}</a>({{ $taxonomy.Count }})
+            </li>
+            {{ end }}
+          </ul>
+       </section>
+      </aside>
+    </main>
+    {{ partial "footer.html" . }}
+  </body>
 </html>

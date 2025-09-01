@@ -1,5 +1,8 @@
-<footer class="footerMenu">
-  <span>{{ dateFormat "2006" now }} {{ with .Site.Copyright }} {{ . }} {{ end }}</span>
+<footer class="commonMain footerMain">
+  <div class="commonArticle footerMenu">
+    <span>{{ dateFormat "2006" now }} {{ with .Site.Copyright }} {{ . }} {{ end }}</span>
+  </div>
+  <div class="commonRightSide footerRightSide"></div>
 </footer>
 
 {{- if eq .Kind "page" -}}

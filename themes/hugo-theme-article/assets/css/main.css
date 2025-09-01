@@ -225,8 +225,20 @@ img {
 }
 
 .commonRightSide {
+  top: 0em;
+  color: #232333;
+  position: sticky;
+  align-self: flex-start;
   width: var(--rightSideSize);
   margin-right: auto;
+}
+
+.commonRightSide .content ul {
+  margin-top: unset;
+}
+
+.commonRightSide .content li::before{
+  content: none;
 }
 
 /*-------------------header配置-------------------*/
@@ -328,11 +340,13 @@ img {
 }
 
 /* -------------------footer配置------------------- */
+.footerMain {
+  display: none;
+  height: 10vh;
+}
+
 .footerMenu {
   display: flex;
-  margin-top: 10px;
-  padding-top: 5px;
-  padding-bottom: 5px;
   flex-direction: column;
   align-items: center;
   justify-content: center;
@@ -375,17 +389,18 @@ img {
   font-size: 1.1rem !important;
 }
 
-/* -------------------单页配置---------------------- */
-.singleRightSide {
-  top: 0em;
-  color: #232333;
-  position: sticky;
-  align-self: flex-start;
+.listRightSide {
+  top: 2.6rem;
 }
 
+/* -------------------单页配置---------------------- */
 #TableOfContents {
   max-height: 80vh;
   overflow-y: auto;
+}
+
+#TableOfContents ul {
+  margin-top: unset;
 }
 
 /* 添加目录高亮样式 */
@@ -471,10 +486,16 @@ img {
   :root {
     --mainArticleSize: 80%;
   }
+  .headerMenu a#tag {
+    display: none;
+  }
 }
 
 @media (min-width: 1441px) {
   :root {
     --mainArticleSize: 60%;
+  }
+  .headerMenu a#tag {
+    display: none;
   }
 }

@@ -17,8 +17,17 @@
         {{- end -}}
       </ul>
     </section>
-    {{- partial "footer.html" . -}}
   </article>
-  <aside class="commonRightSide listRightSide"></aside>
+  <aside class="commonRightSide listRightSide">
+    <section class="content">
+      <ul class="tags">
+        {{ range $name, $taxonomy := .Site.Taxonomies.tags }}
+        <li>
+          <a href="{{ "tags/" | absURL }}{{ $name | urlize }}"><i data-feather="tag"></i>{{ $name }}</a>({{ $taxonomy.Count }})
+        </li>
+        {{ end }}
+      </ul>
+    </section>
+  </aside>
 </main>
 {{ end }}

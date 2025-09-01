@@ -59,10 +59,6 @@ pre {
 }
 
 /* --------------------header配置------------------- */
-.headerMain {
-  /* background-color: #202124; */
-}
-
 .headerMenu a {
   color: var(--darkfontcolor);
   border-bottom: 2px solid var(--darkMaincolor);
@@ -113,7 +109,7 @@ pre {
   color: #61afef;
 }
 
-.singleRightSide {
+.commonRightSide {
   color: var(--darkfontcolor);
 }
 

@@ -42,3 +42,6 @@ ignoreFiles = ["themes/.*/content/.*"]
 
 [pagination]
   disablePagination = true
+
+[taxonomies]
+  tag = 'tags'
