@@ -1,6 +1,6 @@
 {{ define "main" }}
-<main class="singleMain">
-  <article class="singleArticle">
+<main class="commonMain singleMain">
+  <article class="commonArticle singleArticle">
     <section class="titleSection">
       <h1 class="title">{{ .Title }}</h1>
       <time>{{ dateFormat "2006-01-02 15:04:01" .Date }}</time>
@@ -10,7 +10,7 @@
     </section>
     {{- partial "footer.html" . -}}
   </article>
-  <aside class="singleRightSide">
+  <aside class="commonRightSide singleRightSide">
     {{ .TableOfContents }}
     {{ if .Params.tags }}
       <nav class="tags">

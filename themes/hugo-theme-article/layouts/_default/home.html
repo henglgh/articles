@@ -3,8 +3,8 @@
 	{{ partial "header.html" . }}
 	<body>
 		{{ partial "head.html" . }}
-		<main class="homeMain">
-			<article class="homeArticle">
+		<main class="commonMain homeMain">
+			<article class="commonArticle homeArticle">
 				{{ $pages := .Site.RegularPages }}
 				{{ $filteredPages := where $pages "Params.hidden" "ne" true }}
 				{{ range $filteredPages }}
@@ -17,7 +17,7 @@
 				{{ end }}
 				{{ partial "footer.html" . }}
 			</article>
-			<aside class="homeRightSide"></aside>
+			<aside class="commonRightSide homeRightSide"></aside>
 		</main>
 	</body>
 </html>

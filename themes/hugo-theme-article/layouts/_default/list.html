@@ -1,6 +1,6 @@
 {{ define "main" }}
-<main class="listMain">
-  <article class="listArticle">
+<main class="commonMain listMain">
+  <article class="commonArticle listArticle">
     {{ if isset .Data "Term" }}
     <h1>🏷️ {{ .Data.Term}}</h1>
     {{ else }}
@@ -19,6 +19,6 @@
     </section>
     {{- partial "footer.html" . -}}
   </article>
-  <aside class="listRightSide"></aside>
+  <aside class="commonRightSide listRightSide"></aside>
 </main>
 {{ end }}
