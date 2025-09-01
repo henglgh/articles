@@ -11,6 +11,8 @@
 --tablecolor: rgba(199, 37, 78, 0.4);
 --tableDarkcolor: rgba(171, 186, 191, 0.4);
 --darkfontcolor: #abb2bf;
+--mainArticleSize: 60%;
+--rightSideSize: 16%;
 }
 
 html {
@@ -227,9 +229,9 @@ img {
 }
 
 .headerMenu {
-  width: 80%;
+  width: var(--mainArticleSize);
   margin-left: auto;
-  margin-right: auto;
+  margin-right: 0;
   display: flex;
   gap: 20px;
   /* justify-content: space-between; */
@@ -254,9 +256,8 @@ img {
 }
 
 .headerRightSide {
-  width: 16%;
+  width: var(--rightSideSize);
   margin-right: auto;
-  /* display: none !important; */
 }
 
 /*--------------------搜索框配置------------------- */
@@ -341,8 +342,6 @@ img {
   max-width: 100%;
   overflow-y: auto;
   overflow-wrap:break-word;
-  /* scrollbar-width: thin;
-  scrollbar-color: rgba(102, 102, 102, 0.2) #ffffff; */
 
   /* 特有的 */
   display: flex;
@@ -350,15 +349,14 @@ img {
 }
 
 .homeArticle {
-  width: 80%;
+  width: var(--mainArticleSize);
   margin-left: auto;
-  margin-right: auto;
+  margin-right: 0;
 }
 
 .homeRightSide {
-  width: 16%;
+  width: var(--rightSideSize);
   margin-right: auto;
-  display: none !important;
 }
 
 .homeArticle .content {
@@ -390,8 +388,6 @@ img {
   /* max-width: 100%; */
   overflow-y: auto;
   overflow-wrap:break-word;
-  /* scrollbar-width: thin;
-  scrollbar-color: rgba(102, 102, 102, 0.2) #ffffff; */
 
   /* 特有的 */
   display: flex;
@@ -399,16 +395,14 @@ img {
 }
 
 .termsArticle {
-  /* width: 50%; */
-  width: 80%;
+  width: var(--mainArticleSize);
   margin-left: auto;
-  margin-right: auto;
+  margin-right: 0;
 }
 
 .termsRightSide {
-  width: 16%;
+  width: var(--rightSideSize);
   margin-right: auto;
-  display: none !important;
 }
 
 .termsArticle .content .tags li::before{
@@ -427,8 +421,6 @@ img {
   /* max-width: 100%; */
   overflow-y: auto;
   overflow-wrap:break-word;
-  /* scrollbar-width: thin;
-  scrollbar-color: rgba(102, 102, 102, 0.2) #ffffff; */
 
   /* 特有的 */
   display: flex;
@@ -436,15 +428,14 @@ img {
 }
 
 .listArticle {
-  width: 80%;
+  width: var(--mainArticleSize);
   margin-left: auto;
-  margin-right: auto;
+  margin-right: 0;
 }
 
 .listRightSide {
-  width: 16%;
+  width: var(--rightSideSize);
   margin-right: auto;
-  display: none !important;
 }
 
 .listArticle .content a {
@@ -452,11 +443,11 @@ img {
 }
 
 /* -------------------单页配置---------------------- */
-.singleHeaderMenu {
+/* .singleHeaderMenu {
   width: 60%;
   margin-left: auto;
   margin-right: 0;
-}
+} */
 
 
 .singleMain {
@@ -466,8 +457,6 @@ img {
   /* max-width: 100%; */
   overflow-y: auto;
   overflow-wrap:break-word;
-  /* scrollbar-width: thin;
-  scrollbar-color: rgba(102, 102, 102, 0.2) #ffffff; */
 
   /* 特有的 */
   display: flex;
@@ -475,19 +464,18 @@ img {
 }
 
 .singleArticle {
-  width: 60%;
+  width: var(--mainArticleSize);
   margin-left: auto;
   margin-right: 0;
 }
 
 .singleRightSide {
-  width: 16%;
+  width: var(--rightSideSize);
   margin-right: auto;
   color: #232333;
   position: sticky;
   top: 0em;
   align-self: flex-start;
-  /* display: none !important; */
 }
 
 #TableOfContents {
@@ -566,12 +554,15 @@ img {
 }
 
 @media (min-width: 769px) and (max-width: 1024px) {
-  .singleRightSide, .headerRightSide{
+  /* .singleRightSide, .headerRightSide{
     display: none !important;
-  }
-  .headerMenu, .homeArticle, .listArticle, .termsArticle, .singleArticle {
+  } */
+  /* .headerMenu, .homeArticle, .listArticle, .termsArticle, .singleArticle {
     width: 90%;
     margin-right: auto;
+  } */
+  :root {
+    --mainArticleSize: 90%;
   }
   .homeArticle .content-time {
     flex: 0 0 20%;
@@ -579,17 +570,20 @@ img {
 }
 
 @media (min-width: 1025px) and (max-width: 1440px) {
-  .singleRightSide, .headerRightSide {
+  /* .singleRightSide, .headerRightSide {
     display: none !important;
-  }
-  .headerMenu, .homeArticle, .listArticle, .termsArticle, .singleArticle {
+  } */
+  /* .headerMenu, .homeArticle, .listArticle, .termsArticle, .singleArticle {
     width: 80%;
     margin-right: auto;
+  } */
+  :root {
+    --mainArticleSize: 80%;
   }
 }
 
 @media (min-width: 1441px) {
-  .headerMenu, .homeArticle, .listArticle, .termsArticle, .singleArticle {
-    width: 60%;
+  :root {
+    --mainArticleSize: 60%;
   }
 }

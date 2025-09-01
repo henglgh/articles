@@ -1,5 +1,5 @@
 <header class="headerMain">
-	<div class="headerMenu {{ if eq .Kind "page" }} singleHeaderMenu {{ end }}">
+	<div class="headerMenu">
 		<nav class="headerMenuHome">
 			<!-- <a href="{{ absURL "" }}">Home</a> -->
 			<a href="{{ absURL "" }}"><i data-feather="home"></i></a>
@@ -20,7 +20,5 @@
 			{{ end }}
 		</nav>
 	</div>
-	{{- if eq .Kind "page" -}} 
 	<div class="headerRightSide"></div>
-	{{- end -}}
 </header>
