@@ -385,12 +385,16 @@ img {
 }
 
 /*-------------------列表页配置---------------------- */
-.listArticle .content a {
-  font-size: 1.1rem !important;
-}
-
 .listRightSide {
   top: 2.6rem;
+}
+
+.listRightSide .content {
+  display: none;
+}
+
+.listArticle .content a {
+  font-size: 1.1rem !important;
 }
 
 /* -------------------单页配置---------------------- */
