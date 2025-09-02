@@ -11,22 +11,22 @@
 
 ## 1.2. 截图
 ### 1.2.1. 主页
-![主页](https://raw.githubusercontent.com/henglgh/hugo-theme-article/main/images/home.png)
+![主页](https://raw.githubusercontent.com/henglgh/articles/main/themes/hugo-theme-article/images/home.png)
 
 ### 1.2.2. 归档页
-![归档页](https://raw.githubusercontent.com/henglgh/hugo-theme-article/main/images/list.png)
+![归档页](https://raw.githubusercontent.com/henglgh/articles/main/themes/hugo-theme-article/images/list.png)
 
 ### 1.2.3. 归档列表页
-![归档列表页](https://raw.githubusercontent.com/henglgh/hugo-theme-article/main/images/archive.png)
+![归档列表页](https://raw.githubusercontent.com/henglgh/articles/main/themes/hugo-theme-article/images/archive.png)
 
 ### 1.2.4. 文章页
-![文章页](https://raw.githubusercontent.com/henglgh/hugo-theme-article/main/images/single.png)
+![文章页](https://raw.githubusercontent.com/henglgh/articles/main/themes/hugo-theme-article/images/single.png)
 
 ### 1.2.5. 搜索页
-![搜索页](https://raw.githubusercontent.com/henglgh/hugo-theme-article/main/images/search.png)
+![搜索页](https://raw.githubusercontent.com/henglgh/articles/main/themes/hugo-theme-article/images/search.png)
 
 ### 1.2.6. 移动端适配
-![手机](https://raw.githubusercontent.com/henglgh/hugo-theme-article/main/images/moblie.png)
+![手机](https://raw.githubusercontent.com/henglgh/articles/main/themes/hugo-theme-article/images/moblie.png)
 
 
 ## 1.3. 安装
@@ -38,9 +38,11 @@ cd blog
 ```bash
 mkdir themes
 ```
-切换到themes目录下后将主题代码仓库执clone到themes目录下
+将主题代码仓库clone到themes目录下
 ```bash
-git clone https://github.com/henglgh/hugo-theme-article.git
+git clone https://github.com/henglgh/articles.git themes/
+mv themes/articles/themes/hugo-theme-article themes/
+rm -rf themes/articles
 ```
 在`content/posts`目录（content目录下可以任意创建子目录，不一定是posts）下添加内容文件，文件内容模板如下：
 ```md
@@ -67,31 +69,33 @@ theme="hugo-theme-article"
 
 ## 1.4. 配置
 ```toml
-baseURL = 'https://henglgh.github.io/hugo-theme-article'
+baseURL = 'https://henglgh.github.io/blog'
 languageCode = 'en-us'
 timeZone = "Asia/Shanghai"
-title = "阿根"
+title = '阿根'
+
+theme="hugo-theme-article"
 copyright = "© 阿根"
 
-[module]
-  [module.hugoVersion]
-    extended = false
-    min = "0.116.0"
+# 忽略 themes 目录下的 content 目录
+ignoreFiles = ["themes/.*/content/.*"]
 
 [params]
-  mode="toggle"
-  useCDN=false
+  katex = true
+  mode = "toggle"
+  useCDN = false
   [[params.social]]
     name = "GitHub"
     icon = "github"
-    url = "https://github.com/henglgh/hugo-theme-article"
+    url = "https://github.com/henglgh/blog"
 
 [outputs]
   home = ["HTML", "JSON"]
 
 [menus]
   [[menu.main]]
-    name = "Archive"
+    #name = "Archive"
+    name = "tag"
     url = "/tags"
     weight = 1
 
@@ -109,6 +113,9 @@ copyright = "© 阿根"
 
 [pagination]
   disablePagination = true
+
+[taxonomies]
+  tag = 'tags'
 ```
 
 ### 1.4.1. 配置说明
