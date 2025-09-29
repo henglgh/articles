@@ -2,11 +2,10 @@
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   {{- $title := ( .Title ) -}}
-  {{- $siteTitle := ( .Site.Title ) -}}
   {{- if .IsHome -}}
-  <title>{{ $siteTitle }} | Home </title>
+  <title>Home</title>
   {{- else -}}
-  <title>{{ $title }} - {{ $siteTitle }}</title>
+  <title>{{ $title }}</title>
   {{- end -}}
   <link rel="icon" type="image/png" href="{{ absURL "images/favicon.png" }}" />
   <meta name="viewport" content="width=device-width, initial-scale=1">
