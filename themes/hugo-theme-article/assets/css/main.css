@@ -357,7 +357,7 @@ img {
 
 /*-----------------主页配置----------------------*/
 .homeArticle .content {
-  margin-bottom: 0.25em;
+  /* margin-bottom: 0.25em; */
   display: flex;
   gap: 10px;
 }
