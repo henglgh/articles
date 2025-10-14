@@ -11,7 +11,13 @@ searchInput.addEventListener('click', function(e) {
 });
 
 document.addEventListener('click', function(e) {
-  if (!headerMenuSearch.contains(e.target) && searchInput.value === '') {
+  // 如果点击的不是搜索区域（搜索框/搜索结果区域等）
+  if (!headerMenuSearch.contains(e.target)) {
+    // 清空输入框内容
+    searchInput.value = '';
+    // 清空搜索结果
+    searchOutput.innerHTML = '';
+    // 隐藏搜索UI
     headerMenu.classList.remove('searchActive');
     headerMenuSearch.classList.remove('expanded');
   }
