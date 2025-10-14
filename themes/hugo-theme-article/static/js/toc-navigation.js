@@ -101,7 +101,7 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     });
   }, {
-    rootMargin: '-20% 0% -80% 0%' // 当标题进入中间区域时触发
+    rootMargin: '-15% 0% -85% 0%' // 当标题进入中间区域时触发
   });
 
   // 观察所有标题

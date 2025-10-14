@@ -362,7 +362,7 @@ img {
 }
 
 /*-----------------主页配置----------------------*/
-.homeArticle .content {
+.homeArticle .content-entry {
   /* margin-bottom: 0.25em; */
   display: flex;
   gap: 10px;
@@ -377,8 +377,16 @@ img {
   flex: 0 1 26%;
 }
 
-.homeArticle .content .description {
+.homeArticle .content-entry .description {
   flex: 0 2 66%;
+}
+
+.homeArticle .content {
+  min-height: 10vh;
+}
+
+.homeArticle .placeholder {
+  min-height: 80vh;
 }
 
 /*----------------专栏页配置----------------------*/
@@ -401,6 +409,14 @@ img {
 
 .listArticle .content a {
   font-size: 1.1rem !important;
+}
+
+.listArticle .content {
+  min-height: 10vh;
+}
+
+.listArticle .placeholder {
+  min-height: 80vh;
 }
 
 /* -------------------单页配置---------------------- */
@@ -474,7 +490,7 @@ img {
     display: none !important;
   }
 
-  .homeArticle .content {
+  .homeArticle .content-entry {
     display: block;
   }
 

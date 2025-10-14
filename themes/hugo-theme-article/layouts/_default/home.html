@@ -5,16 +5,19 @@
     {{ partial "head.html" . }}
     <main class="commonMain homeMain">
       <article class="commonArticle homeArticle">
+        <section class="content">
         {{ $pages := .Site.RegularPages }}
         {{ $filteredPages := where $pages "Params.hidden" "ne" true }}
         {{ range $filteredPages }}
-        <section class="content">
-          <time class="content-time">{{ dateFormat "2006.01.02 15:04" .Date }}</time>
-          <h3 class="content-title"><a href="{{ .RelPermalink }}">{{ .Title }}</a></h3>
-          {{ template "partials/pagedescription.html" . }}
-          <br>
-        </section>
+          <section class="content-entry">
+            <time class="content-time">{{ dateFormat "2006.01.02 15:04" .Date }}</time>
+            <h3 class="content-title"><a href="{{ .RelPermalink }}">{{ .Title }}</a></h3>
+            {{ template "partials/pagedescription.html" . }}
+            <br>
+          </section>
         {{ end }}
+        </section>
+        <section class="placeholder"></section>
       </article>
       <aside class="commonRightSide homeRightSide">
         <section class="content">
