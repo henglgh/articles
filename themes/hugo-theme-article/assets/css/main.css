@@ -460,6 +460,13 @@ img {
   margin-bottom: 0.2em;
 }
 
+.singleArticle .content {
+  min-height: 10vh;
+}
+
+.singleArticle .placeholder {
+  min-height: 80vh;
+}
 
 /*------------------窗口适配----------------------*/
 @media (max-width: 768px) {
