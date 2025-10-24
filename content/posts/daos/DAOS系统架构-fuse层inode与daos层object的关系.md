@@ -13,7 +13,7 @@ tags: [daos]
 # 2. 数据结构
 上述所说的`ls`操作，在DAOS中是一个lookup操作，以dfuse层dfuse_cb_lookup函数为入口。整个I/O逻辑思路大概是2个阶段，第1阶段以父目录dfuse inode为起点，经过层层转换，找到父目录dfuse inode对应的DAOS对象，一旦找到了DAOS对象，就可以从DAOS对象中读取子项的元数据信息。
 
-![parent inode](/static/images/pinode.png)
+![parent inode](https://raw.githubusercontent.com/henglgh/articles/main/static/images/pinode.png)
 
 如上图所示，dfuse inode数据结构的操作最终会转化成对dc object的操作，中间以dfs object为过渡。在这一过程中，最关键的元素是oh（object open handle），oh是dfs object数据结构中的成员，而整个dfs object数据结构被封装到dfuse inode中。从dfuse inode找到关联的dc object，实际上就是从dfs object找到对应dc object。因此oh成为这一环节的关键元素。为了实现这一过程，DAOS提供`obj_hdl2ptr`函数。obj_hdl2ptr函数会根据传入的oh参数，在内存中找到对应的dc objec的内存地址。内存中dc object通过哈希表管理的，此处不再展开细说。
 
@@ -55,7 +55,7 @@ fetch_entry (...) {
 ```
 第2阶段是构建目录子项的dfs object并补全完整的目录子项dfuse inode结构。因为在整个lookup操作流程的最后，是以dfuse_reply_entry方式回复给客户端，而dfuse_reply_entry函数会将完整的目录子项dfuse inode返回。关键处理逻辑在`lookup_rel_int`函数中。
 
-![child inode](/static/images/cinode.png)
+![child inode](https://raw.githubusercontent.com/henglgh/articles/main/static/images/cinode.png)
 
 第2阶段的重点是补全目录子项的dfs object。从上图`dfs_obj`结构可以看到，成员oid可以从第1阶段的目录子项的dfs entry中获取到，成员parent_oid可以直接从父目录的dfs object中获取到，唯独oh没有现成的。因此，在`lookup_rel_int`函数中，会调用`daos_obj_open`函数来获取oh。daos_obj_open函数之所以能正确获取目录子项的oh，是因为其传入参数之一是目录子项对象的oid，oid在第1阶段已经获取到了。
 
