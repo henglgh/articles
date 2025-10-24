@@ -1,5 +1,5 @@
 ---
-title: DAOS系统架构-OID
+title: DAOS系统架构-Object ID
 date: 2025-10-22T09:00:00+0800
 description: "本文详细介绍DAOS.2.6.0中object id的设计思想"
 tags: [daos]
@@ -13,7 +13,7 @@ tags: [daos]
 # 2. 数据结构
 ![oid](https://raw.githubusercontent.com/henglgh/articles/main/static/images/oid.png)
 
-上图所示的是DAOS 6.2.0版本中oid的结构示意图，oid的结构由high和low两部分以`high.low`形式拼接而成，比如`937030206059708418.0`。oid总长度是128位，高64位是high，低64位置low。
+上图所示的是DAOS 2.6.0版本中oid的结构示意图，oid的结构由high和low两部分以`high.low`形式拼接而成，比如`937030206059708418.0`。oid总长度是128位，高64位是high，低64位置low。
 
 high部分的高32位是系统使用的，低32位是high计数使用。high的高32位又被分成8、8、16三部分，分别用来编码`type`、`class`和`meta`。
 
@@ -23,7 +23,35 @@ class是用来定义object的冗余方式，如果没有设置，默认会使用
 
 meta，代码注释中说用来存储对象的元数据信息。但是在生成oid的过程中，用到的只有冗余组的数量`nr_grp`。正常情况下，nr_grp是从class中解析出来的。比如，如果设置class是OC_RP_2G1，nr_grp就是1。非正常情况下需要将解析出来的数值做进一步分析，看是否符合容灾域数量等等，具体的处理逻辑在`daos_oclass_fit_max`和`dc_set_oclass`中。
 
+```c
+oid->hi &= (1ULL << OID_FMT_INTR_BITS) - 1;
+hdr  = ((uint64_t)type << OID_FMT_TYPE_SHIFT);
+hdr |= ((uint64_t)ord << OID_FMT_CLASS_SHIFT);
+if (nr_grps > MAX_NUM_GROUPS)
+  nr_grps = MAX_NUM_GROUPS;
+hdr |= ((uint64_t)nr_grps << OID_FMT_META_SHIFT);
+oid->hi |= hdr;
+```
+
 抛去high高32位后，剩下的32位是真正用来计数的。在DAOS 2.6.0版本中，每新建一个对象，oid.hi都会自动加1（有前提条件），当自加之后的数值超过`0xffffffff`时，代码中会重置oid.hi为`0`。这也就意味着如果只考虑oid.hi，而不考虑oid.lo的话，同一个container内（也可以理解为同一个命名空间内）最多只能创建`0xffffffff`个相同类型相同冗余方式的对象。这样的数量肯定是无法支撑海量数据的，因此oid.lo就起到非常重要的作用。
+
+```c
+/** If we ran out of local OIDs, alloc one from the container */
+if (dfs->oid.hi >= MAX_OID_HI) {
+  /** Allocate an OID for the namespace */
+  rc = daos_cont_alloc_oids(dfs->coh, 1, &dfs->oid.lo, NULL);
+  if (rc) {
+    D_ERROR("daos_cont_alloc_oids() Failed (%d)\n", rc);
+    D_MUTEX_UNLOCK(&dfs->lock);
+    return daos_der2errno(rc);
+  }
+  dfs->oid.hi = 0;
+}
+
+/** set oid and lo, bump the current hi value */
+oid->lo = dfs->oid.lo;
+oid->hi = dfs->oid.hi++;
+```
 
 实际上，oid.hi的低32位和oid.lo的全部64位一起决定了一个object的唯一标识的计数。当oid.lo相同时，代码会将oid.hi的低32位加1。如果加1之后的数值超过`0xffffffff`，代码会将oid.hi的低32位重置为`0`，同时重新生成oid.lo。oid.lo的生成的处理逻辑在`daos_cont_alloc_oids`函数中（此处未进一步分析oid.lo是怎么产生的）。默认情况下，oid.lo的值就是container（container本质上就是一个object）的lo的值。所以，在这种设计模式下，同一个container内可容纳高达`0xffffffff * 0xffffffffffffffff`个对象，对象数量直接以数量级增长。
 
@@ -45,3 +73,25 @@ hosts  hosts2  hosts3
 &nbsp;
 # 3. oid的使用
 在DAOS中oid是通过`oid_gen`函数生成的，该函数是作为dfs层的接口函数使用。在dfs层生成的oid会被DAOS层的dc object直接复用，从始至终，oid不会再其他任何地方产生。比如说，在新建目录时，dfs层的create_dir函数会调用oid_gen生成一个新的oid，然后将该oid作为daos_obj_open的参数传入，由此便进入DAOS层，DAOS层最终会调用dc_obj_open函数构造出一个新的dc object，新的dc object的oid是存储在其内部成员`cob_md`中的，cob_md是daos_obj_md类型的数据结构。在dc_obj_open函数中，会调用dc_obj_fetch_md函数将dfs层传入的oid作为参数与新的dc object的oid进行绑定。
+```c
+create_dir(...) {
+  ...
+  rc = oid_gen(dfs, cid, false, &dir->oid);
+  ...
+  /** Open the Object - local operation */
+  rc = daos_obj_open(dfs->coh, dir->oid, DAOS_OO_RW, &dir->oh, NULL);
+  ...
+}
+
+dc_obj_open(...) {
+  ...
+  rc = dc_obj_fetch_md(args->oid, &obj->cob_md);
+  ...
+}
+
+dc_obj_fetch_md(...) {
+  md->omd_id	= oid;
+  md->omd_ver	= 0;
+  md->omd_pda	= 0;
+}
+```
