@@ -3,7 +3,7 @@ languageCode = 'en-us'
 timeZone = "Asia/Shanghai"
 title = '阿根'
 
-theme="hugo-theme-article"
+theme="articles"
 copyright = "© 阿根"
 
 # 忽略 themes 目录下的 content 目录
