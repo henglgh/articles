@@ -1,0 +1,3 @@
+[submodule "themes/articles"]
+	path = themes/articles
+	url = https://github.com/henglgh/hugo-articles.git
