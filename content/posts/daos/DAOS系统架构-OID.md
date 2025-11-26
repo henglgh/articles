@@ -1,5 +1,5 @@
 ---
-title: [DAOS] oid生成原理分析
+title: "[DAOS] oid生成原理分析"
 date: 2025-10-22T09:00:00+0800
 description: "本文详细介绍DAOS.2.6.0中object id的设计思想"
 tags: [daos]

@@ -1,5 +1,5 @@
 ---
-title: [DAOS] dRPC通信机制介绍
+title: "[DAOS] dRPC通信机制介绍"
 date: 2025-07-02T16:46:40+0800
 description: "本文介绍DAOS.2.6.0通信机制中的dRPC模块设计思想。"
 tags: [daos]

@@ -1,5 +1,5 @@
 ---
-title: [tools] vdbench的介绍与使用
+title: "[tools] vdbench的介绍与使用"
 date: 2025-03-24T10:00:00+0800
 description: "本文详细介绍如何在使用vdbench以及相关参数解释。"
 tags: [tools]

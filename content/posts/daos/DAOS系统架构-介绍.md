@@ -1,5 +1,5 @@
 ---
-title: [DAOS] DAOS介绍
+title: "[DAOS] DAOS介绍"
 date: 2025-04-01T16:03:00+0800
 description: "本文全面介绍DAOS.2.6.0系统，包括但不局限于DAOS系统特性、各个模块的功能等等。"
 tags: [daos]

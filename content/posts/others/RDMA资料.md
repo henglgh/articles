@@ -1,5 +1,5 @@
 ---
-title: [others] RDMA技术介绍
+title: "[others] RDMA技术介绍"
 date: 2021-03-03T16:45:15+0800
 description: "本文详细介绍RDMA技术。"
 tags: [others]

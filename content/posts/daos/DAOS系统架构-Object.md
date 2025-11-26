@@ -1,5 +1,5 @@
 ---
-title: [DAOS] Object介绍
+title: "[DAOS] Object介绍"
 date: 2025-04-25T09:00:00+0800
 description: "本文详细介绍DAOS.2.6.0中Object（对象）的设计思想"
 tags: [daos]

@@ -1,5 +1,5 @@
 ---
-title: [others] iscsi target的创建和使用
+title: "[others] iscsi target的创建和使用"
 date: 2021-03-01T16:45:15+0800
 description: "本文介绍如何在almalinux 8.9下创建、挂载和卸载iscsi target。"
 tags: [others]

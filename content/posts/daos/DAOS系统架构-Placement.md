@@ -1,5 +1,5 @@
 ---
-title: [DAOS] Placement介绍
+title: "[DAOS] Placement介绍"
 date: 2025-06-03T16:24:00+0800
 description: "本文详细介绍DAOS.2.6.0中关于对象的placement map的设计思想"
 tags: [daos]

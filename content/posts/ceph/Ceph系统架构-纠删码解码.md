@@ -1,5 +1,5 @@
 ---
-title: [Ceph] 纠删码解码逻辑分析
+title: "[Ceph] 纠删码解码逻辑分析"
 date: 2021-05-14T14:51:09+0800
 description: "本文从ceph源码角度详细讲解ceph纠删码机制中解码部分的逻辑以及实现过程。"
 tags: [ceph]

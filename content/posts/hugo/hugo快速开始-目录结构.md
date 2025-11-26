@@ -1,5 +1,5 @@
 ---
-title: [Hugo] 目录结构的介绍
+title: "[Hugo] 目录结构的介绍"
 date: 2025-03-28T16:03:00+0800
 description: "本文全面介绍使用hugo搭建的静态站点的基本文件和路径组成。"
 tags: [hugo]

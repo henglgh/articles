@@ -1,5 +1,5 @@
 ---
-title: [Lustre] 基于ldiskfs存储的多机集群部署
+title: "[Lustre] 基于ldiskfs存储的多机集群部署"
 date: 2021-07-03T10:27:18+0800
 description: "本文详细介绍如何在almalinux8.9上部署基于ldiskfs的lustre主备模式的多机集群。"
 tags: [lustre]

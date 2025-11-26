@@ -1,5 +1,5 @@
 ---
-title: [Hugo] 原型的介绍与使用
+title: "[Hugo] 原型的介绍与使用"
 date: 2025-03-31T10:03:00+0800
 description: "本文全面介绍Hugo原型的用法。"
 tags: [hugo]

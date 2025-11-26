@@ -1,5 +1,5 @@
 ---
-title: [others] opengrok部署
+title: "[others] opengrok部署"
 date: 2021-03-01T10:45:15+0800
 description: "本文介绍如何在ubuntu 20.04.6下部署opengrok 1.13.1。"
 tags: [others]

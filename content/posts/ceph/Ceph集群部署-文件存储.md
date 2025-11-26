@@ -1,5 +1,5 @@
 ---
-title: [Ceph] 文件存储部署
+title: "[Ceph] 文件存储部署"
 date: 2021-05-03T14:47:49+0800
 description: "本文介绍如何部署ceph文件存储系统，并使用ceph文件存储系统。"
 tags: [ceph]

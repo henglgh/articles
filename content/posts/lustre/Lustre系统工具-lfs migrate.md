@@ -1,5 +1,5 @@
 ---
-title: [Lustre] lfs migrate逻辑分析
+title: "[Lustre] lfs migrate逻辑分析"
 date: 2021-07-07T16:27:14+0800
 description: "本文分析Lustre 2.15.4的lfs migrate代码逻辑"
 tags: [lustre]

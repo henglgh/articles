@@ -1,5 +1,5 @@
 ---
-title: [DAOS] Rebuild介绍
+title: "[DAOS] Rebuild介绍"
 date: 2025-06-09T14:03:00+0800
 description: "本文介绍DAOS.2.6.0中target发生故障时，如何进行数据重构。"
 tags: [daos]

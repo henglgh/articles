@@ -1,5 +1,5 @@
 ---
-title: [others] vboxmanage命令的介绍与使用
+title: "[others] vboxmanage命令的介绍与使用"
 date: 2021-03-02T16:45:15+0800
 description: "本文简单介绍vboxmanage常用的使用方法。"
 tags: [others]

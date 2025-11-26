@@ -1,5 +1,5 @@
 ---
-title: [Hugo] 快速开始
+title: "[Hugo] 快速开始"
 date: 2025-03-27T10:03:00+0800
 description: "本文全面介绍如何如何快速使用hugo搭建一个静态站点。"
 tags: [hugo]

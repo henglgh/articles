@@ -1,5 +1,5 @@
 ---
-title: [tools] mpirun的介绍与使用
+title: "[tools] mpirun的介绍与使用"
 date: 2025-01-24T10:23:34+0800
 description: "本文详细介绍如何在使用mpirun以及相关参数解释。"
 tags: [tools]

@@ -1,5 +1,5 @@
 ---
-title: [Hugo] Hugo简介
+title: "[Hugo] Hugo简介"
 date: 2025-03-25T16:03:00+0800
 description: "本文全面介绍Hugo简介。"
 tags: [hugo]

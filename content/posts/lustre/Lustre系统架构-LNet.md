@@ -1,5 +1,5 @@
 ---
-title: [Lustre] LNet的介绍与使用
+title: "[Lustre] LNet的介绍与使用"
 date: 2021-07-07T10:27:14+0800
 description: "本文介绍Lustre 2.15.4的LNet功能和使用方法。"
 tags: [lustre]

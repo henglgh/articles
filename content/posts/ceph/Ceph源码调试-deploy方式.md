@@ -1,5 +1,5 @@
 ---
-title: [Ceph] 如何调试使用deploy部署的集群
+title: "[Ceph] 如何调试使用deploy部署的集群"
 date: 2021-05-10T14:50:24+0800
 description: "本文介绍如何调试使用ceph-deploy部署的ceph集群。"
 tags: [ceph]

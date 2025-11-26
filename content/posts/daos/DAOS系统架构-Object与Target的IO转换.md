@@ -1,5 +1,5 @@
 ---
-title: [DAOS] Object与Target的IO转换逻辑分析
+title: "[DAOS] Object与Target的IO转换逻辑分析"
 date: 2025-11-12T09:00:00+0800
 description: "本文详细介绍DAOS.2.6.0中针对object的操作如何转化成针对target的操作。"
 tags: [daos]

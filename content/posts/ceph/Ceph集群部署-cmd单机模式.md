@@ -1,5 +1,5 @@
 ---
-title: [Ceph] 使用Ceph原生命令部署单机集群
+title: "[Ceph] 使用Ceph原生命令部署单机集群"
 date: 2021-05-02T14:45:55+0800
 description: "本文详细介绍如何使用ceph原生命令部署一个完整的ceph集群。"
 tags: [ceph]

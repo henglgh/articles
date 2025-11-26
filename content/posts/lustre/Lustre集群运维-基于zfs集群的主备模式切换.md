@@ -1,5 +1,5 @@
 ---
-title: [Lustre] 基于zfs存储的集群主备模式手动切换
+title: "[Lustre] 基于zfs存储的集群主备模式手动切换"
 date: 2021-07-04T10:27:16+0800
 description: "本文详细介绍基于zfs的主备容灾模式的集群出现故障后，如何手动进行主备切换。"
 tags: [lustre]

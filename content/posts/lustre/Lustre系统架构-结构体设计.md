@@ -1,5 +1,5 @@
 ---
-title: [Lustre] 相关结构体的设计分析
+title: "[Lustre] 相关结构体的设计分析"
 date: 2021-07-07T16:27:14+0800
 description: "本文分析Lustre 2.15.4源码中相关结构体的设计思想"
 tags: [lustre]

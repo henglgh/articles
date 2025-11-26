@@ -1,5 +1,5 @@
 ---
-title: [Lustre] pacemaker集群部署
+title: "[Lustre] pacemaker集群部署"
 date: 2021-07-01T09:27:19+0800
 description: "本文详细介绍如何在almalinux8.9上联网部署pacemaker集群。"
 tags: [lustre]

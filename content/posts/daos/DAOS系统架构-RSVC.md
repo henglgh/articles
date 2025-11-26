@@ -1,5 +1,5 @@
 ---
-title: [DAOS] RSVC介绍
+title: "[DAOS] RSVC介绍"
 date: 2025-06-06T10:00:00+0800
 description: "本文详细介绍DAOS中RSVC（Replicated Services）的设计思想"
 tags: [daos]

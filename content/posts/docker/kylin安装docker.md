@@ -1,5 +1,5 @@
 ---
-title: [docker] kylin安装docker
+title: "[docker] kylin安装docker"
 date: 2025-01-02T16:42:40+0800
 description: "本文详细介绍如何在kylin v10上安装dockder。"
 tags: [docker]

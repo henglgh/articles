@@ -1,5 +1,5 @@
 ---
-title: [DAOS] gRPC通信机制介绍
+title: "[DAOS] gRPC通信机制介绍"
 date: 2025-06-18T15:28:11+0800
 description: "本文介绍DAOS.2.6.0通信机制中的gRPC模块设计思想。"
 tags: [daos]
