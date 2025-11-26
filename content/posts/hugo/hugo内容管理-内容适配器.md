@@ -1,5 +1,5 @@
 ---
-title: Hugo内容管理-内容适配器
+title: [Hugo] 内容适配器的介绍与使用
 date: 2025-03-30T16:03:00+0800
 description: "本文全面介绍Hugo内容适配器的用法。"
 tags: [hugo]

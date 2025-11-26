@@ -1,5 +1,5 @@
 ---
-title: Ceph源码编译-构建deb包
+title: [Ceph] 构建deb包
 date: 2021-05-08T14:50:06+0800
 description: "本文介绍如何制作ceph deb包，并构建ceph本地apt源，实现离线安装ceph。"
 tags: [ceph]

@@ -1,5 +1,5 @@
 ---
-title: Hugo安装
+title: [Hugo] 安装方法
 date: 2025-03-26T16:03:00+0800
 description: "本文全面介绍如何在linux上安装hugo。"
 tags: [hugo]

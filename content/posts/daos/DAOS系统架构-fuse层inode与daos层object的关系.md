@@ -1,5 +1,5 @@
 ---
-title: DAOS系统架构-fuse层inode与daos层object的关系
+title: [DAOS] inode与object的关系分析
 date: 2025-10-24T09:00:00+0800
 description: "本文详细介绍DAOS.2.6.0中fuse层inode与daos层object的关系"
 tags: [daos]

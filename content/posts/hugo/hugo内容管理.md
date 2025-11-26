@@ -1,5 +1,5 @@
 ---
-title: Hugo内容管理
+title: [Hugo] 内容模块的介绍
 date: 2025-03-29T16:03:00+0800
 description: "本文全面介绍Hugo构建内容时md文件中相关参数解释。"
 tags: [hugo]

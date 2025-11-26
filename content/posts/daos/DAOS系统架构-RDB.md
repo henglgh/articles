@@ -1,5 +1,5 @@
 ---
-title: DAOS系统架构-RDB
+title: [DAOS] RDB介绍
 date: 2025-06-05T10:00:00+0800
 description: "本文详细介绍DAOS.2.6.0中RDB（Replicated Data Base）的设计思想"
 tags: [daos]

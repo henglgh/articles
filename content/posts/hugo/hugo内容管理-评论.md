@@ -1,5 +1,5 @@
 ---
-title: Hugo内容管理-评论
+title: [Hugo] 评论的介绍与使用
 date: 2025-03-31T16:03:00+0800
 description: "本文全面介绍Hugo评论的用法。"
 tags: [hugo]

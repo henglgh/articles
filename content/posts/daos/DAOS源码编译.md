@@ -1,5 +1,5 @@
 ---
-title: DAOS源码编译
+title: [DAOS] 源码编译
 date: 2024-12-09T16:48:47+0800
 description: "本文详细介绍如何在almalinux8.9上编译DAOS.2.6.0源码。"
 tags: [daos]

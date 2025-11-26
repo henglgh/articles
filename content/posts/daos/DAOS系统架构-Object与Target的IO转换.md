@@ -1,5 +1,5 @@
 ---
-title: DAOS系统架构：Object与Target的IO转换
+title: [DAOS] Object与Target的IO转换逻辑分析
 date: 2025-11-12T09:00:00+0800
 description: "本文详细介绍DAOS.2.6.0中针对object的操作如何转化成针对target的操作。"
 tags: [daos]
@@ -8,6 +8,8 @@ tags: [daos]
 # 1. 概述
 根据DAOS的架构设计可以知道，用户写入的数据最终会由相应的target负责写入到磁盘。数据的写入操作会先转化成对DAOS object的操作，然后再转化成对target的操作。实际上，object在DAOS中并非是操作的最小单元。DAOS支持更细粒度的操作，比如精确到对字节的操作。本文会从dfs层元数据的`insert_entry`操作出发，理清object IO与target IO之间的逻辑转换。
 
+&nbsp;
+&nbsp;
 # 2. IO逻辑分析
 在创建新文件时，文件的元数据信息会封装到entry中，然后调用insert_entry函数将文件的元数据插入到父目录object中。insert_entry函数会调用`daos_obj_update`函数，该函数是DAOS的API函数，它会借助任务调度机制进入DAOS层实现对DAOS object的一系列操作。因此，通过daos_obj_update函数，insert_entry函数便可以将对entry的操作转换成对父目录object的更新操作。
 ![insert_entry](https://raw.githubusercontent.com/henglgh/articles/main/static/images/insert_entry.png)

@@ -1,5 +1,5 @@
 ---
-title: Lustre源码编译-基于ldiskfs
+title: [Lustre] 基于ldiskfs存储类型的源码编译
 date: 2021-07-04T16:27:14+0800
 description: "本文详细介绍如何编译后端存储类型为ldiskfs的lustre源码，并制作离线rpm安装包。"
 tags: [lustre]

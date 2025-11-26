@@ -1,5 +1,5 @@
 ---
-title: Lustre系统架构-QoS
+title: [Lustre] QoS的介绍与使用
 date: 2021-07-06T16:27:14+0800
 description: "本文介绍Lustre 2.15.4的Qos功能和使用方法。"
 tags: [lustre]

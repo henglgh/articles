@@ -1,5 +1,5 @@
 ---
-title: docker镜像构建(基于ISO)
+title: [docker] 使用ISO文件构建docker镜像
 date: 2025-01-03T17:21:40+0800
 description: "本文详细介绍如何基于kylin v10 ISO文件构建出docker image。"
 tags: [docker]

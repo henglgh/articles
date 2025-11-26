@@ -1,5 +1,5 @@
 ---
-title: Hugo快速开始-基本用法
+title: [Hugo] 基本用法
 date: 2025-03-27T16:03:00+0800
 description: "本文全面介绍Hugo的基本命令用法。"
 tags: [hugo]

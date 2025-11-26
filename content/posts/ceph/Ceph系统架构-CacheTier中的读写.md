@@ -1,5 +1,5 @@
 ---
-title: Ceph系统架构-CacheTier中的读写
+title: [Ceph] CacheTier中的读写逻辑分析
 date: 2021-05-16T14:51:29+0800
 description: "本文从ceph源码角度详细讲ceph cache tier机制中缓存层读写逻辑和实现过程。"
 tags: [ceph]

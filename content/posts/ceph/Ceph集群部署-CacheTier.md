@@ -1,5 +1,5 @@
 ---
-title: Ceph集群部署-CacheTier
+title: [Ceph] CacheTier的介绍与使用
 date: 2021-05-06T14:48:33+0800
 description: "本文介绍如何部署ceph分层存储，并使用ceph分层存储功能。"
 tags: [ceph]

@@ -1,5 +1,5 @@
 ---
-title: Lustre系统架构-nodemap
+title: [Lustre] nodemap的介绍与使用
 date: 2021-07-06T10:27:14+0800
 description: "本文介绍Lustre 2.15.4的nodemap功能和使用方法。"
 tags: [lustre]

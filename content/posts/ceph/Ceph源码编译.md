@@ -1,5 +1,5 @@
 ---
-title: Ceph源码编译
+title: [Ceph] 源码编译
 date: 2021-05-07T14:49:41+0800
 description: "本文介绍如何编译Ceph源码，并开启debug调试功能。"
 tags: [ceph]

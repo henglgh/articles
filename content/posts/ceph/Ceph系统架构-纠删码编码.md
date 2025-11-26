@@ -1,5 +1,5 @@
 ---
-title: Ceph系统架构-纠删码编码
+title: [Ceph] 纠删码编码逻辑分析
 date: 2021-05-13T14:50:57+0800
 description: "本文从ceph源码角度详细讲解ceph纠删码机制中编码部分的逻辑以及实现过程。"
 tags: [ceph]

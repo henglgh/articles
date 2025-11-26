@@ -1,5 +1,5 @@
 ---
-title: IB网络配置-bond
+title: [others] IB网卡的bond网络配置
 date: 2021-03-03T10:45:15+0800
 description: "本文详细介绍在almalinux 8.9上如何设置IB网卡聚合并配置静态ip。"
 tags: [others]

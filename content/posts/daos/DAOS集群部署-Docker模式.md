@@ -1,5 +1,5 @@
 ---
-title: DAOS集群部署-Docker模式
+title: [DAOS] 使用docker部署单机集群
 date: 2025-06-24T13:24:58+0800
 description: "本文详细介绍如何在almalinux8.9上使用docker部署DAOS.2.6.0单机集群（基于Metadata-on-SSD架构）。"
 tags: [daos]

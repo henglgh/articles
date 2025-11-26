@@ -1,5 +1,5 @@
 ---
-title: Lustre集群部署-基于zfs的高可用集群
+title: [Lustre] 基于zfs的高可用集群部署
 date: 2021-07-02T10:27:16+0800
 description: "本文详细介绍如何在almalinux8.9上部署基于zfs的lustre主备模式的高可用集群。"
 tags: [lustre]

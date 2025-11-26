@@ -1,5 +1,5 @@
 ---
-title: ior使用手册
+title: [tools] ior的介绍与使用
 date: 2025-01-24T13:52:45+0800
 description: "本文详细介绍如何在使用ior以及相关参数解释。"
 tags: [tools]
