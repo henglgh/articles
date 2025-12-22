@@ -431,7 +431,7 @@ DTX模型被构建在DAOS容器中。每个容器都维护着自己的DTX表，�
 
 ![replicated_obj_modify_dtx](https://raw.githubusercontent.com/henglgh/articles/main/static/images/replicated_obj_modify_dtx.png)
 
-以下针对DTX_1简单的说明一下流程：如之前所说，每个容器都维护着3个索引：1个指向object tree，另外2个指向DTX tree的。图中紫色表示对extent数据的更新过程。首先会在本地启动一个DTX事务，该事务会被记录在active DTX tree中。针对图中的每个树的操作都会被记录在一个DTX record。该record会被记录在DTX表中，同时record的索引会被记录在extent中。在图中，DTX1-record1记录着对object的更新操作，DTX1-record2记录着对dkey的更新操作，DTX1-record3记录着对akey的更新操作，DTX1-record4记录着对extent的值的更新操作。record之间是有先后顺序的，并且使用了epoch。
+以下针对DTX_1简单的说明一下流程：如之前所说，每个容器都维护着3个索引：1个指向object tree，另外2个指向DTX tree的。图中紫色表示对extent数据的更新过程。实线代表执行过程，箭头表示执行先后顺序。虚线为指代作用，箭头指向被操作的对象。首先会在本地启动一个DTX事务，该事务会被记录在active DTX tree中。针对图中的每个树的操作都会被记录在一个DTX record。该record会被记录在DTX表中，同时record的索引会被记录在extent中。在图中，更新操作顺序：`object-tree -> dkey-tree -> akey-tree -> ev-tree`。DTX1-record1记录着对object的更新操作，DTX1-record2记录着对dkey的更新操作，DTX1-record3记录着对akey的更新操作，DTX1-record4记录着对extent的值的更新操作。record之间是有先后顺序的，并且使用了epoch。
 
 ## 10.2. 基于单个冗余组的DTX Leader选举
 在基于单个冗余组的DTX模型中，将按照一下一般准则对每个对象或者每个dkey进行leader选举：
