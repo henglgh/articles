@@ -10,15 +10,15 @@ tags: [daos]
 
 ![modules](https://raw.githubusercontent.com/henglgh/articles/main/static/images/modules.png)
 
-上图中的的右侧展示了DAOS的模块划分，主要划分为：通信模块、持久化存储模块、线程模块、日志模块、通用模块，以及其他模块。
+上图中的右侧展示了DAOS的模块划分，主要划分为：通信模块、持久化存储模块、线程模块、日志模块、通用模块，以及其他模块。
 
 &nbsp;
 &nbsp;
-# 2. sevice层级设计
+# 2. service层级设计
 
 ![layering](https://raw.githubusercontent.com/henglgh/articles/main/static/images/layering.png)
 
-上图展示的是DAOS service组件的堆栈设计。DAOS内部service组件包括：`management、pool、 container、object 、rebuild以及security`。每个组件都有客户端和服务端之分。有些组件横跨控制平面和数据平面，比如management和security。这类组件的客户端和服务端通常通过`gRPC`进行通信。大部分组件的客户端和服务端是通过`CaRT`进行通信的，比如pool、container、object等。跨组件之间的通信通常是直接调用API函数。位于同一侧不同层级的相同组件之间是通过`dRPC`进行通信，比如位于服务端的，横跨数据平面与控制平面的management组件之间的通信方式。
+上图展示的是DAOS service组件的堆栈设计。DAOS内部service组件包括：`management、pool、 container、object 、rebuild以及security`。每个组件都有客户端和服务端之分。有些组件横跨控制平面和数据平面，比如management和security。这类组件的客户端和服务端通常通过`gRPC`进行通信。大部分组件的客户端和服务端是通过`CaRT`进行通信的，比如pool、container、object等。跨组件之间的通信通常是`直接调用API函数`。位于同一侧不同层级的相同组件之间是通过`dRPC`进行通信，比如位于服务端的，横跨数据平面与控制平面的management组件之间的通信方式。
 
 &nbsp;
 &nbsp;
