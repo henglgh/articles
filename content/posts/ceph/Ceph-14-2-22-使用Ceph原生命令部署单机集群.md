@@ -7,7 +7,7 @@ tags: [ceph]
 
 # 1. 前言
 
-![os-recommend](https://img2024.cnblogs.com/blog/3757792/202601/3757792-20260117141136600-1186123787.png)
+![os-recommend](https://raw.githubusercontent.com/henglgh/articles/main/static/images/ceph/ceph-14-os-recommend.png)
 
 上表中是 Ceph 官方文档给出的 Ceph 14 版本的系统和内核推荐，其中在 centos 7、ubuntu 14.04、ubuntu 16.04、ubuntu 18.04 上都做了完整的测试。本文将介绍如何在 `ubuntu 18.04` 中使用 ceph 原生命令部署一个完整的 ceph 集群，ceph 版本为 `14.2.22`。
 
