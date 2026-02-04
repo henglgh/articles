@@ -117,7 +117,7 @@ DAOS agent是运行在客户端节点上的守护进程，它与DAOS库进行交
 # 4. DAOS 存储模型
 对于DAOS整个系统而言，DAOS pool是整个系统数据存储和空间隔离的`系统单元`。DAOS pool是一个预分配的逻辑空间，该空间被平均分成多个pool shard，均匀分布在一组target中。比如：当pool横跨4个target时，pool会被分成4个pool shard，最终结果导致，每个target上有一个pool shard。预分配的逻辑空间可以是该组target总空间容量的全部或者部分。DAOS pool的总空间容量是在创建pool的时候指定的，pool的空间容量可以被拓展，理论上有2种方式：增大相关联的target空间容量和增加相关联的target数量，目前只支持后者方式。
 
-![daos_abstractions](https://raw.githubusercontent.com/henglgh/articles/main/static/images/daos_abstractions.png)
+![daos_abstractions](https://raw.githubusercontent.com/henglgh/articles/main/static/images/daos/daos_abstractions.png)
 
 一个DAOS pool可以容纳一个或多个被称为`DAOS container`的事务性存对象存储，每个container在pool中都是一个私有的对象地址空间，可以通过事务性方式修改container，并且同一个pool中的所有container之间是相互独立的。container是快照和数据管理的基本单元。归属于同一个container中的DAOS object可以被分发到pool中的任何一个target上，以实现好的性能和弹性，并且可以通过不同的API进行访问，以有效地表示结构化、半结构化和非结构化数据。
 
@@ -139,7 +139,7 @@ pool仅可供经过身份验证和授权的应用程序访问。可以支持多�
 ## 4.2. DAOS Container
 container在pool中代表着一个对象地址空间，每个container都有唯一的UUID标识。与pool一样，container可以存储用户属性信息。
 
-![containers](https://raw.githubusercontent.com/henglgh/articles/main/static/images/containers.png)
+![containers](https://raw.githubusercontent.com/henglgh/articles/main/static/images/daos/containers.png)
 
 为了访问container，一个应用首先要与pool建立连接，然后再打开container。如果该应用被授权访问container，该应用会获取一个container句柄。该句柄中包含授予该应用中任何一个进程访问当前container和container内容的能力。打开container的进程可以与该进程相关联的其他任何一个进程共享这个container句柄。
 
@@ -295,17 +295,17 @@ DAOS在内部使用校验和来发现静默数据损坏。虽然系统中的每�
 
 与Single Value不同，Array Values允许针对一个数组的任何一个部分进行更新和获取操作。除此之外，对数组的更新操作是版本化的。所以一次获取操作，可以是由数组的不同部分不同版本构成的数据。数组中每一个版本化的部分称之为`extents(区段)`。以下是2个简单的extents示例：
 
-![array_example_1](https://raw.githubusercontent.com/henglgh/articles/main/static/images/array_example_1.png)
+![array_example_1](https://raw.githubusercontent.com/henglgh/articles/main/static/images/daos/array_example_1.png)
 
 上图左侧描述关于single extent的更新和获取操作：蓝色线表示更新extent范围（2-13）段的数据，橘黄色线表示读取extent范围（2-6）段的数据。先执行数据更新操作，然后执行读取数据操作。图的右侧表示更新和读取操作的数据版本都是1。
 
-![array_example_2](https://raw.githubusercontent.com/henglgh/articles/main/static/images/array_example_2.png)
+![array_example_2](https://raw.githubusercontent.com/henglgh/articles/main/static/images/daos/array_example_2.png)
 
 上图左侧描述关于moulti extents的更新和获取操作。
 
 数组类型的这种特性要求在创建校验和时采用更加复杂的方法。DAOS采用分块的方法（chunking），即：将extent拆分成固定大小的chunks，然后对每个chunk计算校验和。其中每个extent的起始划分都是相对于整个数组起始点偏移（称为绝对位移对齐），而不是每个I/O(或者说是每个extent)，如下图所示：
 
-![array_with_chunks](https://raw.githubusercontent.com/henglgh/articles/main/static/images/array_with_chunks.png)
+![array_with_chunks](https://raw.githubusercontent.com/henglgh/articles/main/static/images/daos/array_with_chunks.png)
 
 如上图左侧所示，整个数组划分成`0-3 4-7 8-11 12-15`四个extent，每个extent的大小是4（chunksize）。首先第一个I/O（2-6）extent的更新操作，按照绝对位移对齐规则，2-6段拆分成2-3和4-6两个chunk。从2-6的拆分可以看到，即便该I/O的更新范围起始点是从2开始，但是拆分成chunk的起始点依然是按照整个数组的起始点计算的。
 

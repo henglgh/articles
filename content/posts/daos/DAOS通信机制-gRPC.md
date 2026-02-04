@@ -17,7 +17,7 @@ gRPC在DAOS中被应用于控制平面（管理平面）客户端与服务端之
 # 2. gRPC框架
 与许多RPC系统一样，gRPC基于定义服务的思想，指定远程调用的方法及其参数和函数返回类型。服务端实现此接口并运行gRPC服务来处理客户端调用。在通信过程中，客户端通过stub代理调用服务端定义的方法，请求数据被序列化为Protobuf二进制格式。基于HTTP/2协议传输至服务端，服务端解析请求并调用对应处理逻辑。响应数据序列化后返回客户端，客户端反序列化得到结果。
 
-![gRPC框架](https://raw.githubusercontent.com/henglgh/articles/main/static/images/gRPC.png)
+![gRPC框架](https://raw.githubusercontent.com/henglgh/articles/main/static/images/daos/gRPC.png)
 
 
 # 3. gRPC代码实现

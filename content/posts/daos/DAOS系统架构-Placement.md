@@ -73,7 +73,7 @@ struct pool_domain {
 # 3. Placement Map
 placement map本质上是一个抽象的，经过排列过的pool map。它不一定包含pool map的所有细节信息。相反，它只保留了相关组件关系，该组件关系用于分发对象分片以满足应用程序的弹性和性能要求。
 
-![pool_and_placement_map](https://raw.githubusercontent.com/henglgh/articles/main/static/images/pool_and_placement_map.png)
+![pool_and_placement_map](https://raw.githubusercontent.com/henglgh/articles/main/static/images/daos/pool_and_placement_map.png)
 
 一个placement map不会去维护相关联的pool map中的组件状态和组件特征的副本，仅仅是引用pool map的组件。所以，每次DAOS根据一个placement map计算出某个对象的分布时，它还需要从pool map中检查相关联组件的状态和属性。这为间接内存访问增加了一个额外的步骤，但是当一个DAOS存储池有很多placement map而只有一个pool map时，这可以显著减少缓存污染和内存消耗。
 

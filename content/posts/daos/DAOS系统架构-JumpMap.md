@@ -74,7 +74,7 @@ Jump map非常适合用于存储池扩展，因为它结合了跳跃一致性哈
 &nbsp;
 # 8. 存储池组件状态转换
 
-![pool_component_state_transition](https://raw.githubusercontent.com/henglgh/articles/main/static/images/pool_component_state_transition.png)
+![pool_component_state_transition](https://raw.githubusercontent.com/henglgh/articles/main/static/images/daos/pool_component_state_transition.png)
 
 ## 8.1. Drain
 Drain：该操作也是将组件从pool中剔除，与exclude操作不同之处在于，在执行剔除操作前，需要将该组件中的数据迁移到其他组件中，pool不会处于降级状态，正在进行drain操作的组件依然可读。组件的最终状态被设置为`DOWNOUT`。

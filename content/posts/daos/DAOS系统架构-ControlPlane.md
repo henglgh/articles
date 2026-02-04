@@ -88,7 +88,7 @@ System commands会使用fan-out。并向所选中的ranks发送RPCs，以执行�
 
 ## 6.1. 存储格式化
 在启动DAOS数据平面之前，需要对存储进行格式化。
-![storage_format_detail](https://raw.githubusercontent.com/henglgh/articles/main/static/images/storage_format_detail.png)
+![storage_format_detail](https://raw.githubusercontent.com/henglgh/articles/main/static/images/daos/storage_format_detail.png)
 
 如果存储没有被格式化，daos_server将在启动时暂停，等待存储被格式化。
 

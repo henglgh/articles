@@ -33,7 +33,7 @@ tags: [daos]
 
 **重构协议**
 
-![rebuild_protocol](https://raw.githubusercontent.com/henglgh/articles/main/static/images/rebuild_protocol.png)
+![rebuild_protocol](https://raw.githubusercontent.com/henglgh/articles/main/static/images/daos/rebuild_protocol.png)
 
 上图就是这个过程的一个示例：对象A有3个副本，对象B、C、D、E有2个副本。当target2发生故障时，最为Raft领导者的target0会向所有其他存活的targets广播故障信息，通知它们进入降级模式并进行扫描。（蓝色线实线表示领导者target向非领导者targets广播消息，蓝色虚线表示非领导者target向领导者target回复消息，绿色实线表示读取数据。）
 
@@ -52,7 +52,7 @@ tags: [daos]
 
 **多故障协议**
 
-![rebuild_protocol](https://raw.githubusercontent.com/henglgh/articles/main/static/images/multi_failure_rebuild_protocol.png)
+![rebuild_protocol](https://raw.githubusercontent.com/henglgh/articles/main/static/images/daos/multi_failure_rebuild_protocol.png)
 
 - 在这个例子中，对象A是2副本，对象B、C、D是3副本。
 - target1失败后，target2是重构对象B的发起者，它正在从target3和target4中拉取数据。target3是重构对象C的发起者，它正在从target0和target2中拉取数据。

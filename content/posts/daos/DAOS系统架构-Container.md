@@ -15,7 +15,7 @@ tags: [daos]
 # 2. 元数据布局
 DAOS容器服务（`cont_svc`）负责存储容器的元数据，并提供API来查询和更新状态以及管理容器的生命周期。DAOS容器的元数据被组织成`key-value`的存储结构（KVS），然后在某些服务器上做副本。其中`某些服务器`是由Raft共识算法选举出的。客户端请求只能由leader服务处理，所以非leader服务需要将客户端请求重定向给leader服务。cont_svc是从rsvc模块中派生出来的。
 
-![container_meta_layout](https://raw.githubusercontent.com/henglgh/articles/main/static/images/container_meta_layout.png)
+![container_meta_layout](https://raw.githubusercontent.com/henglgh/articles/main/static/images/daos/container_meta_layout.png)
 
 从上图可以看到，在最顶层KVS设计（root）中包含2个子KVS设计：DAOS容器KVS和DAOS容器句柄KVS。
 - DAOS容器KVS：用于存储容器的元数据，该元数据由许多可变和不可变标量以及其他KVS组成。这些属性是由用户在创建一个容器时提供的。

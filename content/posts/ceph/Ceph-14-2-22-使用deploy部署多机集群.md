@@ -483,7 +483,7 @@ radosgw-admin user create --uid=s3user --display-name=s3user --access-key s3user
 
 **添加 s3 用户**
 
-![adduser](https://img2024.cnblogs.com/blog/3757792/202601/3757792-20260125153348954-1950584652.png)
+![adduser](https://raw.githubusercontent.com/henglgh/articles/main/static/images/ceph/s3browser-adduser.png)
 
 - `display name`：s3browser 工具中显示的用户名，随便写，不一定要和上述创建的用户名一样！
 - `account type`：必须要选则 s3 compatible storage！
@@ -492,13 +492,13 @@ radosgw-admin user create --uid=s3user --display-name=s3user --access-key s3user
 
 **添加 bucket**
 
-![addbucket](https://img2024.cnblogs.com/blog/3757792/202601/3757792-20260125153353845-648105144.png)
+![addbucket](https://raw.githubusercontent.com/henglgh/articles/main/static/images/ceph/s3browser-addbucket.png)
 
 bucket 名字随便写，没有规范和要求。
 
 **上传文件**
 
-![upfile](https://img2024.cnblogs.com/blog/3757792/202601/3757792-20260125153356548-1070392758.png)
+![upfile](https://raw.githubusercontent.com/henglgh/articles/main/static/images/ceph/s3browser-upfile.png)
 
 如果上述都没有任何问题，那就表示当前对象存储集群正常，客户端与存储集群连接正常，客户端可以正常读写文件。
 

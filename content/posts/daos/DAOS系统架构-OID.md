@@ -11,7 +11,7 @@ tags: [daos]
 &nbsp;
 &nbsp;
 # 2. 数据结构
-![oid](https://raw.githubusercontent.com/henglgh/articles/main/static/images/oid.png)
+![oid](https://raw.githubusercontent.com/henglgh/articles/main/static/images/daos/oid.png)
 
 上图所示的是DAOS 2.6.0版本中oid的结构示意图，oid的结构由high和low两部分以`high.low`形式拼接而成，比如`937030206059708418.0`。oid总长度是128位，高64位是high，低64位置low。
 
