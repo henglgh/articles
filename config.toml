@@ -1,7 +1,7 @@
 baseURL = 'https://henglgh.github.io/articles'
 languageCode = 'en-us'
 timeZone = "Asia/Shanghai"
-title = '阿根'
+title = '只是笔记'
 
 theme="articles"
 copyright = "© 阿根"
