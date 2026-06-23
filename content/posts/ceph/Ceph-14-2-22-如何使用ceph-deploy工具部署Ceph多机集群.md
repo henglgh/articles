@@ -1,7 +1,7 @@
 ---
-title: "[Ceph 14.2.22] 使用deploy部署多机集群"
+title: "Ceph 14.2.22：如何使用ceph-deploy工具部署Ceph多机集群"
 date: 2021-05-01T14:45:15+0800
-description: "本文将介绍如何在 ubuntu 18.04 中使用 ceph-deploy 部署 ceph 集群，ceph 版本为 14.2.22。"
+description: "本文将介绍如何在 ubuntu 18.04 中使用 ceph-deploy 工具部署 ceph 多机集群，ceph 版本为 14.2.22。"
 tags: [ceph]
 ---
 
@@ -9,7 +9,7 @@ tags: [ceph]
 
 ![os-recommend](https://raw.githubusercontent.com/henglgh/articles/main/static/images/ceph/ceph-14-os-recommend.png)
 
-上表中是 Ceph 官方文档给出的 Ceph 14 系列的系统和内核推荐，其中在 centos 7、ubuntu 14.04、ubuntu 16.04、ubuntu 18.04 上都做了完整的测试。本文将介绍如何在`ubuntu 18.04`中使用 ceph-deploy 部署 ceph 集群，ceph 版本为`14.2.22`。
+上表中是 Ceph 官方文档给出的 Ceph 14 系列的系统和内核推荐，其中在 centos 7、ubuntu 14.04、ubuntu 16.04、ubuntu 18.04 上都做了完整的测试。本文将介绍如何在 `ubuntu 18.04` 中使用 ceph-deploy 工具部署 ceph 多机集群，ceph 版本为`14.2.22`。
 
 # 2. 基础集群部署
 
