@@ -13,7 +13,7 @@ linux os:       almalinux 8.9
 linux kernel:   4.18.0-513.5.1.el8_9.x86_64
 ```
 - DAOS从2.0.0开始是一个全新的架构设计，与1.x版本是不兼容的。另外，从2.6.0开始，DAOS开始支持Metadata-on-SSD，即支持非Intel Optane设备。
-- 本文默认已提前部署好DAOS集群，如果没有部署，参考[DAOS集群部署-多机模式]({{< ref "DAOS集群部署-多机模式.md" >}})。
+- 本文默认已提前部署好DAOS集群，如果没有部署，参考[DAOS 2.6.4：多节点集群部署](https://henglgh.github.io/articles/posts/daos/DAOS-2-6-4-多节点集群部署.md)。
 
 &nbsp;
 &nbsp;

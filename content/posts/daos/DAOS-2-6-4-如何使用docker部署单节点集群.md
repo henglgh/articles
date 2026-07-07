@@ -1,27 +1,27 @@
 ---
-title: "[DAOS] 使用docker部署单机集群"
+title: "DAOS 2.6.4：如何使用docker部署单节点集群"
 date: 2025-06-24T13:24:58+0800
-description: "本文详细介绍如何在almalinux8.9上使用docker部署DAOS.2.6.0单机集群（基于Metadata-on-SSD架构）。"
+description: "本文详细介绍如何在almalinux8.9上使用docker部署DAOS.2.6.4单节点集群（基于Metadata-on-SSD架构）。"
 tags: [daos]
 ---
 
 
 # 1. 前言
-本文详细介绍如何在almalinux8.9上使用docker部署DAOS.2.6.0单机集群，配置方式采用Metadata-on-SSD模式。系统环境如下：
-```bash
-daos:           2.6.0
-linux os:       almalinux 8.9
-linux kernel:   4.18.0-513.5.1.el8_9.x86_64
-```
-DAOS从2.0.0开始是一个全新的架构设计，与1.x版本是不兼容的。另外，从2.6.0开始，DAOS开始支持Metadata-on-SSD，即支持非Intel Optane设备。
+![daos-2.6.x-support](https://i-blog.csdnimg.cn/img_convert/0916e31b2d7804ad4620a668ae6e8e40.png)
+
+上图是 DAOS 2.6.x 版本软硬件适配说明：DAOS 目前只在 `X86_64` 架构上做了开发和测试，其他 CPU 架构上的情况目前还未知。目前支持的操作系统是 `EL8` 系列、`EL9` 系列以及 `SLES/Leap` 系列。另外，从 `2.6.0` 开始，DAOS 开始支持 `Metadata-on-SSD`，即支持非持久化内存设备。
+
+本文将详细介绍如何在 `almalinux 8.9` 上使用docker部署 DAOS 单机集群，配置方式采用 Metadata-on-SSD 模式，DAOS 版本为 `2.6.4`。
 
 &nbsp;
 &nbsp;
 # 2. 集群规划
 ```bash
-Component       Host ip           Host name
---------------------------------------------
-daos_server     192.168.3.13      node0
+Component       component type        Host ip           Host name
+-------------------------------------------------------------------
+[admin]          admin                192.168.3.13      node0
+[server]         server               192.168.3.13      node0
+[client]         client               192.168.3.13      node0
 ```
 
 &nbsp;
@@ -89,7 +89,7 @@ LINUX_IMAGE_TAG="8.9"
 
 # DAOS image build配置
 DAOS_DOCKER_IMAGE_NSP="daos"
-DAOS_DOCKER_IMAGE_TAG="2.6.0"
+DAOS_DOCKER_IMAGE_TAG="2.6.4"
 DAOS_HUGEPAGES_NBR=4096
 DAOS_IFACE_NAME="enp0s8"
 DAOS_IFACE_IP="192.168.3.13"
@@ -158,18 +158,18 @@ docker-compose build daos_base
 构建完成之后，使用`docker images`命令可以看到daos_base镜像已经加载了。
 ```bash
 REPOSITORY           TAG       IMAGE ID       CREATED          SIZE                                                 
-daos/daos-base-el8   2.6.0     7f90c7ca6c25   11 seconds ago   191MB
+daos/daos-base-el8   2.6.4     7f90c7ca6c25   11 seconds ago   191MB
 almalinux/8-init     8.9       2f7f31164cc6   14 months ago    186MB
 ```
 
 ## 5.6. 保存镜像（可以跳过）
 如果需要在多台机器上部署DAOS集群，那么就需要将上述构建的daos base镜像导出到本地，然后在其他机器上加载该镜像即可。
 ```bash
-docker save -o daos-base-image-2.6.0.tar daos/daos-base-el8:2.6.0
+docker save -o daos-base-image-2.6.4.tar daos/daos-base-el8:2.6.4
 ```
 其他机器上只需要加载daos-base镜像，不需要加载almalinux镜像。加载镜像的命令如下：
 ```bash
-docker load -i daos-base-image-2.6.0.tar
+docker load -i daos-base-image-2.6.4.tar
 ```
 
 &nbsp;
@@ -212,7 +212,7 @@ docker load -i daos-base-image-2.6.0.tar
 ```
 - `image`：指定依赖的镜像名，必须和daos_base中保持一致，目的是不需要重新再制作新的的镜像，因此上面配置也将build移除了。
 - `network_mode`：指定容器的网络模式，根据DAOS官网所说，目前只支持host模式，因此这里只能填写`host`。
-- `extra_hosts`：用于配置docker的/etc/hosts文件。docker不支持在容器运行时修改hosts文件，因此必须在启动容器时配置。
+- `extra_hosts`：用于配置docker的/etc/hosts文件。docker不支持在容器运行时修改hosts文件，因此必须在启动容器时配置。（host模式不支持）
 - `volumes`：用于挂载宿主机的目录到容器，任何一个都不能少。尤其是`/lib/modules`，这是spdk运行时需要用到的目录。
 
 ## 6.2. 创建并启动daos_server容器
@@ -222,14 +222,14 @@ docker compose up -d daos_server
 执行`docker ps -a`命令查看daos-server容器是否正常运行
 ```bash
 CONTAINER ID   IMAGE                      COMMAND        CREATED          STATUS                      PORTS     NAMES
-17f0876cfeb3   daos/daos-base-el8:2.6.0   "/sbin/init"   30 minutes ago   Up 30 minutes                         daos-server
+17f0876cfeb3   daos/daos-base-el8:2.6.4   "/sbin/init"   30 minutes ago   Up 30 minutes                         daos-server
 ```
 结果显示，`STATUS:Up 17 seconds`，daos-server容器已经正常启动。
 
 &nbsp;
 &nbsp;
 # 7. 集群部署
-单机集群部署可以参考[DAOS集群部署-单机模式]({{< ref "DAOS集群部署-单机模式.md" >}})。
+单机集群部署可以参考[DAOS 2.6.4：单节点集群部署](https://henglgh.github.io/articles/posts/daos/DAOS-2-6-4-单节点集群部署.md)。
 
 &nbsp;
 &nbsp;
