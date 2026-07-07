@@ -1,23 +1,16 @@
 ---
-title: "[DAOS] 文件存储部署"
+title: "DAOS 2.6.4：文件系统搭建"
 date: 2024-12-09T16:48:46+0800
-description: "本文详细介绍如何部署DAOS文件存储系统。"
+description: "本文详细介绍如何搭建DAOS文件系统。"
 tags: [daos]
 ---
 
 # 1. 前言
-本文详细介绍如何部署DAOS文件存储系统。系统环境如下：
-```bash
-daos:           2.6.0
-linux os:       almalinux 8.9
-linux kernel:   4.18.0-513.5.1.el8_9.x86_64
-```
-- DAOS从2.0.0开始是一个全新的架构设计，与1.x版本是不兼容的。另外，从2.6.0开始，DAOS开始支持Metadata-on-SSD，即支持非Intel Optane设备。
-- 本文默认已提前部署好DAOS集群，如果没有部署，参考[DAOS 2.6.4：多节点集群部署](https://henglgh.github.io/articles/posts/daos/DAOS-2-6-4-多节点集群部署.md)。
+本文将详细介绍如何在 `almalinux 8.9` 上搭建 DAOS 文件系统，DAOS 版本为 `2.6.4`。
 
-&nbsp;
-&nbsp;
-# 2. 文件存储部署
+本文默认已提前部署好DAOS集群，如果没有部署，参考 [DAOS 2.6.4：多节点集群部署](https://henglgh.github.io/articles/posts/daos/DAOS-2-6-4-多节点集群部署.md)。
+
+# 2. 文件系统搭建
 ## 2.1. 创建pool
 ```bash
 dmg pool create -z 5GB test
@@ -185,8 +178,6 @@ container配置信息：
 ```
 可以看到，该object的容错模式被DAOS自动设置为RP_2G8。object shard总数为8，每个shard都有2个副本，每个副本会随机的从rank[0-2]中任选2个。这里之所以被设置为G8，是因为在配置文件中每个rank（在这里即engine）被分别配置4个target用来存储数据。2个rank也就是8个object。
 
-&nbsp;
-&nbsp;
 # 3. 使用文件存储
 ## 3.1. 挂载文件系统
 ```bash
@@ -197,8 +188,6 @@ dfuse -m /mnt/daosfs.3.11 --pool=test --container=test
 echo "hello world" > /mnt/daosfs.3.11/test.txt
 ```
 
-&nbsp;
-&nbsp;
 # 4. 参考资料
 - [https://docs.daos.io/v2.6/user/filesystem/](https://docs.daos.io/v2.6/user/filesystem/)
-- [https://github.com/daos-stack/daos/blob/v2.6.0/src/object/README.md](https://github.com/daos-stack/daos/blob/v2.6.0/src/object/README.md)
+- [https://github.com/daos-stack/daos/blob/v2.6.4/src/object/README.md](https://github.com/daos-stack/daos/blob/v2.6.4/src/object/README.md)
