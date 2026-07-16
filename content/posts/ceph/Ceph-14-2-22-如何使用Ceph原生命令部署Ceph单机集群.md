@@ -260,6 +260,8 @@ ceph-authtool /etc/ceph/keyring --gen-key -n mgr.c \
   --cap osd 'allow *'
 ```
 
+其中mgr.a、mgr.b、mgr.c为mgr的用户，用于访问mgr的keyring。命名规则是`mgr.{id}`。{id}会影响mgr查询keyring文件的路径，比如{a}时，那么mgr会查找`/var/lib/ceph/mgr/ceph-a/keyring`。mgr是ceph的组件，不是client。因此不能采用`client.mgr.{hostname}`的命名规则。
+
 ### 3.5.4. 导入 mgr key 到 auth 库中
 
 ```bash
@@ -544,6 +546,8 @@ ceph-authtool  /etc/ceph/keyring --gen-key -n mds.c \
   --cap mgr 'allow profile mds'
 ```
 
+其中mds.a、mds.b、mds.c为mds的用户，用于访问mds的keyring。命名规则是`mds.{id}`。{id}会影响mds查找keyring文件路径，比如{a}时，那么mds就会找`/var/lib/ceph/mds/ceph-a/keyring`。mds是ceph的mds组件。因此必须采用`mds.{id}`的命名规则。
+
 ### 4.2.4. 导入 mds key 到 auth 库中
 
 ```bash
@@ -687,15 +691,15 @@ mkdir -p /var/lib/ceph/rgw/rgw.c
 ```ini
 [client.rgw.a]
   admin_socket = /var/run/ceph/ceph-client.rgw.a.asok
-  rgw data =/var/lib/ceph/rgw/rgw.a
+  rgw data =/var/lib/ceph/radosgw/rgw.a
 
 [client.rgw.b]
   admin_socket = /var/run/ceph/ceph-client.rgw.b.asok
-  rgw data =/var/lib/ceph/rgw/rgw.b
+  rgw data =/var/lib/ceph/radosgw/rgw.b
 
 [client.rgw.c]
   admin_socket = /var/run/ceph/ceph-client.rgw.c.asok
-  rgw data =/var/lib/ceph/rgw/rgw.c
+  rgw data =/var/lib/ceph/radosgw/rgw.c
 ```
 
 **配置 rgw_frontends**
@@ -731,6 +735,8 @@ ceph-authtool  /etc/ceph/keyring --gen-key -n client.rgw.c \
   --cap osd 'allow rwx' \
   --cap mgr 'allow rw'
 ```
+
+其中client.rgw.a、client.rgw.b、client.rgw.c为radosgw的用户，用于访问radosgw的keyring。命名规则是`client.{id}`。{id}会影响radosgw查找keyring文件路径，比如{id}值为rgw.a时，那么radosgw就会找`/var/lib/ceph/radosgw/ceph-rgw.a/keyring`。radosgw是ceph的client组件。因此必须采用`client.{id}`的命名规则。
 
 测试发现，rgw 的 name 必须是以 `client.` 为前缀。因为 ceph 中没有 `rgw` 这个类别，类别只有 `auth, mon, osd, mds, mgr, client` 这几种。
 
